@@ -278,3 +278,15 @@ Citywide sale median $/sf: 161.14285714285714 from 7463 sales.
 - **Streets:** exact title "Allegheny County Street Centerlines" not found; used **Pittsburgh Street Centerline**.
 - **Delinquency:** slug `allegheny-county-tax-delinquency` 404; used `city-of-pittsburgh-property-tax-delinquency`.
 
+## Workspace UI (`/`)
+
+- Design tokens live in `app/index.css` and `tailwind.config.ts` (HSL, including `--centerline`). Body fonts: Barlow Condensed, Inter, IBM Plex Mono.
+- MapLibre style: OpenFreeMap `https://tiles.openfreemap.org/styles/dark`. On style error, falls back to a token `map-bg` empty style so dots and neighborhood outlines still draw.
+- Client loads parcels from `/lots.json` (symlink `public/lots.json` → `data/lots.json`), then `/api/lots`.
+- URL state keys per BUILD_SPEC §5f. `vacantOnly` defaults **on** in the workspace (engine default remains off for tests). Economics defaults: sale **160**, pace **275**.
+- `fitAll` / ladder / LEVERS / CONSTRAINTS / PARCELS / CSV all use the map's current bounds plus Site filters. Recalc debounce 60 ms on sliders; levers 300 ms; map `moveend` updates `lat,lng,z` and bounds.
+- Parcel page `/parcel/[id]` is the minimal COMPLIANCE + SITE CONDITIONS version; full PRO FORMA is not in this commit.
+- `npm run build` passes. 19 vitest tests still pass.
+- Basemap is OpenFreeMap dark (no token). MapLibre's worker is served from `/maplibre-gl-worker.mjs` (copied into `public/` with `maplibre-gl-shared.mjs`) because Next/Turbopack does not load the default worker URL. If the style fails, a plain `map-bg` canvas still shows dots and neighborhood outlines.
+
+
