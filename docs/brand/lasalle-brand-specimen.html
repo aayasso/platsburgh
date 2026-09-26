@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LaSalle Technologies — Brand Specimen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pine:#1B4332;
+    --pine-light:#2A5A46;
+    --limestone:#E8E0CE;
+    --limestone-dark:#D6CDB6;
+    --ink:#141A17;
+    --body:#4A544E;
+    --hairline:#DDD5C4;
+    /* seven brick courses */
+    --b1:#943526;
+    --b2:#7E2218;
+    --b3:#651812;
+    --b4:#59140E;
+    --b5:#4E100C;
+    --b6:#3D0B08;
+    --b7:#2E0805;
+    --b-deepest:#1F0503;
+    --recess:rgba(40,8,6,0.55);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--limestone);color:var(--ink);font-family:'Inter',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .mono{font-family:'IBM Plex Mono',monospace}
+  .heading{font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em}
+
+  /* brick texture */
+  .brick-texture{
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 80' width='200' height='80'%3E%3Cg fill='none' stroke='hsla(0,0%25,0%25,0.11)' stroke-width='1.25'%3E%3Crect x='1' y='1' width='96' height='38' rx='1'/%3E%3Crect x='101' y='1' width='96' height='38' rx='1'/%3E%3Crect x='-49' y='41' width='96' height='38' rx='1'/%3E%3Crect x='51' y='41' width='96' height='38' rx='1'/%3E%3Crect x='151' y='41' width='96' height='38' rx='1'/%3E%3C/g%3E%3C/svg%3E");
+    background-repeat:repeat;background-size:200px 80px;
+  }
+
+  /* spec chrome */
+  .spec-label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--body);border-top:1px solid var(--hairline);padding:14px 0 0;margin:72px auto 28px;max-width:1060px;display:flex;justify-content:space-between}
+  .spec-label span:last-child{color:#8A8270}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+
+  /* ============ 01 HERO ============ */
+  .hero{background:var(--pine);color:var(--limestone);position:relative;overflow:hidden}
+  .hero-inner{max-width:1060px;margin:0 auto;padding:0 24px}
+  .nav{display:flex;justify-content:space-between;align-items:center;padding:26px 0;border-bottom:1px solid rgba(232,224,206,.14)}
+  .logo{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;letter-spacing:.12em;color:var(--limestone);text-transform:none}
+  .nav-links{display:flex;gap:28px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em;font-size:14px;color:rgba(232,224,206,.7)}
+  .nav-links span:hover{color:var(--limestone);cursor:pointer}
+  .hero-main{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;padding:88px 0 96px;align-items:center}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(232,224,206,.6);margin-bottom:22px}
+  h1{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:clamp(42px,5.6vw,64px);line-height:1.08;letter-spacing:.04em;margin-bottom:24px;color:var(--limestone)}
+  .hero p{font-size:17px;line-height:1.65;color:rgba(232,224,206,.78);max-width:48ch;margin-bottom:34px}
+  .btn-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .btn{display:inline-block;padding:14px 26px;border-radius:2px;font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;text-decoration:none;font-family:'Barlow Condensed',sans-serif}
+  .btn-brick{background:var(--b1);color:var(--limestone)}
+  .btn-brick:hover{background:var(--b2)}
+  .btn-ghost{border:1px solid rgba(232,224,206,.35);color:var(--limestone)}
+  .btn-ghost:hover{border-color:var(--limestone)}
+  .hero-foot{font-family:'IBM Plex Mono',monospace;font-size:12px;color:rgba(232,224,206,.5);margin-top:30px}
+  .hero-foot b{color:rgba(232,224,206,.85);font-weight:500}
+
+  /* sign blade card in hero — the LaSalle street sign motif */
+  .sign-card{padding:40px 20px;display:flex;justify-content:center}
+  .blade-outer{border:1.5px solid #E8E0CE;border-radius:3px;padding:2px;box-shadow:0 24px 60px rgba(0,0,0,.35);transform:rotate(-1.5deg)}
+  .blade-inner{background:var(--pine);border-radius:2px;padding:22px 38px;position:relative;overflow:hidden;text-align:center}
+  .blade-inner::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom, transparent 38%, rgba(255,255,255,0.07) 46%, rgba(255,255,255,0.10) 50%, rgba(255,255,255,0.07) 54%, transparent 62%)}
+  .blade-inner .lbl{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:34px;letter-spacing:.12em;color:var(--limestone);position:relative;z-index:1}
+  .blade-inner .num{font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:15px;letter-spacing:.14em;color:rgba(232,224,206,.7);position:relative;z-index:1;margin-top:4px}
+
+  /* ============ 02 PALETTE ============ */
+  .swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .swatch{border-radius:4px;padding:16px 14px;height:150px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid var(--hairline)}
+  .swatch .n{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:15px;letter-spacing:.04em}
+  .swatch .h{font-family:'IBM Plex Mono',monospace;font-size:11.5px;opacity:.75}
+  .swatch .u{font-size:11px;opacity:.72;line-height:1.45}
+
+  /* course strip — the 7 brick courses stacked as on the homepage */
+  .courses{margin-top:22px;border-radius:4px;overflow:hidden;border:1px solid var(--hairline)}
+  .course{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;color:var(--limestone);font-size:13px}
+  .course .name{font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:14px}
+  .course .hex{font-family:'IBM Plex Mono',monospace;font-size:12px;opacity:.75}
+
+  /* ============ 03 TYPE ============ */
+  .type-row{display:grid;grid-template-columns:190px 1fr;gap:24px;padding:26px 0;border-bottom:1px solid var(--hairline);align-items:baseline}
+  .type-row:last-child{border-bottom:none}
+  .type-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--body);line-height:1.8}
+  .t-display{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:52px;line-height:1.05;letter-spacing:.04em;color:var(--pine)}
+  .t-h2{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:30px;line-height:1.15;letter-spacing:.04em;color:var(--pine)}
+  .t-body{font-size:16px;color:var(--body);max-width:60ch}
+  .t-mono{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--pine)}
+  .rule-list{font-size:14px;color:var(--body);line-height:1.8;margin-top:6px}
+  .rule-list li{list-style:none;padding-left:18px;position:relative}
+  .rule-list li::before{content:"—";position:absolute;left:0;color:var(--b1)}
+
+  /* ============ 04 SIGN BLADE ============ */
+  .blade-demo{background:var(--pine);padding:56px 40px;border-radius:6px;display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap}
+  .blade-note{color:rgba(232,224,206,.75);font-size:14px;max-width:34ch;line-height:1.7}
+  .blade-note b{color:var(--limestone);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:12px;display:block;margin-bottom:8px}
+
+  /* ============ 05 PRODUCT CARD PATTERN ============ */
+  .product-demo{padding:56px 40px;border-radius:6px}
+  .product-demo .eyebrow{color:rgba(232,224,206,.6)}
+  .product-card{display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap}
+  .product-title{flex:0 0 34%;min-width:220px}
+  .product-title h3{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:40px;line-height:1.1;letter-spacing:.05em;color:var(--limestone)}
+  .product-title .tag{margin-top:8px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;color:rgba(232,224,206,.6)}
+  .product-body{flex:1;min-width:260px;background:var(--recess);padding:28px 30px}
+  .product-body p{color:var(--limestone);font-size:16px;line-height:1.65}
+
+  /* ============ 06 IDENTIFIERS / TOKENS ============ */
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+  .chip{font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:#fff;border:1px solid var(--hairline);border-radius:3px;padding:8px 13px;color:var(--pine)}
+  .token-block{background:#fff;border:1px solid var(--hairline);border-radius:6px;padding:22px 26px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.9;color:var(--ink);overflow-x:auto}
+  .token-block .k{color:var(--b1)}
+  .token-block .v{color:var(--pine)}
+  .token-block .c{color:#8A8270}
+
+  /* ============ 07 MOTION & LAYOUT ============ */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .info-card{background:#fff;border:1px solid var(--hairline);border-radius:6px;padding:22px 24px}
+  .info-card h4{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:var(--pine);margin-bottom:10px}
+  .info-card p{font-size:14px;color:var(--body);line-height:1.7}
+
+  footer{margin:80px 0 60px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#8A8270;letter-spacing:.06em}
+
+  @media(max-width:860px){
+    .hero-main{grid-template-columns:1fr;padding:56px 0 64px}
+    .nav-links{display:none}
+    .type-row{grid-template-columns:1fr;gap:8px}
+    .product-demo,.blade-demo{padding:34px 24px}
+    .grid2{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- 01 · HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="nav">
+      <div class="logo">LASALLE TECHNOLOGIES</div>
+      <div class="nav-links">
+        <span>About</span><span>Neighborhood Health Score</span><span>Advanced Aviation Map</span><span>Shoot Score</span><span>Contact</span>
+      </div>
+    </div>
+    <div class="hero-main">
+      <div>
+        <div class="eyebrow">Brand specimen · v1</div>
+        <h1>Pine, limestone, and seven courses of aged brick.</h1>
+        <p>LaSalle Technologies builds intelligent tools for industries at inflection points. The identity is drawn from a single reference: a Chicago street-sign blade against a Pittsburgh brick wall — architectural, weathered, deliberate.</p>
+        <div class="btn-row">
+          <a class="btn btn-brick">View products</a>
+          <a class="btn btn-ghost">Contact</a>
+        </div>
+        <div class="hero-foot">Live products: <b>Advanced Aviation Map · Shoot Score · Neighborhood Health Score · Outabout · Volatile Markets · SlowMA · LLab</b></div>
+      </div>
+      <div class="sign-card">
+        <div class="blade-outer">
+          <div class="blade-inner">
+            <div class="lbl">LASALLE</div>
+            <div class="num">100 N · 1-HUNDRED</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="spec-label"><span>01 · Homepage hero — pine field, limestone type, sign blade as the mark</span><span>lasalle / specimen</span></div>
+
+<!-- 02 · PALETTE -->
+<div class="spec-label"><span>02 · Palette</span><span>3 core neutrals + 7 brick courses</span></div>
+<div class="wrap">
+  <div class="swatches">
+    <div class="swatch" style="background:#1B4332;color:#E8E0CE;border:none"><div><div class="n">Pine</div><div class="h">#1B4332</div></div><div class="u">Primary. Navbar, footer, hero, blade fill, verified state.</div></div>
+    <div class="swatch" style="background:#2A5A46;color:#E8E0CE;border:none"><div><div class="n">Pine Light</div><div class="h">#2A5A46</div></div><div class="u">Hover state on pine surfaces, subtle depth.</div></div>
+    <div class="swatch" style="background:#E8E0CE"><div><div class="n">Limestone</div><div class="h">#E8E0CE</div></div><div class="u">Type on pine, page background on interior pages.</div></div>
+    <div class="swatch" style="background:#D6CDB6"><div><div class="n">Limestone Dark</div><div class="h">#D6CDB6</div></div><div class="u">Hairlines, muted surfaces, disabled input.</div></div>
+    <div class="swatch" style="background:#141A17;color:#E8E0CE;border:none"><div><div class="n">Ink</div><div class="h">#141A17</div></div><div class="u">Body copy on limestone.</div></div>
+    <div class="swatch" style="background:#4A544E;color:#E8E0CE;border:none"><div><div class="n">Moss</div><div class="h">#4A544E</div></div><div class="u">Secondary text, captions, meta.</div></div>
+  </div>
+
+  <div class="courses">
+    <div class="course brick-texture" style="background:#943526"><span class="name">Course 1 · Advanced Aviation Map</span><span class="hex">#943526</span></div>
+    <div class="course brick-texture" style="background:#7E2218"><span class="name">Course 2 · Shoot Score</span><span class="hex">#7E2218</span></div>
+    <div class="course brick-texture" style="background:#651812"><span class="name">Course 3 · SlowMA</span><span class="hex">#651812</span></div>
+    <div class="course brick-texture" style="background:#59140E"><span class="name">Course 4 · Outabout</span><span class="hex">#59140E</span></div>
+    <div class="course brick-texture" style="background:#4E100C"><span class="name">Course 5 · Neighborhood Health Score</span><span class="hex">#4E100C</span></div>
+    <div class="course brick-texture" style="background:#3D0B08"><span class="name">Course 6 · LLab</span><span class="hex">#3D0B08</span></div>
+    <div class="course brick-texture" style="background:#2E0805"><span class="name">Course 7 · Volatile Markets Monitor</span><span class="hex">#2E0805</span></div>
+    <div class="course brick-texture" style="background:#1F0503"><span class="name">Foundation · Contact</span><span class="hex">#1F0503</span></div>
+  </div>
+  <p style="font-size:13px;color:var(--body);margin-top:14px;line-height:1.7;max-width:70ch">The homepage descends through eight brick courses — each product block a shade deeper than the last — resolving into pine at navbar and footer. Reference material is aged Pittsburgh PA brick, not Chicago.</p>
+</div>
+
+<!-- 03 · TYPE -->
+<div class="spec-label"><span>03 · Typography</span><span>Barlow Condensed · Inter · IBM Plex Mono</span></div>
+<div class="wrap">
+  <div class="type-row">
+    <div class="type-meta">DISPLAY<br>Barlow Condensed 700<br>42–64px / 1.05<br>letter-spacing .04em<br>ALL CAPS on marks</div>
+    <div class="t-display">TOOLS FOR INDUSTRIES<br>AT INFLECTION POINTS.</div>
+  </div>
+  <div class="type-row">
+    <div class="type-meta">HEADING<br>Barlow Condensed 600<br>24–40px / 1.15<br>letter-spacing .04–.05em</div>
+    <div class="t-h2">Products</div>
+  </div>
+  <div class="type-row">
+    <div class="type-meta">BODY<br>Inter 400<br>16–17px / 1.65</div>
+    <div class="t-body">LaSalle Technologies builds intelligent tools for industries at inflection points — entering early, growing sustainably, and turning experience into competitive advantage for the people who shape each field.</div>
+  </div>
+  <div class="type-row">
+    <div class="type-meta">UTILITY<br>IBM Plex Mono 400<br>11–14px<br>data, ids, hex</div>
+    <div class="t-mono">--pine: 152 32% 18% · #1B4332 · rgba(40,8,6,0.55)</div>
+  </div>
+  <div class="type-row">
+    <div class="type-meta">RULES</div>
+    <ul class="rule-list">
+      <li>Never serif. Anywhere.</li>
+      <li>Headings are always Barlow Condensed, always with tracking.</li>
+      <li>Body is Inter — DM Sans is an acceptable substitute.</li>
+      <li>Product marks and the wordmark run all-caps with .12em tracking.</li>
+      <li>Mono is reserved for identifiers, tokens, and hex values.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 04 · SIGN BLADE -->
+<div class="spec-label"><span>04 · The mark — LaSalle street sign blade</span><span>the identity's anchor</span></div>
+<div class="wrap">
+  <div class="blade-demo">
+    <div class="blade-outer">
+      <div class="blade-inner">
+        <div class="lbl">LASALLE</div>
+        <div class="num">100 N · 1-HUNDRED</div>
+      </div>
+    </div>
+    <div class="blade-note">
+      <b>Construction</b>
+      Pine fill, 1.5px limestone border, 2px inner padding, 2px corner radius. A subtle diagonal highlight band at 46–54% simulates the metal ridge of the sign. Rotate ±1–2° in decorative contexts; keep upright in navigation.
+    </div>
+  </div>
+</div>
+
+<!-- 05 · PRODUCT CARD PATTERN -->
+<div class="spec-label"><span>05 · Product card — the recessed pattern</span><span>homepage product blocks</span></div>
+<div class="wrap">
+  <div class="product-demo brick-texture" style="background:#7E2218">
+    <div class="eyebrow">Course 2</div>
+    <div class="product-card">
+      <div class="product-title">
+        <h3>Shoot Score</h3>
+        <div class="tag">ENTERTAINMENT · CLIMATE-ADJUSTED COSTS</div>
+      </div>
+      <div class="product-body">
+        <p>For production teams considering where to shoot. Calculates the net dollar value of filming adjusted for expected climate risk.</p>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:13px;color:var(--body);margin-top:14px;line-height:1.7;max-width:70ch">The title sits directly on the brick; the description sits inside a recessed panel at <code style="font-family:'IBM Plex Mono',monospace;font-size:12px">rgba(40, 8, 6, 0.55)</code>. No borders, no boxes around the header — the recess does the containment.</p>
+</div>
+
+<!-- 06 · TOKENS -->
+<div class="spec-label"><span>06 · Design tokens</span><span>HSL in index.css, mirrored in tailwind.config.ts</span></div>
+<div class="wrap">
+  <div class="chips">
+    <span class="chip">--pine: 152 32% 18%</span>
+    <span class="chip">--pine-light: 152 28% 24%</span>
+    <span class="chip">--pine-foreground: 40 20% 92%</span>
+    <span class="chip">--brick: 5 68% 32%</span>
+    <span class="chip">--brick-dark: 4 72% 28%</span>
+    <span class="chip">--limestone: 40 18% 88%</span>
+    <span class="chip">--limestone-dark: 38 14% 78%</span>
+    <span class="chip">--radius: 0.25rem</span>
+  </div>
+  <div class="token-block">
+<span class="c">/* index.css — the source of truth */</span><br>
+<span class="k">--pine</span>: <span class="v">152 32% 18%</span>;<br>
+<span class="k">--pine-light</span>: <span class="v">152 28% 24%</span>;<br>
+<span class="k">--pine-foreground</span>: <span class="v">40 20% 92%</span>;<br>
+<span class="k">--brick</span>: <span class="v">5 68% 32%</span>; &nbsp;<span class="c">/* #8B2218 aged brick */</span><br>
+<span class="k">--brick-dark</span>: <span class="v">4 72% 28%</span>;<br>
+<span class="k">--limestone</span>: <span class="v">40 18% 88%</span>;<br>
+<span class="k">--limestone-dark</span>: <span class="v">38 14% 78%</span>;<br>
+<span class="k">--muted-foreground</span>: <span class="v">152 20% 30%</span>;<br>
+<span class="k">--radius</span>: <span class="v">0.25rem</span>;
+  </div>
+  <p style="font-size:13px;color:var(--body);margin-top:14px;line-height:1.7;max-width:70ch">Never write raw color utilities (<code style="font-family:'IBM Plex Mono',monospace;font-size:12px">text-white</code>, <code style="font-family:'IBM Plex Mono',monospace;font-size:12px">bg-black</code>, hex-in-class) in components. Everything routes through semantic tokens.</p>
+</div>
+
+<!-- 07 · LAYOUT & MOTION -->
+<div class="spec-label"><span>07 · Layout & motion</span><span>the rhythm of the site</span></div>
+<div class="wrap">
+  <div class="grid2">
+    <div class="info-card">
+      <h4>Layout</h4>
+      <p>Sticky navbar (pine, z-50) and sticky footer. Full-bleed hero at 50vh max, capped at 600px. Interior sections at max-width 1060–1152px, 24px horizontal padding. Product blocks are full-bleed with brick texture; content is anchored left in a 1/3 · 2/3 split.</p>
+    </div>
+    <div class="info-card">
+      <h4>Hero rule</h4>
+      <p>No text is overlaid on the hero image. Copy moves into the pine "About" section directly below it. The sign blade speaks; the section that follows explains.</p>
+    </div>
+    <div class="info-card">
+      <h4>Motion</h4>
+      <p>Deliberate 400–600ms fade-up on scroll for every primary element (headings, product cards, contact form). Motion is architectural, not decorative — one clean reveal per element, never a cascade of micro-interactions.</p>
+    </div>
+    <div class="info-card">
+      <h4>Brick texture</h4>
+      <p>SVG at 200×80px, 5 courses of thin hairline rectangles at 11% black opacity, tiled. Applied via the <code style="font-family:'IBM Plex Mono',monospace;font-size:12px">.brick-texture</code> utility on every red section. Reference material: aged Pittsburgh PA brick.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 08 · VOICE -->
+<div class="spec-label"><span>08 · Voice</span><span>how the copy sounds</span></div>
+<div class="wrap">
+  <div class="grid2">
+    <div class="info-card">
+      <h4>Mission line</h4>
+      <p style="font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:20px;line-height:1.25;letter-spacing:.03em;color:var(--pine)">Intelligent tools for industries at inflection points — entering early, growing sustainably, and turning experience into competitive advantage for the people who shape each field.</p>
+    </div>
+    <div class="info-card">
+      <h4>Product taglines</h4>
+      <p><b style="color:var(--pine)">Advanced Aviation Map</b> — eVTOL · Aviation<br>
+      <b style="color:var(--pine)">Shoot Score</b> — Entertainment · Climate-adjusted costs<br>
+      <b style="color:var(--pine)">Neighborhood Health Score</b> — Real Estate · Environmental Data<br>
+      <b style="color:var(--pine)">Volatile Markets Monitor</b> — Live Data · Catastrophe & Resilience Triggers</p>
+    </div>
+  </div>
+</div>
+
+<footer>LASALLE TECHNOLOGIES · BRAND SPECIMEN v1 · 2026-07-16</footer>
+</body>
+</html>
