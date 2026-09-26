@@ -79,6 +79,7 @@ Constraints (exact wording; count in mono beside each; largest first):
 - Undermined
 - No water service
 - Stairs-only access
+- Greenway
 - Not feasible — land cost
 - Not feasible — site conditions
 - Not feasible — sale prices

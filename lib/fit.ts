@@ -25,7 +25,7 @@ function firstSiteConstraint(
   if (site.skipFlood && lot.flood === true) return CONSTRAINT.flood;
   if (site.skipLandslide && lot.landslide) return CONSTRAINT.landslide;
   if (site.skipUndermined && lot.undermined) return CONSTRAINT.undermined;
-  if (site.skipGreenway && lot.greenway) return "greenway";
+  if (site.skipGreenway && lot.greenway) return CONSTRAINT.greenway;
   if (site.skipNoWater && lot.water === false) return CONSTRAINT.noWater;
   if (site.skipStepsOnly && lot.stepsOnly) return CONSTRAINT.stepsOnly;
   return null;

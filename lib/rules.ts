@@ -22,6 +22,7 @@ export const CONSTRAINT = {
   undermined: "Undermined",
   noWater: "No water service",
   stepsOnly: "Stairs-only access",
+  greenway: "Greenway",
   notFeasibleLand: "Not feasible — land cost",
   notFeasibleSite: "Not feasible — site conditions",
   notFeasiblePrice: "Not feasible — sale prices",
