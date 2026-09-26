@@ -1,9 +1,10 @@
 import * as turf from "@turf/turf";
-import type { Feature, LineString, Polygon, Position } from "geojson";
+import type { Feature, Geometry, LineString, MultiPolygon, Polygon, Position } from "geojson";
 
 const FT_PER_M = 3.280839895;
 
 export type PolyIndex = Map<string, Feature<Polygon>[]>;
+export type StreetIndex = Map<string, Feature<LineString>[]>;
 
 export function buildPolyIndex(
   polys: Feature<Polygon>[],
@@ -87,7 +88,7 @@ function nearbyStreets(
   return [...seen];
 }
 
-function ringsOf(geom: Polygon | turf.helpers.Polygon | GeoJSON.Geometry): Position[][] {
+function ringsOf(geom: Geometry): Position[][] {
   if (geom.type === "Polygon") return geom.coordinates as Position[][];
   if (geom.type === "MultiPolygon") {
     return (geom.coordinates as Position[][][]).flat();
@@ -111,7 +112,7 @@ function edgeNearStreet(
 }
 
 export function frontage(opts: {
-  geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon;
+  geometry: Polygon | MultiPolygon;
   streetIndex: StreetIndex;
   lotSf: number;
 }): { widthFt: number; depthFt: number; hasStreetFrontage: boolean } {
@@ -130,7 +131,7 @@ export function frontage(opts: {
     }
   }
   let widthFt = longestFt;
-  let hasStreetFrontage = longestFt > 0;
+  const hasStreetFrontage = longestFt > 0;
   if (!hasStreetFrontage) {
     const wFt = turf.distance(
       turf.point([bbox[0], bbox[1]]),
@@ -148,17 +149,17 @@ export function frontage(opts: {
   return { widthFt: round2(widthFt), depthFt: round2(depthFt), hasStreetFrontage };
 }
 
-export function centroidLonLat(geometry: GeoJSON.Geometry): { lon: number; lat: number } {
-  const c = turf.centroid(turf.feature(geometry as GeoJSON.Polygon));
+export function centroidLonLat(geometry: Geometry): { lon: number; lat: number } {
+  const c = turf.centroid(turf.feature(geometry as Polygon));
   return { lon: round6(c.geometry.coordinates[0]), lat: round6(c.geometry.coordinates[1]) };
 }
 
-export function polygonAreaSf(geometry: GeoJSON.Geometry): number {
-  return turf.area(turf.feature(geometry as GeoJSON.Polygon)) * 10.76391041671;
+export function polygonAreaSf(geometry: Geometry): number {
+  return turf.area(turf.feature(geometry as Polygon)) * 10.76391041671;
 }
 
 export function intersectionShare(
-  lot: GeoJSON.Polygon | GeoJSON.MultiPolygon,
+  lot: Polygon | MultiPolygon,
   overlays: Feature<Polygon>[],
   index?: PolyIndex,
 ): number {
@@ -182,8 +183,8 @@ export function intersectionShare(
 }
 
 export function hitsOverlay(
-  lot: GeoJSON.Polygon | GeoJSON.MultiPolygon,
-  overlays: Feature<Polygon | LineString>[],
+  lot: Polygon | MultiPolygon,
+  overlays: Feature[],
   point?: { lon: number; lat: number },
   index?: PolyIndex,
 ): boolean {

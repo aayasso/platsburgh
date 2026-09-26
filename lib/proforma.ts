@@ -38,11 +38,12 @@ export function presentValue(rate: number, periods: number, payment: number): nu
 
 export function estimatedSiteAdders(lot: Lot, construction: Construction): number {
   const footprint = construction.widthFt * construction.depthFt;
-  const slopeMult =
-    lot.slopeShare > 0.3 ? 0.5 : lot.slopeShare > 0.1 ? 0.25 : 0;
+  const slope =
+    typeof lot.slopeShare === "number" ? lot.slopeShare : 0;
+  const slopeMult = slope > 0.3 ? 0.5 : slope > 0.1 ? 0.25 : 0;
   return (
     slopeMult * 50.7 * footprint +
-    (lot.landslide || lot.undermined ? 8000 : 0) +
+    (lot.landslide === true || lot.undermined === true ? 8000 : 0) +
     (lot.widthFt < 25 ? 20200 : 0) +
     (lot.water === false ? 10000 : 0)
   );
