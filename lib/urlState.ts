@@ -205,3 +205,28 @@ export function decodeView(query: string): WorkspaceState {
 export function encodeViewFromSearch(state: WorkspaceState): string {
   return encodeView(state);
 }
+
+export function decodeParcelOverrides(
+  query: string,
+  assessedLand: number,
+  defaultSite: number,
+): { land: number; sitecost: number } {
+  const search = new URLSearchParams(query.startsWith("?") ? query.slice(1) : query);
+  return {
+    land: num(search, "land", assessedLand),
+    sitecost: num(search, "sitecost", defaultSite),
+  };
+}
+
+export function encodeParcelQuery(
+  state: WorkspaceState,
+  land: number,
+  sitecost: number,
+  assessedLand: number,
+  defaultSite: number,
+): string {
+  const search = new URLSearchParams(encodeView(state));
+  if (land !== assessedLand) search.set("land", String(Math.round(land)));
+  if (sitecost !== defaultSite) search.set("sitecost", String(Math.round(sitecost)));
+  return search.toString();
+}

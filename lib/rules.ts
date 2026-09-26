@@ -239,6 +239,64 @@ export const DEFAULT_HOUSEHOLD: HouseholdTerms = {
   insurancePerMonth: 125,
 };
 
+export const householdSliders: SliderDef[] = [
+  {
+    key: "mortgageRate",
+    label: "Mortgage rate",
+    explanation: "Freddie Mac PMMS, week of Sept 24, 2026.",
+    min: 4,
+    max: 9,
+    step: 0.05,
+    default: 7.03,
+    source: "Freddie Mac PMMS 2026-09-24",
+    panel: "economics",
+  },
+  {
+    key: "downPaymentPct",
+    label: "Down payment",
+    explanation: "Share of price paid in cash at purchase.",
+    min: 3.5,
+    max: 25,
+    step: 0.5,
+    default: 3.5,
+    source: "assumed",
+    panel: "economics",
+  },
+  {
+    key: "incomeToHousing",
+    label: "Income to housing",
+    explanation: "Share of household income spent on housing.",
+    min: 25,
+    max: 40,
+    step: 1,
+    default: 30,
+    source: "assumed",
+    panel: "economics",
+  },
+  {
+    key: "propertyTaxRate",
+    label: "Property tax rate",
+    explanation: "Effective rate on unit price.",
+    min: 0.5,
+    max: 3,
+    step: 0.05,
+    default: 1.5,
+    source: "assumed",
+    panel: "economics",
+  },
+  {
+    key: "insurancePerMonth",
+    label: "Insurance",
+    explanation: "Monthly homeowners insurance.",
+    min: 50,
+    max: 300,
+    step: 5,
+    default: 125,
+    source: "assumed",
+    panel: "economics",
+  },
+];
+
 export function dwellingUnits(construction: Construction): number {
   return construction.units + (construction.adu ? 1 : 0);
 }

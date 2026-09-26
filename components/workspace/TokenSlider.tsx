@@ -8,7 +8,9 @@ export function TokenSlider(props: {
   step: number;
   value: number;
   onValueChange: (n: number) => void;
+  tone?: "pine" | "light";
 }) {
+  const light = props.tone === "light";
   return (
     <Slider
       min={props.min}
@@ -19,7 +21,11 @@ export function TokenSlider(props: {
         const n = Array.isArray(v) ? v[0] : v;
         if (typeof n === "number") props.onValueChange(n);
       }}
-      className="w-full [&_[data-slot=slider-track]]:bg-limestone/20 [&_[data-slot=slider-range]]:bg-centerline [&_[data-slot=slider-thumb]]:border-centerline [&_[data-slot=slider-thumb]]:bg-centerline [&_[data-slot=slider-thumb]]:ring-centerline/40"
+      className={
+        light
+          ? "w-full [&_[data-slot=slider-track]]:bg-limestone-dark [&_[data-slot=slider-range]]:bg-centerline [&_[data-slot=slider-thumb]]:border-centerline [&_[data-slot=slider-thumb]]:bg-limestone [&_[data-slot=slider-thumb]]:ring-centerline/40"
+          : "w-full [&_[data-slot=slider-track]]:bg-limestone/20 [&_[data-slot=slider-range]]:bg-centerline [&_[data-slot=slider-thumb]]:border-centerline [&_[data-slot=slider-thumb]]:bg-centerline [&_[data-slot=slider-thumb]]:ring-centerline/40"
+      }
     />
   );
 }

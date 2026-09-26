@@ -27,6 +27,7 @@ export type ProformaResult = {
   buyerMax: number;
   affordable: boolean;
   subsidyForAffordable: number;
+  monthlyPayment: number;
   constraint: string | null;
 };
 
@@ -34,6 +35,21 @@ export function presentValue(rate: number, periods: number, payment: number): nu
   if (payment <= 0) return 0;
   if (rate === 0) return payment * periods;
   return (payment * (1 - Math.pow(1 + rate, -periods))) / rate;
+}
+
+export function monthlyHousingPayment(
+  unitPrice: number,
+  terms: HouseholdTerms,
+): number {
+  const loan = unitPrice * (1 - terms.downPaymentPct);
+  const r = terms.mortgageRate / 12;
+  const pi =
+    r === 0 || loan <= 0
+      ? loan / 360
+      : (loan * r) / (1 - Math.pow(1 + r, -360));
+  const tax = (terms.propertyTaxRate * unitPrice) / 12;
+  const pmi = terms.downPaymentPct < 0.2 ? (0.005 * loan) / 12 : 0;
+  return pi + tax + terms.insurancePerMonth + pmi;
 }
 
 export function estimatedSiteAdders(lot: Lot, construction: Construction): number {
@@ -140,6 +156,17 @@ export function proforma(
     buyerMax,
     affordable,
     subsidyForAffordable,
+    monthlyPayment: monthlyHousingPayment(unitPrice, terms),
     constraint,
   };
+}
+
+export function namedSiteConditions(lot: Lot): string {
+  const names: string[] = [];
+  const slope = typeof lot.slopeShare === "number" ? lot.slopeShare : 0;
+  if (lot.widthFt < 25) names.push("narrow lot (under 25 ft), staging + street");
+  if (slope > 0.1) names.push("slope");
+  if (lot.landslide === true || lot.undermined === true) names.push("geotech");
+  if (lot.water === false) names.push("no water service");
+  return names.length ? names.join(", ") : "none";
 }
