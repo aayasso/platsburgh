@@ -1,0 +1,15 @@
+:root {
+  --pine: 152 32% 18%;
+  --pine-light: 152 28% 24%;
+  --pine-foreground: 40 20% 92%;
+  --limestone: 40 18% 88%;
+  --limestone-dark: 38 14% 78%;
+  --ink: 152 12% 9%;
+  --moss: 150 6% 31%;
+  --brick: 5 68% 32%;
+  --brick-light: 10 54% 50%;
+  --brick-dark: 4 72% 28%;
+  --centerline: 43 78% 58%;
+  --map-bg: 0 0% 20%;
+  --radius: 0.25rem;
+}

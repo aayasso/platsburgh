@@ -1,16 +1,24 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Barlow_Condensed, IBM_Plex_Mono, Inter } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const display = Barlow_Condensed({
   subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-display",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const sans = Inter({
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-sans",
+});
+
+const mono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
@@ -25,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${display.variable} ${sans.variable} ${mono.variable} antialiased`}
       >
         <TooltipProvider>{children}</TooltipProvider>
       </body>
