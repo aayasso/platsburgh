@@ -12,3 +12,8 @@ Generated from `lib/rules.ts`. Do not edit by hand.
 | unitsPerLot | Units per parcel | Maximum dwelling units on one parcel. | 1 | 60 | 1 | 1 | §911.02 |
 | parkingPerUnit | Parking per unit | Off-street parking spaces required per dwelling unit. | 0 | 2 | 1 | 1 | Ch. 914 |
 | aduAllowed | ADUs permitted | Whether an accessory dwelling unit is permitted on the parcel. | 0 | 1 | 1 | false | Ch. 912 |
+| buildCostPerSf | Construction cost per sq ft | Hard cost per finished square foot, excluding land. Land and site conditions are added from parcel records. | 80 | 400 | 5 | 260 |  |
+| salePricePerSf | Sale price per sq ft | Market value per finished square foot. | 60 | 500 | 5 | 200 |  |
+| buyerIncome | Household income | The household the units should be affordable to. | 30000 | 250000 | 1000 | 79500 |  |
+| subsidyPerUnit | Subsidy per unit | Public capital contributed per unit. | 0 | 150000 | 5000 | 0 |  |
+| buildingPace | Building pace | New residential units the city builds per year. | 50 | 3000 | 25 | 500 |  |

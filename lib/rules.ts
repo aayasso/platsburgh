@@ -1,5 +1,7 @@
 import type {
   Construction,
+  Economics,
+  HouseholdTerms,
   Regulations,
   SiteConditions,
   SiteFilters,
@@ -154,6 +156,86 @@ export const DEFAULT_SITE_FILTERS: SiteFilters = {
   districts: [],
   nearTransitOnly: false,
   delinquentOrForeclosedOnly: false,
+};
+
+export const economicsSliders: SliderDef[] = [
+  {
+    key: "buildCostPerSf",
+    label: "Construction cost per sq ft",
+    explanation:
+      "Hard cost per finished square foot, excluding land. Land and site conditions are added from parcel records.",
+    min: 80,
+    max: 400,
+    step: 5,
+    default: 260,
+    source: "237 N Aiken actual, 2023–24",
+    panel: "economics",
+    role: "DEVELOPER",
+  },
+  {
+    key: "salePricePerSf",
+    label: "Sale price per sq ft",
+    explanation: "Market value per finished square foot.",
+    min: 60,
+    max: 500,
+    step: 5,
+    default: 200,
+    source: "WPRDC sales, prior 24 months, retrieved {date}",
+    panel: "economics",
+    role: "MARKET",
+  },
+  {
+    key: "buyerIncome",
+    label: "Household income",
+    explanation: "The household the units should be affordable to.",
+    min: 30_000,
+    max: 250_000,
+    step: 1_000,
+    default: 79_500,
+    source: "HUD FY2026, 80% of area median, 3-person household",
+    panel: "economics",
+    role: "HOUSEHOLD",
+  },
+  {
+    key: "subsidyPerUnit",
+    label: "Subsidy per unit",
+    explanation: "Public capital contributed per unit.",
+    min: 0,
+    max: 150_000,
+    step: 5_000,
+    default: 0,
+    source: "user-defined",
+    panel: "economics",
+    role: "PUBLIC",
+  },
+  {
+    key: "buildingPace",
+    label: "Building pace",
+    explanation: "New residential units the city builds per year.",
+    min: 50,
+    max: 3_000,
+    step: 25,
+    default: 500,
+    source: "assumed until permits are loaded",
+    panel: "economics",
+    role: "MARKET",
+  },
+];
+
+export const DEFAULT_ECONOMICS: Economics = {
+  buildCostPerSf: 260,
+  salePricePerSf: 200,
+  buyerIncome: 79_500,
+  subsidyPerUnit: 0,
+  buildingPace: 500,
+};
+
+export const DEFAULT_HOUSEHOLD: HouseholdTerms = {
+  mortgageRate: 0.0703,
+  downPaymentPct: 0.035,
+  incomeToHousing: 0.3,
+  propertyTaxRate: 0.015,
+  insurancePerMonth: 125,
 };
 
 export function dwellingUnits(construction: Construction): number {

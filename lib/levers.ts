@@ -1,4 +1,6 @@
 import { fitAll } from "./fit";
+import { proforma } from "./proforma";
+import { DEFAULT_HOUSEHOLD, dwellingUnits } from "./rules";
 import type {
   Construction,
   Economics,
@@ -36,6 +38,36 @@ export type LadderFn = (params: LeverParams, lots: Lot[]) => {
   feasibleUnits: number;
   affordableUnits: number;
 };
+
+export function fullLadder(params: LeverParams, lots: Lot[]) {
+  const all = fitAll(
+    lots,
+    params.regulations,
+    params.construction,
+    params.siteConditions,
+    params.siteFilters,
+    params.viewBounds,
+  );
+  const units = dwellingUnits(params.construction);
+  let feasibleUnits = 0;
+  let affordableUnits = 0;
+  for (const row of all.results) {
+    if (!row.inView || !row.fit.conforming) continue;
+    const pf = proforma(
+      row.lot,
+      params.construction,
+      params.economics,
+      DEFAULT_HOUSEHOLD,
+    );
+    if (pf.feasible) feasibleUnits += units;
+    if (pf.affordable) affordableUnits += units;
+  }
+  return {
+    conformingUnits: all.conformingUnits,
+    feasibleUnits,
+    affordableUnits,
+  };
+}
 
 export function conformingLadder(params: LeverParams, lots: Lot[]) {
   const all = fitAll(
@@ -334,7 +366,7 @@ const SPECS: Spec[] = [
 export function levers(
   lots: Lot[],
   params: LeverParams,
-  ladderFn: LadderFn = conformingLadder,
+  ladderFn: LadderFn = fullLadder,
 ): LeverRow[] {
   const baseline = ladderFn(params, lots);
   const rows: LeverRow[] = SPECS.map((spec) => {
