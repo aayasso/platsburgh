@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "gen-rules": "tsx scripts/gen-rules-doc.ts"
+    "gen-rules": "tsx scripts/gen-rules-doc.ts",
+    "build-lots": "tsx scripts/build-lots.ts",
+    "bench-fitall": "tsx scripts/bench-fitall.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

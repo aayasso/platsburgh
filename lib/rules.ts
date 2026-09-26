@@ -180,8 +180,8 @@ export const economicsSliders: SliderDef[] = [
     min: 60,
     max: 500,
     step: 5,
-    default: 200,
-    source: "WPRDC sales, prior 24 months, retrieved {date}",
+    default: 160,
+    source: "WPRDC sales, prior 24 months, retrieved 2026-09-26",
     panel: "economics",
     role: "MARKET",
   },
@@ -216,8 +216,8 @@ export const economicsSliders: SliderDef[] = [
     min: 50,
     max: 3_000,
     step: 25,
-    default: 500,
-    source: "assumed until permits are loaded",
+    default: 275,
+    source: "City of Pittsburgh PLI permits, last three full years (2023–2025)",
     panel: "economics",
     role: "MARKET",
   },
@@ -225,10 +225,10 @@ export const economicsSliders: SliderDef[] = [
 
 export const DEFAULT_ECONOMICS: Economics = {
   buildCostPerSf: 260,
-  salePricePerSf: 200,
+  salePricePerSf: 160,
   buyerIncome: 79_500,
   subsidyPerUnit: 0,
-  buildingPace: 500,
+  buildingPace: 275,
 };
 
 export const DEFAULT_HOUSEHOLD: HouseholdTerms = {

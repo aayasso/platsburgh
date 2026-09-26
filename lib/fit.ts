@@ -14,6 +14,12 @@ function siteUnknowns(lot: Lot): string[] {
   const unknowns: string[] = [];
   if (lot.flood === "unknown") unknowns.push("flood");
   if (lot.water === "unknown") unknowns.push("water");
+  if (lot.landslide === "unknown") unknowns.push("landslide");
+  if (lot.undermined === "unknown") unknowns.push("undermined");
+  if (lot.greenway === "unknown") unknowns.push("greenway");
+  if (lot.taxDelinquent === "unknown") unknowns.push("taxDelinquent");
+  if (lot.foreclosure === "unknown") unknowns.push("foreclosure");
+  if (lot.transitDistM === "unknown") unknowns.push("transit");
   return unknowns;
 }
 
@@ -21,13 +27,15 @@ function firstSiteConstraint(
   lot: Lot,
   site: SiteConditions,
 ): string | null {
-  if (site.skipSteep && lot.slopeShare > 0.3) return CONSTRAINT.steep;
+  if (site.skipSteep && typeof lot.slopeShare === "number" && lot.slopeShare > 0.3) {
+    return CONSTRAINT.steep;
+  }
   if (site.skipFlood && lot.flood === true) return CONSTRAINT.flood;
-  if (site.skipLandslide && lot.landslide) return CONSTRAINT.landslide;
-  if (site.skipUndermined && lot.undermined) return CONSTRAINT.undermined;
-  if (site.skipGreenway && lot.greenway) return CONSTRAINT.greenway;
+  if (site.skipLandslide && lot.landslide === true) return CONSTRAINT.landslide;
+  if (site.skipUndermined && lot.undermined === true) return CONSTRAINT.undermined;
+  if (site.skipGreenway && lot.greenway === true) return CONSTRAINT.greenway;
   if (site.skipNoWater && lot.water === false) return CONSTRAINT.noWater;
-  if (site.skipStepsOnly && lot.stepsOnly) return CONSTRAINT.stepsOnly;
+  if (site.skipStepsOnly && lot.stepsOnly === true) return CONSTRAINT.stepsOnly;
   return null;
 }
 
@@ -141,12 +149,11 @@ export function passesSiteFilters(lot: Lot, filters: SiteFilters): boolean {
   if (filters.districts.length > 0 && !filters.districts.includes(lot.district)) {
     return false;
   }
-  if (filters.nearTransitOnly && lot.transitDistM > 400) return false;
-  if (
-    filters.delinquentOrForeclosedOnly &&
-    !(lot.taxDelinquent || lot.foreclosure)
-  ) {
-    return false;
+  if (filters.nearTransitOnly) {
+    if (lot.transitDistM === "unknown" || lot.transitDistM > 400) return false;
+  }
+  if (filters.delinquentOrForeclosedOnly) {
+    if (lot.taxDelinquent !== true && lot.foreclosure !== true) return false;
   }
   return true;
 }

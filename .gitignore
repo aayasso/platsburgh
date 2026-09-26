@@ -34,6 +34,12 @@ yarn-error.log*
 .env.local
 .env*.local
 
+# overlay/geometry working cache
+data/cache/
+
+# overlay/geometry working cache
+data/cache/
+
 # vercel
 .vercel
 

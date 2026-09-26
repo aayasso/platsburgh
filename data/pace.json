@@ -1,0 +1,11 @@
+{
+  "source": "pli-permits",
+  "years": {
+    "2023": 380,
+    "2024": 256,
+    "2025": 183
+  },
+  "average": 273,
+  "buildingPaceDefault": 273,
+  "note": "Counted permits whose type/occupancy looked like new residential; unit field used when present."
+}

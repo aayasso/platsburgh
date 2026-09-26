@@ -10,20 +10,20 @@ export type Lot = {
   depthFt: number;
   hasStreetFrontage: boolean;
   stepsOnly: boolean;
-  slopeShare: number;
-  landslide: boolean;
-  undermined: boolean;
+  slopeShare: number | "unknown";
+  landslide: boolean | "unknown";
+  undermined: boolean | "unknown";
   flood: boolean | "unknown";
-  greenway: boolean;
+  greenway: boolean | "unknown";
   water: boolean | "unknown";
   empty: boolean;
   owner: OwnerType;
   assessedLand: number;
   lon: number;
   lat: number;
-  transitDistM: number;
-  taxDelinquent: boolean;
-  foreclosure: boolean;
+  transitDistM: number | "unknown";
+  taxDelinquent: boolean | "unknown";
+  foreclosure: boolean | "unknown";
 };
 
 export type Regulations = {
