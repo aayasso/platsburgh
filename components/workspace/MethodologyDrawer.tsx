@@ -3,8 +3,9 @@
 import { useRef } from "react";
 import type { Evaluation } from "@/lib/evaluate";
 import { fmtInt, fmtMoney } from "@/lib/format";
+import { dumpParameters, loadParameters } from "@/lib/params";
 import { affordablePrice } from "@/lib/proforma";
-import { economicsSliders, regulationSliders } from "@/lib/rules";
+import { economicsSliders, householdSliders, regulationSliders } from "@/lib/rules";
 import type { WorkspaceState } from "@/lib/urlState";
 
 export function MethodologyDrawer(props: {
@@ -17,9 +18,10 @@ export function MethodologyDrawer(props: {
   const fileRef = useRef<HTMLInputElement>(null);
   const { state, evaluation } = props;
   const maxPrice = affordablePrice(state.economics.buyerIncome, state.household);
+  const h = state.household;
 
   function download() {
-    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    const blob = new Blob([dumpParameters(state)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -30,8 +32,14 @@ export function MethodologyDrawer(props: {
 
   function loadFile(file: File) {
     file.text().then((text) => {
-      const parsed = JSON.parse(text) as Partial<WorkspaceState>;
-      props.onLoad({ ...state, ...parsed });
+      const parsed = loadParameters(text);
+      props.onLoad({
+        ...state,
+        regulations: parsed.regulations,
+        economics: parsed.economics,
+        household: parsed.household ?? state.household,
+        construction: parsed.construction ?? state.construction,
+      });
     });
   }
 
@@ -48,8 +56,16 @@ export function MethodologyDrawer(props: {
     );
   }
 
+  const termValues: Record<string, string> = {
+    mortgageRate: `${(h.mortgageRate * 100).toFixed(2)}%`,
+    downPaymentPct: `${(h.downPaymentPct * 100).toFixed(1)}%`,
+    incomeToHousing: `${Math.round(h.incomeToHousing * 100)}%`,
+    propertyTaxRate: `${(h.propertyTaxRate * 100).toFixed(1)}%`,
+    insurancePerMonth: `${fmtMoney(h.insurancePerMonth)} / mo`,
+  };
+
   return (
-    <aside className="pointer-events-auto absolute bottom-[52px] right-0 top-[var(--top-bar)] z-30 flex w-[440px] flex-col overflow-y-auto border-l-2 border-brick bg-pine p-5">
+    <aside className="pointer-events-auto absolute bottom-[52px] right-0 top-[var(--top-bar)] z-30 flex w-[480px] flex-col overflow-y-auto border-l-2 border-brick bg-pine p-5">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="font-display text-[13px] font-semibold tracking-section text-limestone">
           METHODOLOGY
@@ -88,25 +104,33 @@ export function MethodologyDrawer(props: {
               </tr>
             );
           })}
+          {householdSliders.map((s) => (
+            <tr key={s.key} className="border-t border-limestone/10 align-top">
+              <td className="py-2 font-display tracking-heading">{s.label}</td>
+              <td className="py-2 font-mono">{termValues[s.key]}</td>
+              <td className="py-2 font-sans text-[14px] text-limestone/70">{s.explanation}</td>
+              <td className="py-2 font-mono text-[12px]">{s.source}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
       <p className="mb-2 font-mono text-[13px] text-limestone">
         Maximum price {fmtMoney(maxPrice)}
       </p>
       <p className="mb-4 font-mono text-[13px] text-limestone">
-        Median subsidy {dash(evaluation.ladder.subsidyPerUnit)}
+        Median subsidy {evaluation.ladder.subsidyPerUnit == null ? "—" : fmtMoney(evaluation.ladder.subsidyPerUnit)}
       </p>
       <p className="mb-4 font-sans text-[14px] text-limestone/70">
         A parcel is feasible when sale value plus subsidy covers construction cost, assessed land
         value, and site-condition costs. It is affordable when the unit price is within the
         household&apos;s borrowing capacity at the stated mortgage assumptions.
       </p>
+      <p className="mb-2 font-sans text-[14px] text-limestone/70">
+        Pace assumes the current parameters and the recent building rate hold.
+      </p>
       <p className="mb-4 font-sans text-[14px] text-limestone/70">
-        Mortgage rate {(state.household.mortgageRate * 100).toFixed(2)}% · Down payment{" "}
-        {(state.household.downPaymentPct * 100).toFixed(1)}% · Income to housing{" "}
-        {Math.round(state.household.incomeToHousing * 100)}% · Property tax rate{" "}
-        {(state.household.propertyTaxRate * 100).toFixed(1)}% · Insurance{" "}
-        {fmtMoney(state.household.insurancePerMonth)} / mo
+        Public return is property tax only; no sales tax, wage tax, or transfer tax. Not discounted;
+        simple payback.
       </p>
       <div className="mb-4 flex gap-2">
         <button
@@ -114,20 +138,20 @@ export function MethodologyDrawer(props: {
           onClick={download}
           className="border border-brick px-3 py-1 font-display text-[12px] font-semibold tracking-section text-limestone"
         >
-          DOWNLOAD
+          DOWNLOAD PARAMETERS
         </button>
         <button
           type="button"
           onClick={() => fileRef.current?.click()}
           className="border border-brick px-3 py-1 font-display text-[12px] font-semibold tracking-section text-limestone"
         >
-          LOAD
+          LOAD PARAMETERS
         </button>
         <input
           ref={fileRef}
           type="file"
           accept="application/json"
-          className="hidden"
+          className="sr-only"
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) loadFile(file);
@@ -140,8 +164,4 @@ export function MethodologyDrawer(props: {
       </p>
     </aside>
   );
-}
-
-function dash(n: number | null) {
-  return n == null ? "—" : fmtMoney(n);
 }
