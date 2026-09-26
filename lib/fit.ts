@@ -87,8 +87,7 @@ export function fit(
     constraint: envelopePass ? null : CONSTRAINT.envelope,
   });
 
-  const unitsCount = dwellingUnits(construction);
-  const unitsPass = unitsCount <= regulations.unitsPerLot;
+  const unitsPass = construction.units <= regulations.unitsPerLot;
   checks.push({
     id: "units",
     pass: unitsPass,

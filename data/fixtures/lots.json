@@ -22,7 +22,7 @@
     "lat": 40.45,
     "transitDistM": 120,
     "taxDelinquent": false,
-    "foreclosure": false
+    "foreclosure": true
   },
   {
     "id": "fixture-flood",
@@ -93,7 +93,7 @@
     "empty": true,
     "owner": "other",
     "assessedLand": 10000,
-    "lon": -79.94,
+    "lon": -80.00,
     "lat": 40.45,
     "transitDistM": 200,
     "taxDelinquent": false,

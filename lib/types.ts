@@ -57,6 +57,22 @@ export type SiteConditions = {
   minFrontageFt: number;
 };
 
+export type Economics = {
+  buildCostPerSf: number;
+  salePricePerSf: number;
+  buyerIncome: number;
+  subsidyPerUnit: number;
+  buildingPace: number;
+};
+
+export type HouseholdTerms = {
+  mortgageRate: number;
+  downPaymentPct: number;
+  incomeToHousing: number;
+  propertyTaxRate: number;
+  insurancePerMonth: number;
+};
+
 export type SiteFilters = {
   vacantOnly: boolean;
   owner: "any" | "city";
