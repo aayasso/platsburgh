@@ -13,7 +13,7 @@ export const SOURCES: SourceRow[] = [
     url: "https://data.wprdc.org/dataset/property-assessments-parcel-data-for-downloads",
   },
   {
-    name: "Allegheny County Parcels",
+    name: "Allegheny County Parcels (OPENDATA/Parcels)",
     publisher: "Allegheny County GIS",
     retrieved: "2026-09-26",
     url: "https://openac-alcogis.opendata.arcgis.com/",
@@ -22,10 +22,10 @@ export const SOURCES: SourceRow[] = [
     name: "Pittsburgh Neighborhoods",
     publisher: "City of Pittsburgh / WPRDC",
     retrieved: "2026-09-26",
-    url: "https://data.wprdc.org/dataset/neighborhoods2",
+    url: "https://data.wprdc.org/dataset/e672f13d-71c4-4a66-8f38-710e75ed80a4/resource/4af8e160-57e9-4ebf-a501-76ca1b42fc99/download/neighborhoods.geojson",
   },
   {
-    name: "Pittsburgh Street Centerline",
+    name: "Pittsburgh Street Centerline (fallback; Allegheny County Street Centerlines not found)",
     publisher: "City of Pittsburgh / WPRDC",
     retrieved: "2026-09-26",
     url: "https://data.wprdc.org/dataset/pittsburgh-street-centerline",
@@ -55,7 +55,7 @@ export const SOURCES: SourceRow[] = [
     url: "https://data.wprdc.org/",
   },
   {
-    name: "National Flood Hazard Layer",
+    name: "National Flood Hazard Layer (MapServer/28; /gis/nfhl/ 404)",
     publisher: "FEMA",
     retrieved: "2026-09-26",
     url: "https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28",
@@ -67,7 +67,7 @@ export const SOURCES: SourceRow[] = [
     url: "https://data.wprdc.org/dataset/prt-of-allegheny-county-transit-stops",
   },
   {
-    name: "City of Pittsburgh Property Tax Delinquency",
+    name: "City of Pittsburgh Property Tax Delinquency (fallback; allegheny-county-tax-delinquency 404)",
     publisher: "City of Pittsburgh / WPRDC",
     retrieved: "2026-09-26",
     url: "https://data.wprdc.org/dataset/city-of-pittsburgh-property-tax-delinquency",
