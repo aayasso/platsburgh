@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { countyAerialUrl, esriAerialUrl } from "../lib/aerial";
+import { aerialTilePlan, esriTileUrl } from "../lib/aerial";
 import { fit } from "../lib/fit";
 import { zipHomeValuesFigure } from "../lib/parcelRefs";
 import { annualTaxPerUnit, paybackYears } from "../lib/publicReturn";
@@ -49,8 +49,14 @@ describe("§9 test 21 Sunday sources", () => {
   });
 
   it("the aerial renders with a fallback tile source", () => {
-    expect(countyAerialUrl(clean)).toContain("AlleghenyCountyImagery2021");
-    expect(esriAerialUrl(clean)).toContain("World_Imagery");
+    expect(esriTileUrl(19, 155000, 148000)).toBe(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/19/155000/148000",
+    );
+    const plan = aerialTilePlan({ ...clean, lat: 40.4668, lon: -79.93545 });
+    expect(plan.z).toBeGreaterThanOrEqual(18);
+    expect(plan.z).toBeLessThanOrEqual(19);
+    expect(plan.tiles.length).toBeGreaterThan(0);
+    expect(plan.tiles[0].src).toMatch(/World_Imagery\/MapServer\/tile\/\d+\/\d+\/\d+$/);
   });
 
   it("skipCondemned is in the URL as cond", () => {

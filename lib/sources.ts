@@ -121,10 +121,10 @@ export const SOURCES: SourceRow[] = [
     url: "https://data.bls.gov/timeseries/WPUIP231000",
   },
   {
-    name: "Allegheny County orthoimagery (PASDA Imagery 2021); Esri World Imagery fallback",
-    publisher: "Allegheny County / Esri",
+    name: "Esri World Imagery tiles",
+    publisher: "Esri",
     retrieved: "2026-09-27",
-    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
   },
 ];
 

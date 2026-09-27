@@ -29,4 +29,4 @@ Retrieved 2026-09-26 unless noted. Fallbacks that were actually used (not the sp
 | City of Pittsburgh Property Tax Abatements | City of Pittsburgh via WPRDC | data.wprdc.org/dataset/city-property-tax-abatements | abatedThrough; Public return payback counted from the last abated year |
 | Zillow Home Value Index, ZIP, all homes | Zillow | zillow.com/research/data | zhviChange12m (12-month change for the parcel's ZIP) |
 | Producer Price Index, inputs to residential construction (WPUIP231000) | BLS | data.bls.gov | Ground Truth row; note under the modular cost mark. Not applied to any slider default. |
-| Orthoimagery | Allegheny County PASDA Imagery 2021; Esri World Imagery fallback | imagery.pasda.psu.edu; server.arcgisonline.com | parcel-page aerial (320 px) with parcel outline |
+| Orthoimagery | Esri World Imagery tiles (`tile/{z}/{y}/{x}`) | server.arcgisonline.com | parcel-page aerial (320 px stacked tiles with parcel outline) |

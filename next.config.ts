@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "server.arcgisonline.com",
+        pathname: "/ArcGIS/rest/services/World_Imagery/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
