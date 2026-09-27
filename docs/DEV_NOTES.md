@@ -288,7 +288,7 @@ Citywide sale median $/sf: 161.14285714285714 from 7463 sales.
 - Parcel page `/parcel/[id]` is the full COMPLIANCE + SITE CONDITIONS + PRO FORMA view per BUILD_SPEC §7 and COPY.md. Shared economics (cost, price, income, subsidy) and the five TERMS (`rate, down, ratio, tax, ins`) live in the URL with the workspace. `land` and `sitecost` are parcel-only overrides. SUMMARY is omitted unless `ANTHROPIC_API_KEY` is set; the route validates that Claude introduces no numbers absent from the COMPLIANCE lines.
 - METHODOLOGY lists regulation sliders, economics sliders, and the five household terms from `lib/rules.ts`. Buttons are **DOWNLOAD** / **LOAD** (COPY.md). Pace and public-return sentences from §5d/§5e are in the drawer; those two sentences were added to COPY.md because they appear on screen.
 - DOWNLOAD CSV writes the current PARCELS list (in-view, Site-filtered). SOURCES uses retrieved 2026-09-26 and the fallbacks actually used: County `OPENDATA/Parcels` (not PASDA), Pittsburgh Street Centerline, City of Pittsburgh property tax delinquency, FEMA `/arcgis/rest/services/public/NFHL/MapServer/28`.
-- `data/sales_medians.json` is keyed by County `NEIGHCODE` (`byNeighcode`). `lots.neighborhood` is the City neighborhood name from the Neighborhoods GeoJSON. Those keys do not join without guessing a code, so the parcel-page reference line uses the citywide median **$161/sf** from **7,463** sales (COPY still reads “Sales in this neighborhood”).
+- `data/sales_medians.json` is keyed by County `NEIGHCODE` (`byNeighcode`). `lots.neighborhood` is the City neighborhood name from the Neighborhoods GeoJSON. Those keys do not join without guessing a code. The parcel page uses **comps by distance** (`compsPpsf` / `compsN`) instead, with a citywide fallback when `compsN` < 5.
 - **Live 0050M00032000000 (237 N Aiken):** assessment `USEDESC` is SINGLE FAMILY, `YEARBLT` 2024, `empty` is false — it only appears on the map with **Vacant parcels only** unchecked. Width is **21.54 ft** (not the calibration 22 ft), so even at min lot 1,200 · front 15 · rear 15 · side 3 · units 2 the buildable width is 15.54 ft vs a 16 ft building and COMPLIANCE still fails setbacks. Test 5 still passes against `data/fixtures/lots.json` (22 × 96.79, vacant, land 13,000). Height limit must be 3 (`stories=3`) with the 3-story building or Height FAILs at the default limit of 2.
 
 ## Performance (2026-09-26, Node, 39,207 parcels)
@@ -303,7 +303,7 @@ Citywide sale median $/sf: 161.14285714285714 from 7463 sales.
 
 - `/api/health` (BUILD_SPEC §11).
 - Hosted/Vercel URL; run `npm run dev` locally.
-- Parcel-page neighborhood sale median by City name (sales file is County NEIGHCODE only).
+- Parcel-page neighborhood sale median by City name (sales file is County NEIGHCODE only); the parcel page uses comps by distance instead.
 - Footer line on the map workspace (it would sit under the bottom bar); parcel page and `/docs` show it.
 - `docs/brand/lasalle-brand-specimen.html` is the upstream brand file and still contains LaSalle product names with “Score”; it is not UI copy.
 

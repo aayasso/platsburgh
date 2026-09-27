@@ -7,6 +7,7 @@ import { buildableEnvelope, fit } from "@/lib/fit";
 import { fmtInt, metersToFt } from "@/lib/format";
 import { estimatedSiteAdders, proforma } from "@/lib/proforma";
 import { dwellingUnits } from "@/lib/rules";
+import { SITE_CITES } from "@/lib/sources";
 import type { Lot } from "@/lib/types";
 import {
   decodeParcelOverrides,
@@ -120,51 +121,57 @@ export function ParcelClient(props: {
       : pf.feasible
         ? "CONFORMING · FEASIBLE"
         : "CONFORMING"
-    : `NON-CONFORMING · ${result.constraint ?? ""}`;
+    : ["NON-CONFORMING", result.constraint ?? ""].filter(Boolean).join(" · ");
 
+  const city = SITE_CITES.city;
+  const fema = SITE_CITES.flood;
+  const dep = SITE_CITES.water;
+  const streets = SITE_CITES.streets;
+  const yn = (v: boolean | "unknown") =>
+    v === "unknown" ? "Not available in open data." : v ? "Yes" : "No";
   const siteRows: { label: string; value: string; source: string }[] = [
     {
-      label: "Slope",
+      label: "Steep slope",
       value:
         typeof lot.slopeShare === "number"
-          ? `${Math.round(lot.slopeShare * 100)}% of parcel on 25%+ slope`
+          ? yn(lot.slopeShare > 0.3)
           : "Not available in open data.",
-      source: "City of Pittsburgh · 2026-09-26",
+      source: city,
     },
     {
       label: "Landslide-prone",
-      value: lot.landslide === "unknown" ? "Not available in open data." : lot.landslide ? "Yes" : "No",
-      source: "City of Pittsburgh · 2026-09-26",
+      value: yn(lot.landslide),
+      source: city,
     },
     {
       label: "Undermined",
-      value: lot.undermined === "unknown" ? "Not available in open data." : lot.undermined ? "Yes" : "No",
-      source: "City of Pittsburgh · 2026-09-26",
+      value: yn(lot.undermined),
+      source: city,
     },
     {
       label: "Flood zone",
-      value: lot.flood === "unknown" ? "Not available in open data." : lot.flood ? "Yes" : "No (Zone X)",
-      source: "FEMA NFHL · 2026-09-26",
+      value: yn(lot.flood),
+      source: fema,
     },
     {
       label: "Greenway",
-      value: lot.greenway === "unknown" ? "Not available in open data." : lot.greenway ? "Yes" : "No",
-      source: "City of Pittsburgh · 2026-09-26",
+      value: yn(lot.greenway),
+      source: city,
     },
     {
-      label: "Water service",
-      value: lot.water === "unknown" ? "Not available in open data." : lot.water ? "Yes (PWSA)" : "No",
-      source: "PA DEP via WPRDC · 2026-09-26",
+      label: "No water service",
+      value: lot.water === "unknown" ? "Not available in open data." : yn(!lot.water),
+      source: dep,
     },
     {
       label: "Sewer",
       value: "not available in open data — confirm with PWSA.",
-      source: "no source",
+      source: "",
     },
     {
-      label: "Street access",
-      value: lot.stepsOnly ? "stairs-only" : "street frontage",
-      source: "Pittsburgh Street Centerline · 2026-09-26",
+      label: "Stairs-only access",
+      value: yn(lot.stepsOnly),
+      source: streets,
     },
   ];
 

@@ -91,3 +91,16 @@ export const SOURCES: SourceRow[] = [
     url: "https://www.huduser.gov/portal/datasets/fmr/fmr2026/fy2026_safmrs.xlsx",
   },
 ];
+
+export function sourceCite(needle: string): string {
+  const row = SOURCES.find((s) => s.name.includes(needle) || s.publisher.includes(needle));
+  if (!row) return "";
+  return `${row.publisher} · ${row.retrieved}`;
+}
+
+export const SITE_CITES = {
+  city: sourceCite("Landslide"),
+  flood: sourceCite("Flood"),
+  water: sourceCite("PWSA"),
+  streets: sourceCite("Street"),
+};
