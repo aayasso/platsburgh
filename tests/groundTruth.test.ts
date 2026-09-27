@@ -17,8 +17,14 @@ describe("§5g GROUND TRUTH", () => {
       "Any construction method",
       "Observed on a modular build (method-specific)",
     ]);
-    expect(GROUND_TRUTH).toHaveLength(23);
+    expect(GROUND_TRUTH).toHaveLength(24);
     for (const row of GROUND_TRUTH) {
+      if (row.item === "Construction input prices since the observed build") {
+        expect(copy).toContain(row.item);
+        expect(copy).toContain(row.source);
+        expect(row.figure).toMatch(/^[+-]?\d+\.\d+% \(Nov 2023–May 2024 avg to latest month\)$/);
+        continue;
+      }
       expect(copy).toContain(`| ${row.item} | ${row.figure} | ${row.source} | ${row.date} |`);
     }
   });

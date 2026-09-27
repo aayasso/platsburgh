@@ -1,3 +1,6 @@
+import ppiJson from "../data/ppi.json";
+import { formatPpiDelta, type PpiFile } from "./ppi";
+
 export type GroundTruthRow = {
   item: string;
   figure: string;
@@ -100,6 +103,12 @@ export const GROUND_TRUTH_ANY: GroundTruthRow[] = [
     figure: "$162 per finished sq ft",
     source: "NAHB Cost of Constructing a Home",
     date: "2024",
+  },
+  {
+    item: "Construction input prices since the observed build",
+    figure: `${formatPpiDelta(ppiJson as PpiFile) ?? "not available"} (Nov 2023–May 2024 avg to latest month)`,
+    source: "BLS Producer Price Index, inputs to residential construction",
+    date: `retrieved ${(ppiJson as PpiFile).retrieved}`,
   },
   {
     item: "Citywide sale price, arm's-length, prior 24 months",

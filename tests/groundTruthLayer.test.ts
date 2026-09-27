@@ -45,8 +45,11 @@ describe("§9 test 20 ground truth", () => {
   });
 
   it("GROUND TRUTH table is rendered from lib/groundTruth.ts", () => {
-    expect(GROUND_TRUTH.length).toBe(23);
+    expect(GROUND_TRUTH.length).toBe(24);
     expect(GROUND_TRUTH.map((r) => r.item).join("\n")).toContain("Building permit fee");
+    expect(GROUND_TRUTH.map((r) => r.item).join("\n")).toContain(
+      "Construction input prices since the observed build",
+    );
   });
 
   it("compsN < 5 shows the citywide median labeled citywide", () => {

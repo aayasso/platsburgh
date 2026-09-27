@@ -1,12 +1,19 @@
+import ppiJson from "../data/ppi.json";
+import { formatPpiDelta, type PpiFile } from "./ppi";
 import type { Lot } from "./types";
 
-export type ObservedMark = { value: number; label: string };
+export type ObservedMark = { value: number; label: string; note?: string };
+
+const modularPpiNote = (() => {
+  const delta = formatPpiDelta(ppiJson as PpiFile);
+  return delta ? `inputs ${delta} since, BLS PPI` : undefined;
+})();
 
 /** Ticks listed in COPY.md "Observed marks on sliders". Clicking does nothing. */
 export const OBSERVED_MARKS = {
   buildCostPerSf: [
     { value: 162, label: "site-built US avg $162" },
-    { value: 260, label: "modular PGH $260" },
+    { value: 260, label: "modular PGH $260", note: modularPpiNote },
   ] as ObservedMark[],
   salePriceCitywide: { value: 160, label: "citywide $160" } as ObservedMark,
   buyerIncome: [{ value: 79_500, label: "80% AMI $79,500" }] as ObservedMark[],

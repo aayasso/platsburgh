@@ -10,10 +10,10 @@ import type { Lot } from "../lib/types";
 
 describe("§5g observed marks", () => {
   it("COPY.md stated values and labels", () => {
-    expect(OBSERVED_MARKS.buildCostPerSf).toEqual([
-      { value: 162, label: "site-built US avg $162" },
-      { value: 260, label: "modular PGH $260" },
-    ]);
+    expect(OBSERVED_MARKS.buildCostPerSf[0]).toEqual({ value: 162, label: "site-built US avg $162" });
+    expect(OBSERVED_MARKS.buildCostPerSf[1].value).toBe(260);
+    expect(OBSERVED_MARKS.buildCostPerSf[1].label).toBe("modular PGH $260");
+    expect(OBSERVED_MARKS.buildCostPerSf[1].note).toMatch(/^inputs [+-]\d+\.\d+% since, BLS PPI$/);
     expect(OBSERVED_MARKS.salePriceCitywide).toEqual({ value: 160, label: "citywide $160" });
     expect(OBSERVED_MARKS.buyerIncome[0]).toEqual({ value: 79_500, label: "80% AMI $79,500" });
     expect(OBSERVED_MARKS.buildingPace[0]).toEqual({ value: 273, label: "2023–25 avg 273" });
