@@ -36,6 +36,7 @@ function firstSiteConstraint(
   if (site.skipGreenway && lot.greenway === true) return CONSTRAINT.greenway;
   if (site.skipNoWater && lot.water === false) return CONSTRAINT.noWater;
   if (site.skipStepsOnly && lot.stepsOnly === true) return CONSTRAINT.stepsOnly;
+  if (site.skipCondemned && lot.condemned === true) return CONSTRAINT.condemned;
   return null;
 }
 

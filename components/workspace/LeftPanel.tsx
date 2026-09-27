@@ -318,6 +318,7 @@ export function LeftPanel(props: {
                 ["skipUndermined", "Exclude undermined"],
                 ["skipNoWater", "Exclude no water service"],
                 ["skipStepsOnly", "Exclude stairs-only access"],
+                ["skipCondemned", "Exclude condemned structures"],
               ] as const
             ).map(([key, label]) => (
               <label

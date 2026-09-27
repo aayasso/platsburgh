@@ -23,6 +23,7 @@ export const CONSTRAINT = {
   noWater: "No water service",
   stepsOnly: "Stairs-only access",
   greenway: "Greenway",
+  condemned: "Condemned structure",
   notFeasibleLand: "Not feasible — land cost",
   notFeasibleSite: "Not feasible — site conditions",
   notFeasiblePrice: "Not feasible — sale prices",
@@ -148,6 +149,7 @@ export const DEFAULT_SITE_CONDITIONS: SiteConditions = {
   skipGreenway: true,
   skipNoWater: true,
   skipStepsOnly: true,
+  skipCondemned: false,
   minFrontageFt: 20,
 };
 
