@@ -11,7 +11,7 @@ Use these strings exactly. Planning and development vocabulary; no slang ("penci
   - **SUBSIDY / UNIT** · `${max}` · — · `{years}` PAYBACK (median across parcels requiring subsidy)
 
 ## Observed marks on sliders
-A small tick on the track at a measured value, with a mono label under the tick (limestone at 60%): Construction cost `actual $260`; Sale price `citywide $160` and, when in view, `local ${n}`; Household income `80% AMI $79,500`; Building pace `2023–25 avg 273`; Mortgage rate `PMMS 7.03%`; Minimum lot area `code 3,000`; setbacks and height `code {value}`. Marks are facts with sources (in the drawer), never presets: clicking a mark does nothing.
+A small tick on the track at a measured value, with a mono label under the tick (limestone at 60%): Construction cost: two marks, `site-built US avg $162` (NAHB 2024) and `modular PGH $260` (237 N Aiken 2024); Sale price `citywide $160` and, when in view, `local ${n}`; Household income `80% AMI $79,500`; Building pace `2023–25 avg 273`; Mortgage rate `PMMS 7.03%`; Minimum lot area `code 3,000`; setbacks and height `code {value}`. Marks are facts with sources (in the drawer), never presets: clicking a mark does nothing.
 
 ## REGULATIONS (section label; collapsed by default, chevron at right)
 On the panel when open: label and value only, plus observed marks where listed above. Explanation and code reference appear only in the METHODOLOGY drawer.
@@ -46,7 +46,7 @@ On the panel when open: role word, label, value only. Explanation and source app
 
 | Role word | Slider | Label | Explanation (drawer only) | Source (drawer only) |
 |---|---|---|---|---|
-| DEVELOPER | buildCostPerSf | Construction cost per sq ft | Hard cost per finished square foot, excluding land. Land and site conditions are added from parcel records. | 237 N Aiken actual, 2023–24 |
+| DEVELOPER | buildCostPerSf | Construction cost per sq ft | Hard cost per finished square foot for any construction method, excluding land. Land and site conditions are added from parcel records. | default $200 (assumed) between NAHB 2024 site-built average $162 and an observed Pittsburgh modular build $260 |
 | MARKET | salePricePerSf | Sale price per sq ft | Market value per finished square foot. | WPRDC sales, prior 24 months, retrieved {date} |
 | HOUSEHOLD | buyerIncome | Household income | The household the units should be affordable to. | HUD FY2026, 80% of area median, 3-person household |
 | PUBLIC | subsidyPerUnit | Subsidy per unit | Public capital contributed per unit. | user-defined |
@@ -98,7 +98,9 @@ SOURCES tab: one row per dataset — `{name}` · `{publisher}` · `retrieved {da
 Title: **METHODOLOGY**. First line: "Starting positions match the current code for a low-density residential district (§903.03)."
 Table: every regulation and economics slider — parameter, current value, explanation, code reference or source. Also: the household's maximum price at the current income, and the median subsidy required across conforming parcels.
 Definitions block: the feasible / affordable sentence above; the household assumptions with their current values.
-**GROUND TRUTH** (section inside the drawer, after the parameter table): "What building actually costs and takes in Pittsburgh, from one completed project and public records. Reference only." Table columns: Item · Figure · Source · Date.
+**GROUND TRUTH** (section inside the drawer, after the parameter table): "What building actually costs and takes in Pittsburgh, from public records and one completed project. Reference only; the tool is neutral on construction method." Two groups, columns Item · Figure · Source · Date.
+
+*Any construction method*
 | Item | Figure | Source | Date |
 |---|---|---|---|
 | Building permit fee (two-unit, ~2,700 sq ft) | $1,970 | 237 N Aiken invoices | 2023 |
@@ -109,23 +111,26 @@ Definitions block: the feasible / affordable sentence above; the household assum
 | Utility change orders (ACHD check valve, curb valve, storm core, road bond) | $4,670 | 237 N Aiken invoices | 2024 |
 | Street repair after utility cut | $5,015 | 237 N Aiken invoices | 2024 |
 | Electric service (two meters, two panels) | $5,350 | 237 N Aiken invoices | 2024 |
-| Site prep and precast foundation (184 linear ft) | $49,486 (≈ $50.70 per footprint sq ft; $139 per linear ft) | 237 N Aiken invoices | 2023–24 |
-| Crane, set crew, toter, cones (three modules, 1.5 days) | $29,632 | 237 N Aiken invoices | Dec 2023 |
-| Extra crane site prep and traffic control | $8,920 | 237 N Aiken invoices | 2024 |
-| Neighbor staging agreement (22-ft lot, no alley) | $14,000 | 237 N Aiken agreement | Nov 2023 |
-| Factory cost, volumetric modular, high-spec two-unit | $175 per finished sq ft; freight $10,668 for three modules from Strattanville, PA | 237 N Aiken final invoice | 2024 |
-| Factory start to set day | 164 days (modules ~80% built in 30 days) | 237 N Aiken records | 2023 |
-| Set day to certificate of occupancy | 229 days | 237 N Aiken records | 2023–24 |
-| Factory start to occupancy | 393 days | 237 N Aiken records | 2023–24 |
+| Site prep and foundation (precast, 184 linear ft) | $49,486 (≈ $50.70 per footprint sq ft) | 237 N Aiken invoices | 2023–24 |
+| Access, staging, and street logistics on a lot under 25 ft with no alley | $14,000 neighbor agreement + $8,920 street work | 237 N Aiken records | 2023–24 |
+| Site work complete to certificate of occupancy | 229 days | 237 N Aiken records | 2023–24 |
 | Construction interest | $33,269 on $537,600 over nine months at prime | 237 N Aiken loan statements | 2024 |
 | Design, survey, appraisal, title, insurance | ≈ $23,400 combined | 237 N Aiken invoices | 2023–24 |
-| Total documented cost, 2,667 finished sq ft | $853,890 (≈ $320 per sq ft) | 237 N Aiken cost basis | 2024 |
-| Appraised value, same building | $865,000 (≈ $324 per sq ft) | FNB appraisal | Jan 2025 |
+| Site-built construction cost, US average | $162 per finished sq ft | NAHB Cost of Constructing a Home | 2024 |
 | Citywide sale price, arm's-length, prior 24 months | $161 per finished sq ft median, 7,463 sales | WPRDC sales | retrieved 2026-09-26 |
+| Appraised value, new two-unit, 2,667 sq ft | $865,000 (≈ $324 per sq ft) | FNB appraisal | Jan 2025 |
 | New residential units permitted per year | 380 · 256 · 183 (avg 273) | City PLI permits | 2023–2025 |
 | 30-year mortgage rate | 7.03% | Freddie Mac PMMS | Sept 24, 2026 |
 | Area median income, three-person household | $99,400 (80%: $79,500) | HUD FY2026 | May 2026 |
-Footer of the table: "A contextual setback was approved administratively on this project with no Zoning Board case; the tool does not model approvals. Figures are one project's invoices and are shown as reference, not estimates."
+
+*Observed on a modular build (method-specific)*
+| Item | Figure | Source | Date |
+|---|---|---|---|
+| Factory cost, volumetric modular, high-spec two-unit | $175 per finished sq ft; freight $10,668 for three modules from Strattanville, PA | 237 N Aiken final invoice | 2024 |
+| Crane, set crew, toter, cones (three modules, 1.5 days) | $29,632 | 237 N Aiken invoices | Dec 2023 |
+| Factory start to set day | 164 days (modules ~80% built in 30 days) | 237 N Aiken records | 2023 |
+| Total documented cost, modular two-unit, 2,667 finished sq ft | $853,890 (≈ $320 per sq ft; ≈ $260 hard) | 237 N Aiken cost basis | 2024 |
+Footer of the table: "The tool does not assume a construction method; the construction-cost slider is yours to set. The one observed project happened to be modular, so its method-specific figures are grouped separately. A contextual setback was approved administratively on that project with no Zoning Board case; the tool does not model approvals."
 
 Buttons: **DOWNLOAD PARAMETERS** · **LOAD PARAMETERS** (JSON)
 Last line: "These are the exact parameters that produced the results on this page. The page address reproduces this view."
@@ -151,9 +156,9 @@ Result column: **PASS** / **FAIL**.
 - Section label: **SITE CONDITIONS** — each: `{condition}: {value}` · `{dataset} · {date}`. Unavailable: "Not available in open data." Sewer always present: "Sewer: not available in open data — confirm with PWSA."
 - Section label: **PRO FORMA** — no intro line.
   - **DEVELOPMENT** block, lines (label · amount; slider beneath where marked, with its own value at the track's end; source in mono beneath):
-    - Construction cost · ${total} · slider `${cost} / sq ft` · `× {sf} sq ft · 237 N Aiken actual`
+    - Construction cost · ${total} · slider `${cost} / sq ft` · `× {sf} sq ft · any method; default assumed between NAHB 2024 and an observed modular build`
     - Land · ${land} · slider `${land}` · `County assessment ${assessed}`
-    - Site conditions · ${adders} · slider `${adders}` · `estimated: {named conditions} · 237 N Aiken actual`
+    - Site conditions · ${adders} · slider `${adders}` · `estimated: {named conditions} · observed on one Pittsburgh build`
     - **Total cost** · ${cost}
     - Sale value · ${value} · slider `${price} / sq ft` · `× {sfPerUnit} sq ft × {units} units · WPRDC sales`
     - **Total value** · ${value} · `sale value + subsidy`
@@ -173,7 +178,7 @@ Result column: **PASS** / **FAIL**.
     - Buttons: **ASSUMPTIONS** · **SUMMARY**
   - Source tags (mono): `237 N Aiken actual` · `assumed` · `WPRDC sales` · `County assessment` · `HUD FY2026` · `Freddie Mac PMMS 2026-09-24`
   - Buttons: **ASSUMPTIONS** · **SUMMARY**
-  - Assumptions drawer: every slider's current value with its source — mortgage rate (default 7.03%, Freddie Mac PMMS, Sept 24, 2026) · down payment (default 3.5%) · income to housing (default 30%) · property tax rate (default 1.5% effective, assumed from the County's roughly 1.47% effective rate) · insurance (default $125/mo, assumed) · PMI 0.5%/yr below 20% down (fixed) · 30-year term (fixed) · land (assessed value unless overridden). Footer: "Cost anchor: one completed modular two-unit at 237 N Aiken Ave, Pittsburgh (2023–24), documented at $853,890. Not an appraisal, underwriting, or a loan offer."
+  - Assumptions drawer: every slider's current value with its source — mortgage rate (default 7.03%, Freddie Mac PMMS, Sept 24, 2026) · down payment (default 3.5%) · income to housing (default 30%) · property tax rate (default 1.5% effective, assumed from the County's roughly 1.47% effective rate) · insurance (default $125/mo, assumed) · PMI 0.5%/yr below 20% down (fixed) · 30-year term (fixed) · land (assessed value unless overridden). Footer: "Site and regulatory figures come from one completed Pittsburgh project (237 N Aiken Ave, 2023–24, documented at $853,890); construction cost is method-neutral and set by you. Not an appraisal, underwriting, or a loan offer."
   - SUMMARY output label: "Generated from the checks above. It contains nothing that is not already on this page."
 
 ## Footer (every page)

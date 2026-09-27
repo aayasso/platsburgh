@@ -144,7 +144,7 @@ The same idea as the regulations: the economics are sliders, always visible, and
 
 ```
 Economics (sliders):
-  buildCostPerSf     $80–$400      step 5      default 260    — DEVELOPER: 237 N Aiken hard cost per finished sf, rounded (source in drawer)
+  buildCostPerSf     $80–$400      step 5      default 200    — DEVELOPER: method-neutral; default assumed between NAHB 2024 site-built average ($162) and the observed Pittsburgh modular build ($260); both are observed marks on the slider
   salePricePerSf     $60–$500      step 5      default = citywide median of arm's-length sales, prior 24 months (from build-lots; date in drawer) — MARKET
   buyerIncome        $30,000–$250,000 step 1,000  default 79,500 — HOUSEHOLD: HUD FY2026 Pittsburgh HUD Metro FMR Area, 80% AMI, 3-person household, effective May 1, 2026 (source in drawer)
   subsidyPerUnit     $0–$150,000   step 5,000  default 0      — PUBLIC
@@ -259,7 +259,7 @@ Empty view: if the map view contains no parcels after filters, every ladder cell
 
 ## 5g. Ground truth layer
 Three things that tell a newcomer what is normal here, all facts with sources, never advice:
-1. **Observed marks on sliders** — a tick on the track at a measured value with a mono label (wording in COPY.md): construction cost at the 237 N Aiken actual; sale price at the citywide median and, when parcels are in view, the median of their compsPpsf; household income at 80% AMI; building pace at the 2023–25 average; mortgage rate at PMMS; regulation sliders at the current code value. Ticks are 1px limestone at 60%, 8px tall, centered on the value; clicking does nothing.
+1. **Observed marks on sliders** — a tick on the track at a measured value with a mono label (wording in COPY.md): construction cost at two marks, the NAHB 2024 site-built US average ($162) and the observed Pittsburgh modular build ($260); sale price at the citywide median and, when parcels are in view, the median of their compsPpsf; household income at 80% AMI; building pace at the 2023–25 average; mortgage rate at PMMS; regulation sliders at the current code value. Ticks are 1px limestone at 60%, 8px tall, centered on the value; clicking does nothing.
 2. **GROUND TRUTH table in METHODOLOGY** — content verbatim from COPY.md; rendered from `lib/groundTruth.ts` so docs can be generated from it.
 3. **Comps by distance and rent reference on the parcel page** — `compsPpsf`/`compsN` from the parcel file (computed once in build-lots with a spatial grid; fall back to citywide when compsN < 5) and `fmr2br` from HUD FY2026 Small Area FMRs by ZIP (fetch the FY2026 SAFMR file from huduser.gov; if unreachable, use the metro FMR for the Pittsburgh HUD Metro FMR Area and label it "metro"). Reference only; the rental path is not modeled.
 
@@ -311,9 +311,9 @@ Opens with the same regulations/construction/economics/site settings the person 
 - Optional **SUMMARY** button: Claude writes ≤120 words from the check lines only; validated to contain no numbers not present in the checks.
 - **← MAP** link back to the page with the same parameters.
 
-## 8. Cost anchor (used by §5b defaults and adders)
-237 North Aiken Ave, Pittsburgh: volumetric modular 3-story two-unit, 2,667 finished sf, 976 sf footprint, 3 modules, documented $853,889.66 (2023–24). Hard cost ≈ $722,393 → **$271 per finished sf all-in hard**; with soft costs and interest ≈ $310/sf. Default `buildCostPerSf` = 260, labeled "237 N Aiken actual, hard cost per finished sf, rounded." Site adders: slope multipliers on the $50.70/footprint-sf site line; $8,000 geotech (assumed); $20,200 narrow-lot staging and street logistics (actual); $10,000 no-water (assumed). Everything on screen says which.
-Acceptance: the anchor building (16 × 64 × 3, 2 units, finishedSf 3,072) on the anchor parcel at the default construction cost gives cost = 260 × 3,072 + 13,000 + 20,200 = $831,920, within ±10% of $853,890.
+## 8. Cost basis (used by §5b defaults and adders) — method-neutral
+The tool does not assume a construction method. The construction-cost slider is the user's; its default ($200) is an assumed midpoint between two observed marks: NAHB 2024 site-built US average ($162/finished sf) and one completed Pittsburgh volumetric-modular build, 237 North Aiken Ave (2023–24; 3-story two-unit, 2,667 finished sf, 976 sf footprint; documented $853,889.66; ≈ $260/sf hard). Site and regulatory adders come from that project's invoices and apply to any method: slope multipliers on the $50.70/footprint-sf site line; $8,000 geotech (assumed); $20,200 access/staging/street logistics on a lot under 25 ft (observed); $10,000 no-water (assumed). Everything on screen says which.
+Acceptance (test 9): the anchor building (16 × 64 × 3, 2 units, finishedSf 3,072) on the anchor parcel with the construction-cost slider at the observed modular mark ($260) gives cost = 260 × 3,072 + 13,000 + 20,200 = $831,920, within ±10% of $853,890.
 
 ## 9. Tests (write first)
 1. Fixture parcel 40×100, 4,000 sf, no site issues → conforming at the default building (24×40, 2 stories, 1 unit) and default regulations.
@@ -324,7 +324,7 @@ Acceptance: the anchor building (16 × 64 × 3, 2 units, finishedSf 3,072) on th
 6. Unknown water is listed, not counted as a failure.
 7. `fitAll` over 1,000 synthetic parcels < 50 ms.
 8. Regulations JSON round-trips: download → load → identical counts.
-9. Cost: anchor reproduction within ±10% (§8).
+9. Cost: anchor reproduction within ±10% (§8) with buildCostPerSf set to 260 (the observed modular mark), not the default.
 10. Pro forma: a conforming fixture parcel with finishedSf 1,920, land 10,000, no adders, buildCost 260, salePrice 200, subsidy 0 → not feasible, gap = 260×1920+10000 − 200×1920 = 125,200; breakEvenSubsidyPerUnit = 125,200; raise subsidy to 130,000 → feasible. Constraint = "Not feasible — sale prices".
 11. Affordability: same parcel is feasible at salePrice 300 (unitPrice 576,000); buyerIncome 79,500 → buyerMax well under 576,000 → not affordable, constraint "Not affordable at household income"; buyerIncome 200,000 → affordable. subsidyForAffordable at 79,500 = (cost − buyerMax) / 1, positive.
 12. Ladder: conforming ≥ feasible ≥ affordable, always.
