@@ -1,6 +1,5 @@
 import { ParcelClient } from "@/components/parcel/ParcelClient";
 import { getLot } from "@/lib/lots-data";
-import { neighborhoodSales } from "@/lib/salesMedians";
 import Link from "next/link";
 
 function qs(sp: Record<string, string | string[] | undefined>): string {
@@ -41,7 +40,6 @@ export default async function ParcelPage({
       lot={lot}
       query={query}
       hasSummary={Boolean(process.env.ANTHROPIC_API_KEY)}
-      sales={neighborhoodSales(lot.neighborhood)}
     />
   );
 }

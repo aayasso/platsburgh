@@ -7,7 +7,6 @@ import { buildableEnvelope, fit } from "@/lib/fit";
 import { fmtInt, metersToFt } from "@/lib/format";
 import { estimatedSiteAdders, proforma } from "@/lib/proforma";
 import { dwellingUnits } from "@/lib/rules";
-import type { NeighborhoodSales } from "@/lib/salesMedians";
 import type { Lot } from "@/lib/types";
 import {
   decodeParcelOverrides,
@@ -20,7 +19,6 @@ export function ParcelClient(props: {
   lot: Lot;
   query: string;
   hasSummary: boolean;
-  sales: NeighborhoodSales;
 }) {
   const { lot } = props;
   const [state, setState] = useState<WorkspaceState>(() => decodeView(props.query));
@@ -246,7 +244,6 @@ export function ParcelClient(props: {
           state={state}
           land={land}
           sitecost={sitecost}
-          sales={props.sales}
           hasSummary={props.hasSummary}
           checkLines={compliance.map(([, wording]) => wording)}
           onEconomics={(key, n) =>

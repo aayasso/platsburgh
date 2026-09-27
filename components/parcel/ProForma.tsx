@@ -9,8 +9,8 @@ import {
 } from "@/lib/proforma";
 import { annualTaxPerUnit, paybackYears } from "@/lib/publicReturn";
 import { economicsMarks, OBSERVED_MARKS } from "@/lib/observedMarks";
+import { salesWithinHalfMileLine, typicalRentLine } from "@/lib/parcelRefs";
 import { economicsSliders } from "@/lib/rules";
-import type { NeighborhoodSales } from "@/lib/salesMedians";
 import type { Lot } from "@/lib/types";
 import type { WorkspaceState } from "@/lib/urlState";
 
@@ -46,7 +46,6 @@ export function ProForma(props: {
   state: WorkspaceState;
   land: number;
   sitecost: number;
-  sales: NeighborhoodSales;
   hasSummary: boolean;
   checkLines: string[];
   onEconomics: (key: "buildCostPerSf" | "salePricePerSf" | "buyerIncome" | "subsidyPerUnit", n: number) => void;
@@ -54,7 +53,7 @@ export function ProForma(props: {
   onLand: (n: number) => void;
   onSite: (n: number) => void;
 }) {
-  const { lot, state, land, sitecost, sales } = props;
+  const { lot, state, land, sitecost } = props;
   const pf = proforma(lot, state.construction, state.economics, state.household, {
     landOverride: land,
     siteOverride: sitecost,
@@ -249,9 +248,11 @@ export function ProForma(props: {
                 </>
               )}
             </p>
-            <p className="mt-1 font-sans text-[14px] text-moss">
-              Sales in this neighborhood: median {fmtMoney(Math.round(sales.medianPerSf))}/sq ft ({fmtInt(sales.n)}{" "}
-              sales, prior 24 months)
+            <p className="mt-1 font-mono text-[13px] text-moss">
+              {salesWithinHalfMileLine(lot)}
+            </p>
+            <p className="mt-1 font-mono text-[13px] text-moss">
+              {typicalRentLine(lot)}
             </p>
           </div>
         </section>
