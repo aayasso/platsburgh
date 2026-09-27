@@ -8,7 +8,7 @@ import { ProForma } from "@/components/parcel/ProForma";
 import { buildableEnvelope, fit } from "@/lib/fit";
 import { fmtInt, metersToFt } from "@/lib/format";
 import { zipHomeValuesFigure } from "@/lib/parcelRefs";
-import { extraSiteRows } from "@/lib/parcelSiteFacts";
+import { extraSiteRows, transitHeaderLine } from "@/lib/parcelSiteFacts";
 import { GEOMETRY_MISMATCH_NOTE } from "@/lib/nextSteps";
 import { estimatedSiteAdders, proforma } from "@/lib/proforma";
 import { dwellingUnits } from "@/lib/rules";
@@ -238,7 +238,7 @@ export function ParcelClient(props: {
                 <span className="font-mono"> · {GEOMETRY_MISMATCH_NOTE}</span>
               ) : null}{" "}
               · {lot.empty ? "Vacant" : "Improved"} ·{" "}
-              {lot.owner === "city" ? "City-owned" : "Privately owned"} · Transit {transitFt} ft · {tax}
+              {lot.owner === "city" ? "City-owned" : "Privately owned"} · {transitHeaderLine(transitFt, lot.transitTripsPerHour)} · {tax}
             </p>
             <div className="mt-3 text-right">
               <div className="font-display text-[14px] font-bold tracking-section">{status}</div>
