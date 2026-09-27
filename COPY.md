@@ -184,6 +184,36 @@ Result column: **PASS** / **FAIL**.
   - Assumptions drawer: every slider's current value with its source — mortgage rate (default 7.03%, Freddie Mac PMMS, Sept 24, 2026) · down payment (default 3.5%) · income to housing (default 30%) · property tax rate (default 1.5% effective, assumed from the County's roughly 1.47% effective rate) · insurance (default $125/mo, assumed) · PMI 0.5%/yr below 20% down (fixed) · 30-year term (fixed) · land (assessed value unless overridden). Footer: "Site and regulatory figures come from one completed Pittsburgh project (237 N Aiken Ave, 2023–24, documented at $853,890); construction cost is method-neutral and set by you. Not an appraisal, underwriting, or a loan offer."
   - SUMMARY output label: "Generated from the checks above. It contains nothing that is not already on this page."
 
+## PARCEL PAGE — NEXT STEPS (after PRO FORMA)
+- Section label: **NEXT STEPS** — derived from the compliance results at the current parameters; each line is one approval or filing with the office and a link. Show only the lines that apply.
+  - Always: "Building permit — City of Pittsburgh Permits, Licenses and Inspections, via OneStopPGH." (link)
+  - Always for a new building: "Stormwater review — Pittsburgh Water; a planning module was required on a single infill lot." (link to PWSA development)
+  - If Buildable area fails by 10 ft or less on any side, or Frontage fails: "Contextual setback — City Planning, Zoning Division; may be approved administratively." (link)
+  - If any regulation check fails otherwise (lot area, height, units, ADU, parking, or buildable area by more than 10 ft): "Variance — Zoning Board of Adjustment; a hearing is required." (link to pittsburghpa.gov/dcp/zba)
+  - If Flood zone: "Floodplain permit — City Planning." · If Landslide-prone or Undermined: "Geotechnical report — required before foundation design." · If Steep slope: "Grading permit — PLI." · If Condemned structure: "Demolition permit — PLI." · If City-owned: "Acquisition — Urban Redevelopment Authority or City property disposition." · If Tax-delinquent or In foreclosure: "Acquisition — treasurer's sale or foreclosure process."
+- Section label: **CONFIRM BEFORE YOU ACT** — always shown, exactly these lines:
+  - "Frontage and depth are measured from the County parcel polygon; the deed may differ by inches to a foot."
+  - "Sewer availability is not in any open dataset — confirm with Pittsburgh Water."
+  - "Contextual setbacks, variances, and overlays are decided case by case; the tool does not model approvals."
+  - "Construction cost is your setting; comparable sales and rents are references, not appraisals."
+
+## First visit
+A single note over the map on first load, dismissed by any click or after 12 seconds, never shown again on that browser (localStorage): three lines in Inter 14px on a pine card — "Open a panel and move a slider." · "Every number counts what's on the map." · "Click a parcel for the details." — and a mono line: `Dismiss`.
+
+## CSV
+First rows of every DOWNLOAD CSV, before the parcel columns:
+```
+# Platsburgh export · {date-time}
+# Map view: {lat}, {lng}, zoom {z} · {inView} parcels in view
+# Regulations: minimum lot area {v} · front {v} · rear {v} · side {v} · height {v} · units per parcel {v} · parking per unit {v} · ADUs {v}
+# Construction: {w} × {d} ft · {stories} stories · {units} units · attached {yes/no} · ADU {yes/no}
+# Economics: construction cost ${v}/sq ft · sale price ${v}/sq ft · household income ${v} · subsidy ${v}/unit · building pace {v}/yr
+# Terms: mortgage {v}% · down {v}% · income to housing {v}% · property tax {v}% · insurance ${v}/mo
+# Site: vacant only {v} · owner {v} · district {v} · near transit {v} · delinquent/foreclosed {v} · exclusions {list} · min frontage {v}
+# Sources retrieved: assessments {date} · parcels {date} · zoning {date} · sales {date} · permits {date} · HUD {date}
+# Decision support, not legal, financial, or zoning advice.
+```
+
 ## Footer (every page)
 "Decision-support prototype built at the AI Horizons AI for Housing Hackathon, Sept 26–27, 2026. Not legal, financial, or zoning advice. Sources and limitations: /docs."
 

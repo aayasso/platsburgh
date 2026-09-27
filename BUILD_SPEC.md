@@ -278,6 +278,12 @@ Three things that tell a newcomer what is normal here, all facts with sources, n
 - **Condemned, violations, abatements, ZHVI**: parcel facts on the parcel page per COPY.md; `skipCondemned` exclusion in Site conditions; abatement shifts the payback per §5e.
 - README and LIMITATIONS: a "Sources considered and not used" list — ZBA decisions (PDF parsing; deliberate), USGS 3DEP (marginal over City slope polygons), HMDA (complex, low marginal value), PA DEP eMapPA (manual access), OneStopPGH (portal, not data), Redfin/Realtor.com (parcel-level comps used instead), PennDOT, ResStock, Historical PLI.
 
+## 5i. Next steps, first-visit note, CSV provenance
+- **NEXT STEPS** and **CONFIRM BEFORE YOU ACT** on the parcel page, after PRO FORMA, per COPY.md. `lib/nextSteps.ts` maps the parcel's check results and facts to the list deterministically; every line has an office and a link. No LLM.
+- **First-visit note** per COPY.md: shown once per browser (localStorage key `platsburgh.seen`), dismissed by any click or after 12 s. Must not block the map or the panels.
+- **CSV provenance**: DOWNLOAD CSV writes the comment rows in COPY.md "CSV" before the header row, using the live parameter state and the retrieval dates from the SOURCES data.
+Tests: 22 — nextSteps for the anchor fixture at the calibration parameters returns building permit, stormwater review, and contextual setback (not variance); at defaults returns variance; a flood fixture adds the floodplain line. 23 — the CSV begins with the comment block and the parameter values match the URL state.
+
 ## 6. The page (`/`)
 Layout and styling per DESIGN_SYSTEM.md (top pine bar with the ladder, left pine panel with the four sections, right-edge METHODOLOGY tab, bottom pine bar with CONSTRAINTS / LEVERS / PARCELS / SOURCES and DOWNLOAD CSV, full-bleed dark map that pans and zooms freely). The content below is what goes where; the design file says how it looks.
 
