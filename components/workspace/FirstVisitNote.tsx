@@ -4,6 +4,12 @@ import { useEffect, useState } from "react";
 
 const KEY = "platsburgh.seen";
 
+const LINES = [
+  "Open a panel and move a slider.",
+  "Every number counts what's on the map.",
+  "Click a parcel for the details.",
+] as const;
+
 export function FirstVisitNote() {
   const [open, setOpen] = useState(false);
 
@@ -37,9 +43,11 @@ export function FirstVisitNote() {
       aria-live="polite"
     >
       <div className="pointer-events-auto max-w-md bg-pine px-4 py-3 text-limestone shadow-sm">
-        <p className="font-sans text-[14px]">Open a panel and move a slider.</p>
-        <p className="font-sans text-[14px]">Every number counts what's on the map.</p>
-        <p className="font-sans text-[14px]">Click a parcel for the details.</p>
+        {LINES.map((line) => (
+          <p key={line} className="font-sans text-[14px]">
+            {line}
+          </p>
+        ))}
         <p className="mt-2 font-mono text-[12px]">Dismiss</p>
       </div>
     </div>

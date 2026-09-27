@@ -7,6 +7,7 @@ This is a decision-support prototype built in 39 hours. It is not legal, financi
 - The sliders apply one set of rules to every parcel in scope, regardless of the parcel's actual zoning district. The district is shown on each parcel page for reference. The tool shows what a given slider set would allow; it does not state the law for a particular parcel.
 - Starting slider positions match the current code for a low-density residential district only as a convenience; move anything.
 - Contextual setbacks, overlays, historic review, and other case-by-case approvals are not modeled. A parcel shown as non-conforming at a given setting may be approvable in practice, and vice versa. 237 N Aiken Ave is the example: at standard setbacks the building there did not conform; it was approved without a Zoning Board case.
+- **NEXT STEPS** on the parcel page is derived from the compliance checks and mapped facts at the current sliders. It is not a permit determination and does not replace review by the City of Pittsburgh Zoning Division, PLI, PWSA, or a licensed design professional.
 
 **Known gaps (shown as "unknown," never guessed)**
 

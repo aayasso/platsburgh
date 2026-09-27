@@ -8,7 +8,7 @@ Screenshots: [workspace](img/workspace.png) · [METHODOLOGY](img/methodology.png
 
 ### What it does
 
-One page. Set zoning regulations with sliders, describe a building with sliders, set five economics sliders — construction cost per square foot, sale price per square foot, household income, subsidy per unit, building pace — and every parcel in the current map view that passes the Site filters recolors as you move things. The results are a four-row table: **units on parcels conforming** (to the regulations set), **feasible** (value covers cost), **affordable** (a household at that income can carry the mortgage), and **subsidy required**. Click any parcel for eight compliance checks with the actual numbers, site conditions with their sources, and a pro forma in three views — development, household, public support.
+One page. Set zoning regulations with sliders, describe a building with sliders, set five economics sliders — construction cost per square foot, sale price per square foot, household income, subsidy per unit, building pace — and every parcel in the current map view that passes the Site filters recolors as you move things. The results are a four-row table: **units on parcels conforming** (to the regulations set), **feasible** (value covers cost), **affordable** (a household at that income can carry the mortgage), and **subsidy required**. Click any parcel for eight compliance checks with the actual numbers, site conditions with their sources, a pro forma in three views — development, household, public support — then **NEXT STEPS** (the filings that follow from those checks, with office and link) and **CONFIRM BEFORE YOU ACT**.
 
 There are no fixed rule sets and no hidden financial assumptions. The sliders on the page are the only inputs. The tool is neutral on construction method: construction cost is user-set, with observed marks for the NAHB 2024 site-built average and one Pittsburgh modular build; site and regulatory figures come from that build's invoices.
 
@@ -16,7 +16,7 @@ There are no fixed rule sets and no hidden financial assumptions. The sliders on
 - **Construction** — four sliders (width, depth, stories, units) and two checkboxes (Attached, ADU).
 - **Economics** — five sliders: construction cost per square foot (method-neutral; starts at **$200**, an assumed midpoint, with observed marks for the NAHB 2024 site-built US average **$162** and one Pittsburgh modular build **$260**), sale price per square foot (starts at **$160**, the citywide median of recent sales rounded to the slider step), household income (starts at 80% of area median for a three-person household), subsidy per unit, and building pace (**275**, from City of Pittsburgh PLI new residential construction permits, 2023–2025). A parcel is feasible when value covers cost plus assessed land and site conditions; affordable when the unit price is within that household's borrowing capacity.
 - **Site** — the map is the scope. Filters: vacant parcels only or all, any owner or city-owned, optional zoning district, near transit only (a quarter mile of a PRT stop), tax-delinquent or foreclosed only. Site conditions: exclude steep slope, flood zone, landslide-prone, undermined, no water service, stairs-only access, or condemned structures (off by default); minimum frontage.
-- **Results** — the four-row table (units, parcels, years), with years-to-build at the recent pace and subsidy payback in property tax; a map of every parcel in view; **Levers**; a CONSTRAINTS list; a PARCELS list with CSV download; a METHODOLOGY drawer; the page address reproduces any view.
+- **Results** — the four-row table (units, parcels, years), with years-to-build at the recent pace and subsidy payback in property tax; a map of every parcel in view; **Levers**; a CONSTRAINTS list; a PARCELS list with CSV download (the file starts with comment rows of the live parameters and source retrieval dates); a METHODOLOGY drawer; the page address reproduces any view. The first visit shows a short note over the map once per browser.
 
 ### Guiding principles
 
@@ -31,7 +31,7 @@ Planners and council staff testing what a regulation change would open up; peopl
 
 ### How compliance works
 
-See [RULES.md](RULES.md). Eight checks per parcel, in order: site conditions, parcel area, frontage, buildable area after setbacks, units per parcel, ADU, height, parking. The first failure is the parcel's constraint; all eight appear on the parcel page with the numbers. Unavailable site data is listed, never counted as a failure.
+See [RULES.md](RULES.md). Eight checks per parcel, in order: site conditions, parcel area, frontage, buildable area after setbacks, units per parcel, ADU, height, parking. The first failure is the parcel's constraint; all eight appear on the parcel page with the numbers. Unavailable site data is listed, never counted as a failure. **NEXT STEPS** on the parcel page is derived from those checks and parcel facts (building permit, stormwater review, contextual setback or variance, and site-specific filings). **CONFIRM BEFORE YOU ACT** is always shown. Neither is a permit determination.
 
 ### Run locally
 

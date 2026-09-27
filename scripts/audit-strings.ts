@@ -75,7 +75,12 @@ function extract(src: string): string[] {
   return found;
 }
 
-const files = [...walk(join(root, "app")), ...walk(join(root, "components"))];
+const files = [
+  ...walk(join(root, "app")),
+  ...walk(join(root, "components")),
+  join(root, "lib/nextSteps.ts"),
+  join(root, "lib/csvExport.ts"),
+];
 const missing: { file: string; text: string }[] = [];
 for (const file of files) {
   const src = readFileSync(file, "utf8");
