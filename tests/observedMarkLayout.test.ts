@@ -1,57 +1,20 @@
 import { describe, expect, it } from "vitest";
-import { layoutObservedMarks } from "../lib/observedMarkLayout";
+import { observedMarkLegend } from "../lib/observedMarkLayout";
 
-describe("observed-mark label layout", () => {
-  it("left-aligns in the first 15% and right-aligns in the last 15%", () => {
-    const [left] = layoutObservedMarks(
-      [{ value: 10, label: "L", width: 40 }],
-      0,
-      100,
-      200,
-    );
-    expect(left.align).toBe("left");
-    expect(left.labelLeft).toBe(20);
-    expect(left.tickX).toBe(20);
-
-    const [right] = layoutObservedMarks(
-      [{ value: 90, label: "R", width: 40 }],
-      0,
-      100,
-      200,
-    );
-    expect(right.align).toBe("right");
-    expect(right.labelLeft).toBe(180 - 40);
-    expect(right.tickX).toBe(180);
-  });
-
-  it("clamps labels to the track and drops a later overlapping label to row 1", () => {
-    const [first, second] = layoutObservedMarks(
-      [
-        { value: 50, label: "aaaaaa", width: 80 },
-        { value: 52, label: "bbbbbb", width: 80 },
-      ],
-      0,
-      100,
-      200,
-    );
-    expect(first.row).toBe(0);
-    expect(second.row).toBe(1);
-    expect(first.labelLeft).toBeGreaterThanOrEqual(0);
-    expect(first.labelLeft + first.width).toBeLessThanOrEqual(200);
-    expect(second.labelLeft).toBeGreaterThanOrEqual(0);
-    expect(second.labelLeft + second.width).toBeLessThanOrEqual(200);
-  });
-
-  it("keeps separated labels on the first row", () => {
-    const placed = layoutObservedMarks(
-      [
-        { value: 20, label: "a", width: 30 },
-        { value: 80, label: "b", width: 30 },
-      ],
-      0,
-      100,
-      200,
-    );
-    expect(placed.every((p) => p.row === 0)).toBe(true);
+describe("observed-mark legend", () => {
+  it("lists labels in ascending value order separated by middots", () => {
+    expect(
+      observedMarkLegend([
+        { value: 260, label: "2024 build $260" },
+        { value: 162, label: "site-built $162" },
+      ]),
+    ).toBe("site-built $162 · 2024 build $260");
+    expect(
+      observedMarkLegend([
+        { value: 335, label: "new construction $335" },
+        { value: 113, label: "local $113" },
+        { value: 160, label: "citywide $160" },
+      ]),
+    ).toBe("local $113 · citywide $160 · new construction $335");
   });
 });
