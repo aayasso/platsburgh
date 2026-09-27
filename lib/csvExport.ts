@@ -1,5 +1,6 @@
 import Papa from "papaparse";
 import type { EvaluatedParcel } from "./evaluate";
+import { historicDesignation, yesNoOrUnavailable, namedDistanceValue, countOrUnavailable, hydrantValue } from "./parcelSiteFacts";
 import { SOURCES } from "./sources";
 import type { SiteConditions } from "./types";
 import type { WorkspaceState } from "./urlState";
@@ -83,6 +84,13 @@ export function parcelCsvRows(parcels: EvaluatedParcel[]) {
               ? "Site data unavailable"
               : (p.constraint ?? "Non-conforming"),
     "Subsidy required": p.subsidyRequired > 0 ? p.subsidyRequired : "",
+    "Historic designation": historicDesignation(p.lot.historicDistrict, p.lot.historicSite),
+    "Opportunity Zone": yesNoOrUnavailable(p.lot.opportunityZone),
+    "Nearest school": namedDistanceValue(p.lot.schoolName, p.lot.schoolDistFt),
+    "Nearest park": namedDistanceValue(p.lot.parkName, p.lot.parkDistFt),
+    "Transit trips/hr": p.lot.transitTripsPerHour ?? "",
+    "Nearest hydrant": hydrantValue(p.lot.hydrantDistFt),
+    "Street trees": countOrUnavailable(p.lot.frontageTrees),
   }));
 }
 
@@ -101,6 +109,13 @@ export function buildParcelsCsv(
       "Frontage (ft)",
       "Status",
       "Subsidy required",
+      "Historic designation",
+      "Opportunity Zone",
+      "Nearest school",
+      "Nearest park",
+      "Transit trips/hr",
+      "Nearest hydrant",
+      "Street trees",
     ],
     data: parcelCsvRows(parcels),
   });

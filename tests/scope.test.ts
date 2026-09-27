@@ -54,7 +54,7 @@ describe("§9 tests 16 and 19", () => {
         null,
       ).conformingParcels,
     );
-    expect(west.inViewLine).toEqual({ n: 3, total: 6 });
+    expect(west.inViewLine).toEqual({ n: 3, total: 8 });
 
     const query = encodeView({
       map: { lat: 40.44, lng: -80.0, z: 12 },

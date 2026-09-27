@@ -11,6 +11,7 @@ This is a decision-support prototype built in 39 hours. It is not legal, financi
 
 **Known gaps (shown as "unknown," never guessed)**
 
+- Power lines, gas mains, sewer mains, water mains, lead service lines, and hydrants are not published as open data.
 - Sewer tap availability and capacity — no open dataset.
 - Soils and geotechnical conditions (only mapped landslide-prone and undermined status).
 - Title, easements, deed restrictions.
