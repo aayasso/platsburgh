@@ -1,6 +1,7 @@
 "use client";
 
 import { TokenSlider } from "@/components/workspace/TokenSlider";
+import { economicsMarks, regulationMarks } from "@/lib/observedMarks";
 import { economicsSliders, regulationSliders } from "@/lib/rules";
 import { fmtInt, fmtMoney } from "@/lib/format";
 import type { WorkspaceState } from "@/lib/urlState";
@@ -36,6 +37,7 @@ function SliderRow(props: {
   step: number;
   numeric: number;
   role?: string;
+  marks?: { value: number; label: string }[];
   onChange: (n: number) => void;
 }) {
   return (
@@ -57,6 +59,7 @@ function SliderRow(props: {
         step={props.step}
         value={props.numeric}
         onValueChange={props.onChange}
+        marks={props.marks}
       />
     </div>
   );
@@ -65,6 +68,7 @@ function SliderRow(props: {
 export function LeftPanel(props: {
   state: WorkspaceState;
   districts: string[];
+  localSaleMedian: number | null;
   onChange: (next: WorkspaceState) => void;
 }) {
   const { state, onChange } = props;
@@ -108,6 +112,7 @@ export function LeftPanel(props: {
               max={s.max}
               step={s.step}
               numeric={numeric}
+              marks={regulationMarks(s.key)}
               onChange={(n) => {
                 if (key === "aduAllowed") {
                   onChange({ ...state, regulations: { ...r, aduAllowed: n >= 1 } });
@@ -211,6 +216,7 @@ export function LeftPanel(props: {
               max={s.max}
               step={s.step}
               numeric={numeric}
+              marks={economicsMarks(s.key, props.localSaleMedian)}
               onChange={(n) => onChange({ ...state, economics: { ...e, [key]: n } })}
             />
           );

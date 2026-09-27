@@ -8,6 +8,7 @@ import {
   proforma,
 } from "@/lib/proforma";
 import { annualTaxPerUnit, paybackYears } from "@/lib/publicReturn";
+import { economicsMarks, OBSERVED_MARKS } from "@/lib/observedMarks";
 import { economicsSliders } from "@/lib/rules";
 import type { NeighborhoodSales } from "@/lib/salesMedians";
 import type { Lot } from "@/lib/types";
@@ -19,6 +20,7 @@ function LineSlider(props: {
   max: number;
   step: number;
   numeric: number;
+  marks?: { value: number; label: string }[];
   onChange: (n: number) => void;
 }) {
   return (
@@ -29,6 +31,7 @@ function LineSlider(props: {
         max={props.max}
         step={props.step}
         value={props.numeric}
+        marks={props.marks}
         onValueChange={props.onChange}
       />
       {props.valueLabel ? (
@@ -86,6 +89,7 @@ export function ProForma(props: {
                 max={construction.max}
                 step={construction.step}
                 numeric={state.economics.buildCostPerSf}
+                marks={OBSERVED_MARKS.buildCostPerSf}
                 onChange={(n) => props.onEconomics("buildCostPerSf", n)}
               />
               <Source>
@@ -122,6 +126,7 @@ export function ProForma(props: {
                 max={sale.max}
                 step={sale.step}
                 numeric={state.economics.salePricePerSf}
+                marks={economicsMarks("salePricePerSf", lot.compsPpsf ?? null)}
                 onChange={(n) => props.onEconomics("salePricePerSf", n)}
               />
               <Source>
@@ -162,6 +167,7 @@ export function ProForma(props: {
                 max={income.max}
                 step={income.step}
                 numeric={state.economics.buyerIncome}
+                marks={OBSERVED_MARKS.buyerIncome}
                 onChange={(n) => props.onEconomics("buyerIncome", n)}
               />
               <Source>HUD FY2026 · 80% of area median · 3-person household</Source>
@@ -188,6 +194,7 @@ export function ProForma(props: {
                 max={9}
                 step={0.05}
                 numeric={h.mortgageRate * 100}
+                marks={OBSERVED_MARKS.mortgageRatePct}
                 onChange={(n) => props.onHousehold({ ...h, mortgageRate: n / 100 })}
               />
               <Term
@@ -303,6 +310,7 @@ function Term(props: {
   max: number;
   step: number;
   numeric: number;
+  marks?: { value: number; label: string }[];
   onChange: (n: number) => void;
 }) {
   return (
@@ -317,6 +325,7 @@ function Term(props: {
         max={props.max}
         step={props.step}
         value={props.numeric}
+        marks={props.marks}
         onValueChange={props.onChange}
       />
     </div>

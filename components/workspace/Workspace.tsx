@@ -9,6 +9,7 @@ import { MethodologyDrawer } from "@/components/workspace/MethodologyDrawer";
 import { ParcelMap } from "@/components/workspace/ParcelMap";
 import { evaluateWorkspace, type Evaluation } from "@/lib/evaluate";
 import { levers, type LeverRow } from "@/lib/levers";
+import { localCompsMedian } from "@/lib/observedMarks";
 import type { Lot, ViewBounds } from "@/lib/types";
 import {
   decodeView,
@@ -168,7 +169,12 @@ export function Workspace() {
         <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-centerline" />
       </header>
       {lots ? (
-        <LeftPanel state={state} districts={districts} onChange={persist} />
+        <LeftPanel
+          state={state}
+          districts={districts}
+          localSaleMedian={localCompsMedian(evaluation.parcels.map((p) => p.lot))}
+          onChange={persist}
+        />
       ) : (
         <aside className="pointer-events-none absolute bottom-[52px] left-0 top-[var(--top-bar)] z-20 w-[380px] bg-pine p-4 font-sans text-[15px] text-limestone">
           Loading parcels…

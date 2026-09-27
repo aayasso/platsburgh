@@ -24,6 +24,11 @@ export type Lot = {
   transitDistM: number | "unknown";
   taxDelinquent: boolean | "unknown";
   foreclosure: boolean | "unknown";
+  compsPpsf?: number | null;
+  compsN?: number;
+  zip?: string;
+  fmr2br?: number | null;
+  fmrMetro?: boolean;
 };
 
 export type Regulations = {
