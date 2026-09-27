@@ -1,6 +1,8 @@
+import { execFileSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { PITTSBURGH_METRO_FMR_2BR, SAFMR_FY2026_URL } from "../lib/fmr";
 import * as turf from "@turf/turf";
 import type { Feature, LineString, Polygon } from "geojson";
 import { pageArcGisGeoJSON, queryArcGisCount } from "../lib/arcgis";
@@ -82,6 +84,181 @@ function median(values: number[]): number | null {
   const s = [...values].sort((a, b) => a - b);
   const m = Math.floor(s.length / 2);
   return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+}
+
+function zip5(raw: string): string {
+  const d = (raw ?? "").replace(/\D/g, "");
+  return d.slice(0, 5);
+}
+
+type SalePsf = { pin: string; ppsf: number };
+
+/** Median $/finished sf of arm's-length sales within 800 m, via a 400 m spatial grid. */
+function assignCompsByDistance(
+  lots: Lot[],
+  sales: SalePsf[],
+  coords: Map<string, { lon: number; lat: number }>,
+) {
+  const pts: { lon: number; lat: number; ppsf: number }[] = [];
+  for (const s of sales) {
+    const loc = coords.get(s.pin);
+    if (!loc) continue;
+    pts.push({ lon: loc.lon, lat: loc.lat, ppsf: s.ppsf });
+  }
+  const CELL = 400;
+  const R2 = 800 * 800;
+  const mLat = 111_320;
+  const mLon = 111_320 * Math.cos((40.44 * Math.PI) / 180);
+  const grid = new Map<string, typeof pts>();
+  const cellKey = (lon: number, lat: number) =>
+    `${Math.floor((lon * mLon) / CELL)},${Math.floor((lat * mLat) / CELL)}`;
+  for (const p of pts) {
+    const k = cellKey(p.lon, p.lat);
+    const arr = grid.get(k);
+    if (arr) arr.push(p);
+    else grid.set(k, [p]);
+  }
+  const t0 = Date.now();
+  for (const lot of lots) {
+    const cx = Math.floor((lot.lon * mLon) / CELL);
+    const cy = Math.floor((lot.lat * mLat) / CELL);
+    const vals: number[] = [];
+    for (let dx = -2; dx <= 2; dx++) {
+      for (let dy = -2; dy <= 2; dy++) {
+        const cell = grid.get(`${cx + dx},${cy + dy}`);
+        if (!cell) continue;
+        for (const p of cell) {
+          const dLat = (p.lat - lot.lat) * mLat;
+          const dLon = (p.lon - lot.lon) * mLon;
+          if (dLat * dLat + dLon * dLon <= R2) vals.push(p.ppsf);
+        }
+      }
+    }
+    lot.compsN = vals.length;
+    lot.compsPpsf = median(vals);
+  }
+  log(
+    `Comps by distance: ${pts.length} geocoded sales of ${sales.length}, ${lots.length} parcels, ${Date.now() - t0} ms (800 m, 400 m grid).`,
+  );
+}
+
+async function coordsForSales(sales: SalePsf[], lots: Lot[]) {
+  const coords = new Map<string, { lon: number; lat: number }>();
+  for (const l of lots) coords.set(l.id, { lon: l.lon, lat: l.lat });
+  const geom = readCache<{
+    features: { id: string; geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon }[];
+  }>("geometry.json");
+  if (geom) {
+    for (const f of geom.features) {
+      if (coords.has(f.id)) continue;
+      const c = centroidLonLat(f.geometry);
+      coords.set(f.id, { lon: c.lon, lat: c.lat });
+    }
+  }
+  const missing = [...new Set(sales.map((s) => s.pin))].filter((p) => !coords.has(p));
+  if (missing.length) {
+    log(`Sale PINs missing geometry: ${missing.length}; fetching from County.`);
+    const extra = await fetchPinsFromCounty(missing);
+    for (const f of extra) {
+      const c = centroidLonLat(f.geometry);
+      coords.set(f.id, { lon: c.lon, lat: c.lat });
+    }
+    log(`Sale PINs geocoded after County fetch: ${sales.filter((s) => coords.has(s.pin)).length}`);
+  }
+  return coords;
+}
+
+function parseSafmrXlsx(xlsxPath: string): Record<string, number> {
+  const py = `
+import json, sys, zipfile, xml.etree.ElementTree as ET
+ns = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
+z = zipfile.ZipFile(sys.argv[1])
+ss = ET.fromstring(z.read("xl/sharedStrings.xml"))
+strings = ["".join(t.text or "" for t in si.iter("{http://schemas.openxmlformats.org/spreadsheetml/2006/main}t")) for si in ss.findall("m:si", ns)]
+sheet = ET.fromstring(z.read("xl/worksheets/sheet1.xml"))
+out = {}
+for i, row in enumerate(sheet.findall("m:sheetData/m:row", ns)):
+    if i == 0:
+        continue
+    cells = {}
+    for c in row.findall("m:c", ns):
+        ref = c.get("r") or ""
+        col = "".join(ch for ch in ref if ch.isalpha())
+        v = c.find("m:v", ns)
+        if v is None or v.text is None:
+            continue
+        cells[col] = strings[int(v.text)] if c.get("t") == "s" else v.text
+    zc = (cells.get("A") or "").strip()[:5]
+    try:
+        br2 = float(cells.get("J") or "")
+    except ValueError:
+        continue
+    if zc.isdigit() and len(zc) == 5:
+        out[zc] = br2
+print(json.dumps(out))
+`;
+  const raw = execFileSync("python3", ["-c", py, xlsxPath], {
+    encoding: "utf8",
+    maxBuffer: 80_000_000,
+  });
+  return JSON.parse(raw) as Record<string, number>;
+}
+
+async function stepSafmr(): Promise<{
+  byZip: Record<string, number>;
+  usedMetro: boolean;
+  url: string;
+}> {
+  log("## HUD FY2026 Small Area FMRs");
+  const dest = cachePath("fy2026_safmrs.xlsx");
+  try {
+    if (!existsSync(dest)) {
+      const res = await fetch(SAFMR_FY2026_URL, {
+        headers: { "User-Agent": "Mozilla/5.0 (compatible; Platsburgh/1.0; research)" },
+      });
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      writeFileSync(dest, Buffer.from(await res.arrayBuffer()));
+    }
+    const byZip = parseSafmrXlsx(dest);
+    log(`SAFMR file ${SAFMR_FY2026_URL}: ${Object.keys(byZip).length} ZIP rows.`);
+    return { byZip, usedMetro: false, url: SAFMR_FY2026_URL };
+  } catch (e) {
+    log(
+      `SAFMR unreachable (${e instanceof Error ? e.message : e}); using Pittsburgh HUD Metro FMR Area 2-bedroom FMR ${PITTSBURGH_METRO_FMR_2BR}.`,
+    );
+    return { byZip: {}, usedMetro: true, url: SAFMR_FY2026_URL };
+  }
+}
+
+function applyZipAndFmr(
+  lots: Lot[],
+  zipByPin: Map<string, string>,
+  safmr: { byZip: Record<string, number>; usedMetro: boolean },
+) {
+  let withZip = 0;
+  let withSafmr = 0;
+  for (const lot of lots) {
+    const z = zipByPin.get(lot.id) ?? lot.zip ?? "";
+    if (z) {
+      lot.zip = z;
+      withZip++;
+    }
+    if (safmr.usedMetro) {
+      lot.fmr2br = null;
+      lot.fmrMetro = true;
+      continue;
+    }
+    const n = z ? safmr.byZip[z] : undefined;
+    if (typeof n === "number" && Number.isFinite(n)) {
+      lot.fmr2br = n;
+      lot.fmrMetro = false;
+      withSafmr++;
+    } else {
+      lot.fmr2br = null;
+      lot.fmrMetro = true;
+    }
+  }
+  log(`ZIP on ${withZip} parcels; SAFMR 2BR on ${withSafmr}; metro flag when missing.`);
 }
 
 function addressOf(row: AssessmentRow): string {
@@ -219,7 +396,7 @@ async function fetchPinsFromCounty(pins: string[]) {
         kept.push({ id, geometry: f.geometry as GeoJSON.Polygon | GeoJSON.MultiPolygon });
       }
     }
-    log(`PIN batch ${i}: +${kept.length}`);
+    console.log(`PIN batch ${i}: +${kept.length}`);
   }
   return kept;
 }
@@ -481,10 +658,16 @@ async function stepSales(
   const res = pickDatastoreResource(pkg);
   if (!res) {
     log("NOT FOUND: sales datastore");
-    return { citywide: null as number | null, count: 0, byNeigh: {} as Record<string, number> };
+    return {
+      citywide: null as number | null,
+      count: 0,
+      byNeigh: {} as Record<string, number>,
+      sales: [] as SalePsf[],
+    };
   }
   const cutoff = new Date("2024-09-26T00:00:00Z");
   const prices: number[] = [];
+  const saleRows: SalePsf[] = [];
   const byNeigh: Record<string, number[]> = {};
   let priceField = "";
   let offset = 0;
@@ -521,6 +704,7 @@ async function stepSales(
       const psf = price / sf;
       if (psf < 20 || psf > 800) continue;
       prices.push(psf);
+      saleRows.push({ pin, ppsf: psf });
       const neigh = neighByPin.get(pin);
       if (neigh) {
         const list = byNeigh[neigh] ?? [];
@@ -554,7 +738,7 @@ async function stepSales(
       2,
     ),
   );
-  return { citywide, count: prices.length, byNeigh: byNeighMed };
+  return { citywide, count: prices.length, byNeigh: byNeighMed, sales: saleRows };
 }
 
 async function stepPace() {
@@ -828,6 +1012,7 @@ async function main() {
       transitDistM: prtPoints.length ? nearestPointMeters(lon, lat, prtPoints) : "unknown",
       taxDelinquent: delinquent ? delinquent.has(row.PARID) : "unknown",
       foreclosure: foreclosed ? foreclosed.has(row.PARID) : "unknown",
+      zip: zip5(row.PROPERTYZIP),
     };
     lots.push(lot);
     if (lots.length % 2000 === 0) {
@@ -836,8 +1021,7 @@ async function main() {
   }
   log(`assemble done in ${Date.now() - tAssemble} ms`);
 
-  writeFileSync(join(root, "data", "lots.json"), JSON.stringify(lots));
-  log(`Wrote data/lots.json: ${lots.length} lots (${withGeom} with geometry of ${assessments.length} vacant-or-residential).`);
+  log(`Assembled ${lots.length} lots (${withGeom} with geometry of ${assessments.length} vacant-or-residential).`);
 
   const unknownCounts: Record<string, number> = {};
   const keys = [
@@ -857,6 +1041,16 @@ async function main() {
   log(`Unknown counts: ${JSON.stringify(unknownCounts)}`);
 
   const sales = await stepSales(livingAreaAll, neighByPin);
+  assignCompsByDistance(lots, sales.sales, await coordsForSales(sales.sales, lots));
+  const zipByPin = new Map<string, string>();
+  for (const row of allAssess?.rows ?? assessments) {
+    const z = zip5(row.PROPERTYZIP);
+    if (z) zipByPin.set(row.PARID, z);
+  }
+  const safmr = await stepSafmr();
+  applyZipAndFmr(lots, zipByPin, safmr);
+  writeFileSync(join(root, "data", "lots.json"), JSON.stringify(lots));
+  log(`Wrote data/lots.json: ${lots.length} lots.`);
   await stepPace();
 
   const anchor = lots.find((l) => l.id === "0050M00032000000");
@@ -879,9 +1073,40 @@ async function main() {
   saveNotes();
 }
 
-main().catch((err) => {
+async function enrichExisting() {
+  notes.length = 0;
+  const lots = JSON.parse(readFileSync(join(root, "data", "lots.json"), "utf8")) as Lot[];
+  const allAssess = readCache<{ rows: AssessmentRow[] }>("assessments.json");
+  if (!allAssess?.rows?.length) throw new Error("assessments.json cache required for --enrich-only");
+  const livingAreaAll = new Map<string, number>();
+  const neighByPin = new Map<string, string>();
+  const zipByPin = new Map<string, string>();
+  for (const row of allAssess.rows) {
+    if (row.FINISHEDLIVINGAREA && row.FINISHEDLIVINGAREA > 0) {
+      livingAreaAll.set(row.PARID, row.FINISHEDLIVINGAREA);
+    }
+    if (row.NEIGHCODE) neighByPin.set(row.PARID, row.NEIGHCODE);
+    const z = zip5(row.PROPERTYZIP);
+    if (z) zipByPin.set(row.PARID, z);
+  }
+  const sales = await stepSales(livingAreaAll, neighByPin);
+  assignCompsByDistance(lots, sales.sales, await coordsForSales(sales.sales, lots));
+  const safmr = await stepSafmr();
+  applyZipAndFmr(lots, zipByPin, safmr);
+  writeFileSync(join(root, "data", "lots.json"), JSON.stringify(lots));
+  log(`Wrote data/lots.json: ${lots.length} lots (enrich-only).`);
+  const prev = existsSync(notesPath) ? readFileSync(notesPath, "utf8").trimEnd() : "";
+  const added = notes.filter((l) => !prev.includes(l));
+  writeFileSync(notesPath, `${prev}\n\n## Ground truth data (comps, ZIP, SAFMR)\n\n${added.join("\n")}\n`);
+}
+
+const enrichOnly = process.argv.includes("--enrich-only");
+const run = enrichOnly ? enrichExisting : main;
+run().catch((err) => {
   console.error(err);
-  notes.push(`FATAL: ${err instanceof Error ? err.stack ?? err.message : err}`);
-  saveNotes();
+  if (!enrichOnly) {
+    notes.push(`FATAL: ${err instanceof Error ? err.stack ?? err.message : err}`);
+    saveNotes();
+  }
   process.exit(1);
 });

@@ -84,4 +84,10 @@ export const SOURCES: SourceRow[] = [
     retrieved: "2026-09-26",
     url: "https://data.wprdc.org/dataset/real-estate-sales",
   },
+  {
+    name: "HUD FY2026 Small Area FMRs",
+    publisher: "HUD",
+    retrieved: "2026-09-26",
+    url: "https://www.huduser.gov/portal/datasets/fmr/fmr2026/fy2026_safmrs.xlsx",
+  },
 ];

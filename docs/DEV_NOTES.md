@@ -309,4 +309,8 @@ Citywide sale median $/sf: 161.14285714285714 from 7463 sales.
 
 - Basemap is OpenFreeMap dark (no token). MapLibre's worker is served from `/maplibre-gl-worker.mjs` (copied into `public/` with `maplibre-gl-shared.mjs`) because Next/Turbopack does not load the default worker URL. If the style fails, a plain `map-bg` canvas still shows dots and neighborhood outlines.
 
+## Ground truth data (comps, ZIP, SAFMR)
 
+- **Comps by distance:** median $/finished sq ft of arm's-length sales within 800 m over the prior 24 months. Spatial grid 400 m; **7286** of **7463** sales geocoded (County PIN fetch for sales not in the 40k lots file). Assigned on **39,207** parcels in **445 ms**.
+- **ZIP:** `PROPERTYZIP` from assessments, five digits, on every parcel in lots.json.
+- **HUD FY2026 Small Area FMRs:** `https://www.huduser.gov/portal/datasets/fmr/fmr2026/fy2026_safmrs.xlsx` (38,601 ZIP rows). 2-bedroom column `SAFMR 2BR`. Every parcel in this file matched a ZIP. If the file is unreachable, use Pittsburgh HUD Metro FMR Area 2-bedroom FMR **$1,299** and set `fmrMetro` so the parcel page reads "metro".
