@@ -164,12 +164,13 @@ export const economicsSliders: SliderDef[] = [
     key: "buildCostPerSf",
     label: "Construction cost per sq ft",
     explanation:
-      "Hard cost per finished square foot, excluding land. Land and site conditions are added from parcel records.",
+      "Hard cost per finished square foot for any construction method, excluding land. Land and site conditions are added from parcel records.",
     min: 80,
     max: 400,
     step: 5,
-    default: 260,
-    source: "237 N Aiken actual, 2023–24",
+    default: 200,
+    source:
+      "default $200 (assumed) between NAHB 2024 site-built average $162 and an observed Pittsburgh modular build $260",
     panel: "economics",
     role: "DEVELOPER",
   },
@@ -224,7 +225,7 @@ export const economicsSliders: SliderDef[] = [
 ];
 
 export const DEFAULT_ECONOMICS: Economics = {
-  buildCostPerSf: 260,
+  buildCostPerSf: 200,
   salePricePerSf: 160,
   buyerIncome: 79_500,
   subsidyPerUnit: 0,

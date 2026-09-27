@@ -164,7 +164,7 @@ export function proforma(
 export function namedSiteConditions(lot: Lot): string {
   const names: string[] = [];
   const slope = typeof lot.slopeShare === "number" ? lot.slopeShare : 0;
-  if (lot.widthFt < 25) names.push("narrow parcel (under 25 ft), staging + street");
+  if (lot.widthFt < 25) names.push("Access, staging, and street logistics on a lot under 25 ft");
   if (slope > 0.1) names.push("slope");
   if (lot.landslide === true || lot.undermined === true) names.push("geotech");
   if (lot.water === false) names.push("no water service");

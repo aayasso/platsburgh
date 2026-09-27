@@ -33,7 +33,8 @@ const base = {
 
 describe("§9 test 20 ground truth", () => {
   it("observed-mark values match COPY.md", () => {
-    expect(OBSERVED_MARKS.buildCostPerSf[0].value).toBe(260);
+    expect(OBSERVED_MARKS.buildCostPerSf[0].value).toBe(162);
+    expect(OBSERVED_MARKS.buildCostPerSf[1].value).toBe(260);
     expect(OBSERVED_MARKS.salePriceCitywide.value).toBe(160);
     expect(OBSERVED_MARKS.buyerIncome[0].value).toBe(79_500);
     expect(OBSERVED_MARKS.buildingPace[0].value).toBe(273);
@@ -44,7 +45,7 @@ describe("§9 test 20 ground truth", () => {
   });
 
   it("GROUND TRUTH table is rendered from lib/groundTruth.ts", () => {
-    expect(GROUND_TRUTH.length).toBe(24);
+    expect(GROUND_TRUTH.length).toBe(23);
     expect(GROUND_TRUTH.map((r) => r.item).join("\n")).toContain("Building permit fee");
   });
 

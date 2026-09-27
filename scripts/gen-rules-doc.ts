@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { GROUND_TRUTH, GROUND_TRUTH_FOOTER, GROUND_TRUTH_INTRO } from "../lib/groundTruth";
+import { GROUND_TRUTH_FOOTER, GROUND_TRUTH_GROUPS, GROUND_TRUTH_INTRO } from "../lib/groundTruth";
 import { economicsSliders, householdSliders, regulationSliders } from "../lib/rules";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -15,9 +15,10 @@ const rows = sliders
   )
   .join("\n");
 
-const gt = GROUND_TRUTH.map(
-  (r) => `| ${r.item} | ${r.figure} | ${r.source} | ${r.date} |`,
-).join("\n");
+const gt = GROUND_TRUTH_GROUPS.map((g) => {
+  const rows = g.rows.map((r) => `| ${r.item} | ${r.figure} | ${r.source} | ${r.date} |`).join("\n");
+  return `### ${g.heading}\n\n| Item | Figure | Source | Date |\n|---|---|---|---|\n${rows}`;
+}).join("\n\n");
 
 const md = `# Rules
 
@@ -33,8 +34,6 @@ ${rows}
 
 ${GROUND_TRUTH_INTRO}
 
-| Item | Figure | Source | Date |
-|---|---|---|---|
 ${gt}
 
 ${GROUND_TRUTH_FOOTER}

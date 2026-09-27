@@ -14,7 +14,7 @@ Eight checks per parcel, in order: site conditions, parcel area, frontage, build
 | unitsPerLot | Units per parcel | Maximum dwelling units on one parcel. | 1 | 60 | 1 | 1 | §911.02 |
 | parkingPerUnit | Parking per unit | Off-street parking spaces required per dwelling unit. | 0 | 2 | 1 | 1 | Ch. 914 |
 | aduAllowed | ADUs permitted | Whether an accessory dwelling unit is permitted on the parcel. | 0 | 1 | 1 | false | Ch. 912 |
-| buildCostPerSf | Construction cost per sq ft | Hard cost per finished square foot, excluding land. Land and site conditions are added from parcel records. | 80 | 400 | 5 | 260 | 237 N Aiken actual, 2023–24 |
+| buildCostPerSf | Construction cost per sq ft | Hard cost per finished square foot for any construction method, excluding land. Land and site conditions are added from parcel records. | 80 | 400 | 5 | 200 | default $200 (assumed) between NAHB 2024 site-built average $162 and an observed Pittsburgh modular build $260 |
 | salePricePerSf | Sale price per sq ft | Market value per finished square foot. | 60 | 500 | 5 | 160 | WPRDC sales, prior 24 months, retrieved 2026-09-26 |
 | buyerIncome | Household income | The household the units should be affordable to. | 30000 | 250000 | 1000 | 79500 | HUD FY2026, 80% of area median, 3-person household |
 | subsidyPerUnit | Subsidy per unit | Public capital contributed per unit. | 0 | 150000 | 5000 | 0 | user-defined |
@@ -27,7 +27,9 @@ Eight checks per parcel, in order: site conditions, parcel area, frontage, build
 
 ## GROUND TRUTH
 
-What building actually costs and takes in Pittsburgh, from one completed project and public records. Reference only.
+What building actually costs and takes in Pittsburgh, from public records and one completed project. Reference only; the tool is neutral on construction method.
+
+### Any construction method
 
 | Item | Figure | Source | Date |
 |---|---|---|---|
@@ -39,21 +41,25 @@ What building actually costs and takes in Pittsburgh, from one completed project
 | Utility change orders (ACHD check valve, curb valve, storm core, road bond) | $4,670 | 237 N Aiken invoices | 2024 |
 | Street repair after utility cut | $5,015 | 237 N Aiken invoices | 2024 |
 | Electric service (two meters, two panels) | $5,350 | 237 N Aiken invoices | 2024 |
-| Site prep and precast foundation (184 linear ft) | $49,486 (≈ $50.70 per footprint sq ft; $139 per linear ft) | 237 N Aiken invoices | 2023–24 |
-| Crane, set crew, toter, cones (three modules, 1.5 days) | $29,632 | 237 N Aiken invoices | Dec 2023 |
-| Extra crane site prep and traffic control | $8,920 | 237 N Aiken invoices | 2024 |
-| Neighbor staging agreement (22-ft lot, no alley) | $14,000 | 237 N Aiken agreement | Nov 2023 |
-| Factory cost, volumetric modular, high-spec two-unit | $175 per finished sq ft; freight $10,668 for three modules from Strattanville, PA | 237 N Aiken final invoice | 2024 |
-| Factory start to set day | 164 days (modules ~80% built in 30 days) | 237 N Aiken records | 2023 |
-| Set day to certificate of occupancy | 229 days | 237 N Aiken records | 2023–24 |
-| Factory start to occupancy | 393 days | 237 N Aiken records | 2023–24 |
+| Site prep and foundation (precast, 184 linear ft) | $49,486 (≈ $50.70 per footprint sq ft) | 237 N Aiken invoices | 2023–24 |
+| Access, staging, and street logistics on a lot under 25 ft with no alley | $14,000 neighbor agreement + $8,920 street work | 237 N Aiken records | 2023–24 |
+| Site work complete to certificate of occupancy | 229 days | 237 N Aiken records | 2023–24 |
 | Construction interest | $33,269 on $537,600 over nine months at prime | 237 N Aiken loan statements | 2024 |
 | Design, survey, appraisal, title, insurance | ≈ $23,400 combined | 237 N Aiken invoices | 2023–24 |
-| Total documented cost, 2,667 finished sq ft | $853,890 (≈ $320 per sq ft) | 237 N Aiken cost basis | 2024 |
-| Appraised value, same building | $865,000 (≈ $324 per sq ft) | FNB appraisal | Jan 2025 |
+| Site-built construction cost, US average | $162 per finished sq ft | NAHB Cost of Constructing a Home | 2024 |
 | Citywide sale price, arm's-length, prior 24 months | $161 per finished sq ft median, 7,463 sales | WPRDC sales | retrieved 2026-09-26 |
+| Appraised value, new two-unit, 2,667 sq ft | $865,000 (≈ $324 per sq ft) | FNB appraisal | Jan 2025 |
 | New residential units permitted per year | 380 · 256 · 183 (avg 273) | City PLI permits | 2023–2025 |
 | 30-year mortgage rate | 7.03% | Freddie Mac PMMS | Sept 24, 2026 |
 | Area median income, three-person household | $99,400 (80%: $79,500) | HUD FY2026 | May 2026 |
 
-A contextual setback was approved administratively on this project with no Zoning Board case; the tool does not model approvals. Figures are one project's invoices and are shown as reference, not estimates.
+### Observed on a modular build (method-specific)
+
+| Item | Figure | Source | Date |
+|---|---|---|---|
+| Factory cost, volumetric modular, high-spec two-unit | $175 per finished sq ft; freight $10,668 for three modules from Strattanville, PA | 237 N Aiken final invoice | 2024 |
+| Crane, set crew, toter, cones (three modules, 1.5 days) | $29,632 | 237 N Aiken invoices | Dec 2023 |
+| Factory start to set day | 164 days (modules ~80% built in 30 days) | 237 N Aiken records | 2023 |
+| Total documented cost, modular two-unit, 2,667 finished sq ft | $853,890 (≈ $320 per sq ft; ≈ $260 hard) | 237 N Aiken cost basis | 2024 |
+
+The tool does not assume a construction method; the construction-cost slider is yours to set. The one observed project happened to be modular, so its method-specific figures are grouped separately. A contextual setback was approved administratively on that project with no Zoning Board case; the tool does not model approvals.

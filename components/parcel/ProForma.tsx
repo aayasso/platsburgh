@@ -92,7 +92,8 @@ export function ProForma(props: {
                 onChange={(n) => props.onEconomics("buildCostPerSf", n)}
               />
               <Source>
-                × {fmtInt(pf.finishedSf)} sq ft · 237 N Aiken actual
+                × {fmtInt(pf.finishedSf)} sq ft · any method; default assumed between NAHB 2024 and
+                an observed modular build
               </Source>
             </Row>
             <Row label="Land" amount={fmtMoney(land)}>
@@ -114,7 +115,7 @@ export function ProForma(props: {
                 onChange={props.onSite}
               />
               <Source>
-                estimated: {named} · 237 N Aiken actual
+                estimated: {named} · observed on one Pittsburgh build
               </Source>
             </Row>
             <Row label="Total cost" amount={fmtMoney(pf.cost)} strong />
@@ -455,8 +456,9 @@ function AssumptionsAndSummary(props: {
             PMMS 2026-09-24
           </p>
           <p className="mt-2">
-            Cost anchor: one completed modular two-unit at 237 N Aiken Ave, Pittsburgh (2023–24),
-            documented at $853,890. Not an appraisal, underwriting, or a loan offer.
+            Site and regulatory figures come from one completed Pittsburgh project (237 N Aiken Ave,
+            2023–24, documented at $853,890); construction cost is method-neutral and set by you. Not
+            an appraisal, underwriting, or a loan offer.
           </p>
           <p className="mt-1 font-mono text-[11px]">
             Construction cost {fmtMoney(e.buildCostPerSf)} / sq ft · Sale price{" "}

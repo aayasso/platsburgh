@@ -4,7 +4,10 @@ export type ObservedMark = { value: number; label: string };
 
 /** Ticks listed in COPY.md "Observed marks on sliders". Clicking does nothing. */
 export const OBSERVED_MARKS = {
-  buildCostPerSf: [{ value: 260, label: "actual $260" }] as ObservedMark[],
+  buildCostPerSf: [
+    { value: 162, label: "site-built US avg $162" },
+    { value: 260, label: "modular PGH $260" },
+  ] as ObservedMark[],
   salePriceCitywide: { value: 160, label: "citywide $160" } as ObservedMark,
   buyerIncome: [{ value: 79_500, label: "80% AMI $79,500" }] as ObservedMark[],
   buildingPace: [{ value: 273, label: "2023–25 avg 273" }] as ObservedMark[],

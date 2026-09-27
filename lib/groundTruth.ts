@@ -5,14 +5,18 @@ export type GroundTruthRow = {
   date: string;
 };
 
+export type GroundTruthGroup = {
+  heading: string;
+  rows: GroundTruthRow[];
+};
+
 export const GROUND_TRUTH_INTRO =
-  "What building actually costs and takes in Pittsburgh, from one completed project and public records. Reference only.";
+  "What building actually costs and takes in Pittsburgh, from public records and one completed project. Reference only; the tool is neutral on construction method.";
 
 export const GROUND_TRUTH_FOOTER =
-  "A contextual setback was approved administratively on this project with no Zoning Board case; the tool does not model approvals. Figures are one project's invoices and are shown as reference, not estimates.";
+  "The tool does not assume a construction method; the construction-cost slider is yours to set. The one observed project happened to be modular, so its method-specific figures are grouped separately. A contextual setback was approved administratively on that project with no Zoning Board case; the tool does not model approvals.";
 
-/** GROUND TRUTH table rows, verbatim from COPY.md. */
-export const GROUND_TRUTH: GroundTruthRow[] = [
+export const GROUND_TRUTH_ANY: GroundTruthRow[] = [
   {
     item: "Building permit fee (two-unit, ~2,700 sq ft)",
     figure: "$1,970",
@@ -62,51 +66,20 @@ export const GROUND_TRUTH: GroundTruthRow[] = [
     date: "2024",
   },
   {
-    item: "Site prep and precast foundation (184 linear ft)",
-    figure: "$49,486 (≈ $50.70 per footprint sq ft; $139 per linear ft)",
+    item: "Site prep and foundation (precast, 184 linear ft)",
+    figure: "$49,486 (≈ $50.70 per footprint sq ft)",
     source: "237 N Aiken invoices",
     date: "2023–24",
   },
   {
-    item: "Crane, set crew, toter, cones (three modules, 1.5 days)",
-    figure: "$29,632",
-    source: "237 N Aiken invoices",
-    date: "Dec 2023",
-  },
-  {
-    item: "Extra crane site prep and traffic control",
-    figure: "$8,920",
-    source: "237 N Aiken invoices",
-    date: "2024",
-  },
-  {
-    item: "Neighbor staging agreement (22-ft lot, no alley)",
-    figure: "$14,000",
-    source: "237 N Aiken agreement",
-    date: "Nov 2023",
-  },
-  {
-    item: "Factory cost, volumetric modular, high-spec two-unit",
-    figure:
-      "$175 per finished sq ft; freight $10,668 for three modules from Strattanville, PA",
-    source: "237 N Aiken final invoice",
-    date: "2024",
-  },
-  {
-    item: "Factory start to set day",
-    figure: "164 days (modules ~80% built in 30 days)",
+    item: "Access, staging, and street logistics on a lot under 25 ft with no alley",
+    figure: "$14,000 neighbor agreement + $8,920 street work",
     source: "237 N Aiken records",
-    date: "2023",
+    date: "2023–24",
   },
   {
-    item: "Set day to certificate of occupancy",
+    item: "Site work complete to certificate of occupancy",
     figure: "229 days",
-    source: "237 N Aiken records",
-    date: "2023–24",
-  },
-  {
-    item: "Factory start to occupancy",
-    figure: "393 days",
     source: "237 N Aiken records",
     date: "2023–24",
   },
@@ -123,22 +96,22 @@ export const GROUND_TRUTH: GroundTruthRow[] = [
     date: "2023–24",
   },
   {
-    item: "Total documented cost, 2,667 finished sq ft",
-    figure: "$853,890 (≈ $320 per sq ft)",
-    source: "237 N Aiken cost basis",
+    item: "Site-built construction cost, US average",
+    figure: "$162 per finished sq ft",
+    source: "NAHB Cost of Constructing a Home",
     date: "2024",
-  },
-  {
-    item: "Appraised value, same building",
-    figure: "$865,000 (≈ $324 per sq ft)",
-    source: "FNB appraisal",
-    date: "Jan 2025",
   },
   {
     item: "Citywide sale price, arm's-length, prior 24 months",
     figure: "$161 per finished sq ft median, 7,463 sales",
     source: "WPRDC sales",
     date: "retrieved 2026-09-26",
+  },
+  {
+    item: "Appraised value, new two-unit, 2,667 sq ft",
+    figure: "$865,000 (≈ $324 per sq ft)",
+    source: "FNB appraisal",
+    date: "Jan 2025",
   },
   {
     item: "New residential units permitted per year",
@@ -159,3 +132,39 @@ export const GROUND_TRUTH: GroundTruthRow[] = [
     date: "May 2026",
   },
 ];
+
+export const GROUND_TRUTH_MODULAR: GroundTruthRow[] = [
+  {
+    item: "Factory cost, volumetric modular, high-spec two-unit",
+    figure:
+      "$175 per finished sq ft; freight $10,668 for three modules from Strattanville, PA",
+    source: "237 N Aiken final invoice",
+    date: "2024",
+  },
+  {
+    item: "Crane, set crew, toter, cones (three modules, 1.5 days)",
+    figure: "$29,632",
+    source: "237 N Aiken invoices",
+    date: "Dec 2023",
+  },
+  {
+    item: "Factory start to set day",
+    figure: "164 days (modules ~80% built in 30 days)",
+    source: "237 N Aiken records",
+    date: "2023",
+  },
+  {
+    item: "Total documented cost, modular two-unit, 2,667 finished sq ft",
+    figure: "$853,890 (≈ $320 per sq ft; ≈ $260 hard)",
+    source: "237 N Aiken cost basis",
+    date: "2024",
+  },
+];
+
+/** GROUND TRUTH table, verbatim from COPY.md, in two groups. */
+export const GROUND_TRUTH_GROUPS: GroundTruthGroup[] = [
+  { heading: "Any construction method", rows: GROUND_TRUTH_ANY },
+  { heading: "Observed on a modular build (method-specific)", rows: GROUND_TRUTH_MODULAR },
+];
+
+export const GROUND_TRUTH: GroundTruthRow[] = GROUND_TRUTH_GROUPS.flatMap((g) => g.rows);

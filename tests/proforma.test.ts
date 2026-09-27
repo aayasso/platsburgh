@@ -36,7 +36,7 @@ describe("§9 tests 9–13, 17–18", () => {
     const pf = proforma(
       anchor,
       anchorBuilding,
-      DEFAULT_ECONOMICS,
+      { ...DEFAULT_ECONOMICS, buildCostPerSf: 260 },
       DEFAULT_HOUSEHOLD,
     );
     expect(pf.finishedSf).toBe(3072);
@@ -46,7 +46,7 @@ describe("§9 tests 9–13, 17–18", () => {
   });
 
   it("10. pro forma gap, subsidy, and sale-price constraint", () => {
-    const econ = { ...DEFAULT_ECONOMICS, salePricePerSf: 200 };
+    const econ = { ...DEFAULT_ECONOMICS, buildCostPerSf: 260, salePricePerSf: 200 };
     const pf = proforma(clean, DEFAULT_CONSTRUCTION, econ, DEFAULT_HOUSEHOLD);
     expect(pf.finishedSf).toBe(1920);
     expect(pf.feasible).toBe(false);
@@ -57,7 +57,7 @@ describe("§9 tests 9–13, 17–18", () => {
     const funded = proforma(
       clean,
       DEFAULT_CONSTRUCTION,
-      { ...DEFAULT_ECONOMICS, salePricePerSf: 200, subsidyPerUnit: 130_000 },
+      { ...DEFAULT_ECONOMICS, buildCostPerSf: 260, salePricePerSf: 200, subsidyPerUnit: 130_000 },
       DEFAULT_HOUSEHOLD,
     );
     expect(funded.feasible).toBe(true);
