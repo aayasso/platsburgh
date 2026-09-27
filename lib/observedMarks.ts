@@ -1,20 +1,13 @@
-import ppiJson from "../data/ppi.json";
-import { formatPpiDelta, type PpiFile } from "./ppi";
 import { DEFAULT_SALE_PRICE_PER_SF, NEW_CONSTRUCTION_SALE_COUNT } from "./salesMedians";
 import type { Lot } from "./types";
 
 export type ObservedMark = { value: number; label: string; note?: string };
 
-const modularPpiNote = (() => {
-  const delta = formatPpiDelta(ppiJson as PpiFile);
-  return delta ? `inputs ${delta} since, BLS PPI` : undefined;
-})();
-
 /** Ticks listed in COPY.md "Observed marks on sliders". Clicking does nothing. */
 export const OBSERVED_MARKS = {
   buildCostPerSf: [
-    { value: 162, label: "site-built US avg $162" },
-    { value: 260, label: "modular PGH $260", note: modularPpiNote },
+    { value: 162, label: "site-built $162" },
+    { value: 260, label: "2024 build $260" },
   ] as ObservedMark[],
   salePriceCitywide: { value: 160, label: "citywide $160" } as ObservedMark,
   salePriceNewConstruction:
@@ -36,11 +29,11 @@ export const OBSERVED_MARKS = {
 
 export function salePriceMarks(localMedian: number | null): ObservedMark[] {
   const marks: ObservedMark[] = [OBSERVED_MARKS.salePriceCitywide];
+  if (localMedian != null && Number.isFinite(localMedian)) {
+    marks.push({ value: localMedian, label: `local $${Math.round(localMedian)}` });
+  }
   if (OBSERVED_MARKS.salePriceNewConstruction) {
     marks.push(OBSERVED_MARKS.salePriceNewConstruction);
-  }
-  if (localMedian != null && Number.isFinite(localMedian)) {
-    marks.push({ value: localMedian, label: `local ${Math.round(localMedian)}` });
   }
   return marks;
 }

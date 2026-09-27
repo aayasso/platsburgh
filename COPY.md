@@ -11,7 +11,7 @@ Use these strings exactly. Planning and development vocabulary; no slang ("penci
   - **SUBSIDY / UNIT** · `${max}` · — · `{years}` PAYBACK (median across parcels requiring subsidy)
 
 ## Observed marks on sliders
-A small tick on the track at a measured value, with a mono label under the tick (limestone at 60%): Construction cost: two marks, `site-built US avg $162` (NAHB 2024) and `modular PGH $260` (237 N Aiken 2024; inputs +{x.x}% since, BLS PPI); Sale price `citywide $160` and `new construction $335` and, when in view, `local ${n}`; Household income `80% AMI $79,500`; Building pace `2023–25 avg 273`; Mortgage rate `PMMS 7.03%`; Minimum lot area `code 3,000`; setbacks and height `code {value}`. Marks are facts with sources (in the drawer), never presets: clicking a mark does nothing.
+A small tick on the track at a measured value, with a mono label under the tick (limestone at 60%): Construction cost: two marks, `site-built $162` and `2024 build $260`; Sale price `citywide $160`, `local $N`, `new construction $335`; Household income `80% AMI $79,500`; Building pace `2023–25 avg 273`; Mortgage rate `PMMS 7.03%`; Minimum lot area `code 3,000`; setbacks and height `code {value}`. Marks are facts with sources (in the drawer), never presets: clicking a mark does nothing.
 
 ## REGULATIONS (section label; collapsed by default, chevron at right)
 On the panel when open: label and value only, plus observed marks where listed above. Explanation and code reference appear only in the METHODOLOGY drawer.

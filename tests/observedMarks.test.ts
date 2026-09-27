@@ -10,10 +10,9 @@ import type { Lot } from "../lib/types";
 
 describe("§5g observed marks", () => {
   it("COPY.md stated values and labels", () => {
-    expect(OBSERVED_MARKS.buildCostPerSf[0]).toEqual({ value: 162, label: "site-built US avg $162" });
-    expect(OBSERVED_MARKS.buildCostPerSf[1].value).toBe(260);
-    expect(OBSERVED_MARKS.buildCostPerSf[1].label).toBe("modular PGH $260");
-    expect(OBSERVED_MARKS.buildCostPerSf[1].note).toMatch(/^inputs [+-]\d+\.\d+% since, BLS PPI$/);
+    expect(OBSERVED_MARKS.buildCostPerSf[0]).toEqual({ value: 162, label: "site-built $162" });
+    expect(OBSERVED_MARKS.buildCostPerSf[1]).toEqual({ value: 260, label: "2024 build $260" });
+    expect(OBSERVED_MARKS.buildCostPerSf[1].note).toBeUndefined();
     expect(OBSERVED_MARKS.salePriceCitywide).toEqual({ value: 160, label: "citywide $160" });
     expect(OBSERVED_MARKS.salePriceNewConstruction).toEqual({
       value: 335,
@@ -37,9 +36,11 @@ describe("§5g observed marks", () => {
     ] as Lot[];
     expect(localCompsMedian(lots)).toBe(200);
     const marks = salePriceMarks(200);
-    expect(marks[0].label).toBe("citywide $160");
-    expect(marks[1]).toEqual({ value: 335, label: "new construction $335" });
-    expect(marks[2]).toEqual({ value: 200, label: "local 200" });
+    expect(marks.map((m) => m.label)).toEqual([
+      "citywide $160",
+      "local $200",
+      "new construction $335",
+    ]);
     expect(economicsMarks("salePricePerSf", null)?.map((m) => m.label)).toEqual([
       "citywide $160",
       "new construction $335",
