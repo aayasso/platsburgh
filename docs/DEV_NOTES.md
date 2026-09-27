@@ -340,3 +340,27 @@ Recomputed 2026-09-27 (`build-lots --sales-only`). Arm's-length sales in the pri
 
 NOT FOUND: WPRDC package_search for hydrants/hydrant returned no hydrant point dataset. hydrantDistFt set null on all lots. City GIS Fire_Hydrants_PGH exists (~9,771 PWSA points) but was not used; the spec required the WPRDC dataset.
 Wrote data/lots.json: 39207 lots (facts hydrants).
+
+## Parcel facts (all)
+
+NOT FOUND: WPRDC package_search for hydrants/hydrant returned no hydrant point dataset. hydrantDistFt set null on all lots. City GIS Fire_Hydrants_PGH exists (~9,771 PWSA points) but was not used; the spec required the WPRDC dataset.
+City Designated Historic Districts: "City Designated Historic Districts" https://data.wprdc.org/dataset/8f92ae09-4cfa-4e0d-9c46-779a66d93d1e/resource/c926cfe2-e085-4808-94bc-b33895089a74/download/historic_districts.geojson
+City Designated Historic Districts: 21 features.
+City Designated Historic Sites: "City Designated Individual Historic Sites" https://data.wprdc.org/dataset/2ee7c48c-6fcf-407a-a8ca-477bdcfffda7/resource/dbe47f38-033d-448b-bb3d-ff0e598d4c50/download/historic_sites.geojson
+City Designated Historic Sites: 158 features.
+Historic: 34 district polygons, 158 site features; 0 lots in a district; 14 lots on a site.
+WPRDC search for opportunity zones returned no package; trying HUD FeatureServer.
+HUD Opportunity Zones (Allegheny County STATE=42 COUNTY=003): 0 tracts.
+NOT FOUND: Opportunity Zone polygons empty. opportunityZone set null.
+Allegheny County Schools: "Allegheny County Schools (Public, Private, Charter, and Career and Technical Centers)" https://data.wprdc.org/dataset/3580b59a-2ce2-4ed9-8997-677449b450f9/resource/9481a004-8683-41e4-bbd2-5027beb2c750/download/schools.geojson
+Allegheny County Schools: 410 features.
+City of Pittsburgh Parks: "City of Pittsburgh Parks" https://data.wprdc.org/dataset/874bb5ef-e001-4553-94db-57303b439fb0/resource/93f2401c-6642-4776-b4ae-354f19ad0e1e/download/___
+City of Pittsburgh Parks: 206 features.
+Schools: 410 points; nearest assigned on 39207 lots.
+Parks: 206 polygons; nearest assigned on 39207 lots.
+Downloading PRT GTFS https://www.rideprt.org/developerresources/google_transit.zip
+GTFS: 6388 stops, 7877 weekday bus trips, 6070 stops with 7–9 a.m. trips; transitTripsPerHour on 39207 lots.
+City Trees: "City of Pittsburgh Trees" https://data.wprdc.org/dataset/9ce31f01-1dfa-4a14-9969-a5c5507a4b40/resource/d876927a-d3da-44d1-82e1-24310cdb7baf/download/trees_img.geojson
+NOT FOUND: City Trees failed: terminated
+NOT FOUND: City Trees points. frontageTrees set null.
+Wrote data/lots.json: 39207 lots (facts all).
