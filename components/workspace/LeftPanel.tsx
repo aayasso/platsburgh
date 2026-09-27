@@ -1,5 +1,7 @@
 "use client";
 
+import { useLayoutEffect, useRef, useState, useEffect } from "react";
+import { DistrictPicker } from "@/components/workspace/DistrictPicker";
 import { TokenSlider } from "@/components/workspace/TokenSlider";
 import { economicsMarks, regulationMarks } from "@/lib/observedMarks";
 import { economicsSliders, regulationSliders } from "@/lib/rules";
@@ -70,9 +72,12 @@ export function LeftPanel(props: {
   districts: string[];
   localSaleMedian: number | null;
   onChange: (next: WorkspaceState) => void;
+  onOverflow?: (overflow: boolean) => void;
 }) {
   const { state, onChange } = props;
   const open = new Set(state.open);
+  const siteOpen = open.has("site");
+  const [conditionsOpen, setConditionsOpen] = useState(true);
   function toggle(id: "reg" | "con" | "eco" | "site") {
     const next = new Set(open);
     if (next.has(id)) next.delete(id);
@@ -80,15 +85,38 @@ export function LeftPanel(props: {
     onChange({ ...state, open: [...next] });
   }
 
+  useEffect(() => {
+    if (siteOpen) setConditionsOpen(true);
+  }, [siteOpen]);
+
   const r = state.regulations;
   const c = state.construction;
   const e = state.economics;
   const f = state.siteFilters;
   const sc = state.siteConditions;
   const scale = 2.2;
+  const scrollRef = useRef<HTMLElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const outer = scrollRef.current;
+    const inner = innerRef.current;
+    if (!outer || !inner || !props.onOverflow) return;
+    const check = () => props.onOverflow!(inner.offsetHeight > outer.clientHeight + 1);
+    check();
+    const ro = new ResizeObserver(check);
+    ro.observe(inner);
+    ro.observe(outer);
+    return () => ro.disconnect();
+  }, [props.onOverflow, state.open]);
 
   return (
-    <aside className="pointer-events-auto absolute left-4 z-20 flex w-[380px] max-h-[calc(100vh-var(--top-bar)-68px)] flex-col overflow-y-auto bg-pine" style={{ top: "calc(var(--top-bar) + 16px)" }}>
+    <aside
+      ref={scrollRef}
+      className="pointer-events-auto absolute left-4 z-20 flex w-[380px] max-h-[calc(100vh-var(--top-bar)-var(--bottom-bar)-16px)] flex-col overflow-y-auto bg-pine"
+      style={{ top: "calc(var(--top-bar) + 16px)" }}
+    >
+      <div ref={innerRef} className="pb-6">
       <Section label="REGULATIONS" open={open.has("reg")} onToggle={() => toggle("reg")}>
         {regulationSliders.map((s) => {
           const key = s.key as keyof typeof r;
@@ -250,33 +278,6 @@ export function LeftPanel(props: {
             </button>
           ))}
         </div>
-        <div className="mb-3 max-h-36 overflow-y-auto border border-limestone/15 p-2">
-          <div className="mb-1 font-display text-[11px] tracking-heading text-limestone/70">
-            Any district
-          </div>
-          {props.districts.map((d) => {
-            const checked = f.districts.includes(d);
-            return (
-              <label
-                key={d}
-                className="flex items-center gap-2 py-0.5 font-mono text-[12px] text-limestone"
-              >
-                <input
-                  type="checkbox"
-                  className="accent-brick"
-                  checked={checked}
-                  onChange={() => {
-                    const districts = checked
-                      ? f.districts.filter((x) => x !== d)
-                      : [...f.districts, d];
-                    onChange({ ...state, siteFilters: { ...f, districts } });
-                  }}
-                />
-                {d}
-              </label>
-            );
-          })}
-        </div>
         <label className="mb-2 flex items-center gap-2 font-display text-[13px] tracking-heading text-limestone">
           <input
             type="checkbox"
@@ -305,7 +306,11 @@ export function LeftPanel(props: {
           />
           Tax-delinquent or foreclosed only
         </label>
-        <details>
+        <details
+          className="mb-3"
+          open={conditionsOpen}
+          onToggle={(ev) => setConditionsOpen((ev.currentTarget as HTMLDetailsElement).open)}
+        >
           <summary className="cursor-pointer font-display text-[13px] font-semibold tracking-section text-limestone/85">
             SITE CONDITIONS
           </summary>
@@ -353,7 +358,13 @@ export function LeftPanel(props: {
             />
           </div>
         </details>
+        <DistrictPicker
+          districts={props.districts}
+          selected={f.districts}
+          onChange={(districts) => onChange({ ...state, siteFilters: { ...f, districts } })}
+        />
       </Section>
+      </div>
     </aside>
   );
 }

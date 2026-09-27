@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { buildParcelsCsv } from "@/lib/csvExport";
 import type { Evaluation } from "@/lib/evaluate";
 import { fmtInt, fmtMoney } from "@/lib/format";
@@ -19,9 +19,11 @@ export function BottomBar(props: {
   state: WorkspaceState;
   onBar: (bar: BarTab) => void;
   onConstraint: (c: string | null) => void;
+  panelOverflow?: boolean;
 }) {
   const open = props.bar !== "closed";
   const [page, setPage] = useState(0);
+  const barRef = useRef<HTMLDivElement>(null);
   const parcels = props.evaluation.parcels;
   const pageCount = Math.max(1, Math.ceil(parcels.length / PAGE));
   const slice = useMemo(
@@ -57,8 +59,24 @@ export function BottomBar(props: {
         : "text-limestone/85"
     }`;
 
+  useEffect(() => {
+    const el = barRef.current;
+    if (!el) return;
+    const apply = () =>
+      document.documentElement.style.setProperty("--bottom-bar", `${el.offsetHeight}px`);
+    apply();
+    const ro = new ResizeObserver(apply);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [open]);
+
   return (
-    <div className="pointer-events-auto absolute bottom-0 left-0 right-0 z-30 bg-pine">
+    <div
+      ref={barRef}
+      className={`pointer-events-auto absolute bottom-0 left-0 right-0 z-30 bg-pine ${
+        props.panelOverflow ? "border-t border-limestone/15" : ""
+      }`}
+    >
       <div className="h-[3px] bg-centerline" />
       {open ? (
         <div className="max-h-[40vh] overflow-y-auto px-6 py-4">

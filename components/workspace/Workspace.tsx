@@ -51,6 +51,7 @@ export function Workspace() {
   const [leverRows, setLeverRows] = useState<LeverRow[]>([]);
   const [constraintFilter, setConstraintFilter] = useState<string | null>(null);
   const [methodOpen, setMethodOpen] = useState(false);
+  const [panelOverflow, setPanelOverflow] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const evalTimer = useRef<number | null>(null);
   const leverTimer = useRef<number | null>(null);
@@ -176,6 +177,7 @@ export function Workspace() {
           districts={districts}
           localSaleMedian={localCompsMedian(evaluation.parcels.map((p) => p.lot))}
           onChange={persist}
+          onOverflow={setPanelOverflow}
         />
       ) : (
         <aside className="pointer-events-none absolute left-4 z-20 w-[380px] bg-pine p-4 font-sans text-[15px] text-limestone" style={{ top: "calc(var(--top-bar) + 16px)" }}>
@@ -197,6 +199,7 @@ export function Workspace() {
         state={state}
         onBar={(bar) => persist({ ...state, bar })}
         onConstraint={setConstraintFilter}
+        panelOverflow={panelOverflow}
       />
     </div>
   );

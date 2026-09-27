@@ -58,12 +58,12 @@ Drawer only: "A parcel is feasible when sale value plus subsidy covers construct
 The map is the scope: every number on the page counts the parcels in the current map view that pass these filters.
 - Checkbox: **Vacant parcels only**
 - Owner: **Any owner** / **City-owned**
-- Zoning district (optional): placeholder "Any district"
 - Checkbox: **Near transit only** (within ¼ mile of a PRT stop)
 - Checkbox: **Tax-delinquent or foreclosed only**
+- **SITE CONDITIONS** (expanded when SITE is open): checkboxes, label only — Exclude steep slope · Exclude flood zone · Exclude landslide-prone · Exclude undermined · Exclude no water service · Exclude stairs-only access · Exclude condemned structures · Exclude parks and industrial districts (P, GI, UI) · Minimum frontage (slider). Definitions in the drawer.
 - Under SITE CONDITIONS: checkbox **Exclude condemned structures**
 - Under SITE CONDITIONS: checkbox **Exclude parks and industrial districts (P, GI, UI)** (default on)
-- **SITE CONDITIONS** (collapsed): checkboxes, label only — Exclude steep slope · Exclude flood zone · Exclude landslide-prone · Exclude undermined · Exclude no water service · Exclude stairs-only access · Exclude condemned structures · Exclude parks and industrial districts (P, GI, UI) · Minimum frontage (slider). Definitions in the drawer.
+- Zoning district: **Zoning district:** **Any district** ▾ — searchable multi-select; chosen districts as mono chips under the row.
 
 ## RESULTS
 - Map legend: **Conforming · feasible · affordable** (solid centerline) · **Conforming · feasible** (hollow centerline) · **Conforming** (thin centerline ring) · **Non-conforming** (brick) · **Site data unavailable** (gray hollow)
