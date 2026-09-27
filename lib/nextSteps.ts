@@ -22,6 +22,7 @@ export const NEXT_STEP_TEXT = {
   demolition: "Demolition permit — PLI.",
   cityOwned: "Acquisition — Urban Redevelopment Authority or City property disposition.",
   delinquent: "Acquisition — treasurer's sale or foreclosure process.",
+  historic: "Historic Review Commission approval — City Planning.",
 } as const;
 
 export const NEXT_STEP_HREF = {
@@ -35,6 +36,7 @@ export const NEXT_STEP_HREF = {
   demolition: "https://pittsburghpa.gov/pli/",
   cityOwned: "https://www.ura.org/",
   delinquent: "https://pittsburghpa.gov/finance/",
+  historic: "https://pittsburghpa.gov/dcp/historic-review-commission",
 } as const;
 
 export const CONFIRM_BEFORE_YOU_ACT = [
@@ -101,5 +103,6 @@ export function nextSteps(
   if (lot.condemned === true) rows.push(step("demolition"));
   if (lot.owner === "city") rows.push(step("cityOwned"));
   if (lot.taxDelinquent === true || lot.foreclosure === true) rows.push(step("delinquent"));
+  if (lot.historicDistrict || lot.historicSite === true) rows.push(step("historic"));
   return rows;
 }

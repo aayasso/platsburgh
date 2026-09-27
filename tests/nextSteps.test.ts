@@ -62,6 +62,20 @@ describe("§9 test 22 next steps", () => {
     expect(texts.some((t) => t.startsWith("Variance"))).toBe(true);
   });
 
+  it("historic fixture adds the HRC next step", () => {
+    const historic = lots.find((l) => l.id === "fixture-historic")!;
+    const result = fit(
+      historic,
+      DEFAULT_REGULATIONS,
+      DEFAULT_CONSTRUCTION,
+      DEFAULT_SITE_CONDITIONS,
+    );
+    const texts = nextSteps(historic, result, DEFAULT_CONSTRUCTION, DEFAULT_REGULATIONS).map(
+      (s) => s.text,
+    );
+    expect(texts.some((t) => t.startsWith("Historic Review Commission approval"))).toBe(true);
+  });
+
   it("flood fixture adds the floodplain line", () => {
     const result = fit(
       flood,

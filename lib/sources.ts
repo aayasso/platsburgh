@@ -132,6 +132,48 @@ export const SOURCES: SourceRow[] = [
     retrieved: "2026-09-27",
     url: "https://data.wprdc.org/",
   },
+  {
+    name: "City Designated Historic Districts",
+    publisher: "City of Pittsburgh / WPRDC",
+    retrieved: "2026-09-27",
+    url: "https://data.wprdc.org/dataset/city-designated-historic-districts",
+  },
+  {
+    name: "City Designated Historic Sites",
+    publisher: "City of Pittsburgh / WPRDC",
+    retrieved: "2026-09-27",
+    url: "https://data.wprdc.org/dataset/city-designated-individual-historic-sites",
+  },
+  {
+    name: "Opportunity Zones (WPRDC no package; HUD FeatureServer returned 0 tracts for Allegheny County)",
+    publisher: "HUD / ArcGIS FeatureServer",
+    retrieved: "2026-09-27",
+    url: "https://services.arcgis.com/VTyQ9soqVukalItT/ArcGIS/rest/services/Opportunity_Zones/FeatureServer/13",
+  },
+  {
+    name: "Schools (Allegheny County or City)",
+    publisher: "Allegheny County / WPRDC",
+    retrieved: "2026-09-27",
+    url: "https://data.wprdc.org/",
+  },
+  {
+    name: "Parks",
+    publisher: "City of Pittsburgh / WPRDC",
+    retrieved: "2026-09-27",
+    url: "https://data.wprdc.org/dataset/parks",
+  },
+  {
+    name: "PRT GTFS (transit frequency)",
+    publisher: "Pittsburgh Regional Transit",
+    retrieved: "2026-09-27",
+    url: "https://www.rideprt.org/developerresources/google_transit.zip",
+  },
+  {
+    name: "City Trees (GeoJSON download terminated; frontageTrees set null)",
+    publisher: "City of Pittsburgh / WPRDC",
+    retrieved: "2026-09-27",
+    url: "https://data.wprdc.org/dataset/city-trees",
+  },
 ];
 
 export function sourceCite(needle: string): string {

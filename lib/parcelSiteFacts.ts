@@ -55,5 +55,30 @@ export function extraSiteRows(lot: Lot): { label: string; value: string; source:
       value: hydrantValue(lot.hydrantDistFt),
       source: sourceCite("Hydrant") || "PWSA via WPRDC · 2026-09-27",
     },
+    {
+      label: "Historic designation",
+      value: historicDesignation(lot.historicDistrict, lot.historicSite),
+      source: sourceCite("Historic"),
+    },
+    {
+      label: "Opportunity Zone",
+      value: yesNoOrUnavailable(lot.opportunityZone),
+      source: sourceCite("Opportunity"),
+    },
+    {
+      label: "Nearest school",
+      value: namedDistanceValue(lot.schoolName, lot.schoolDistFt),
+      source: sourceCite("School"),
+    },
+    {
+      label: "Nearest park",
+      value: namedDistanceValue(lot.parkName, lot.parkDistFt),
+      source: sourceCite("Park"),
+    },
+    {
+      label: "Street trees on frontage",
+      value: countOrUnavailable(lot.frontageTrees),
+      source: sourceCite("Trees"),
+    },
   ];
 }

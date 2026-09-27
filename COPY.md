@@ -142,7 +142,7 @@ Last line: "These are the exact parameters that produced the results on this pag
 
 ## PARCEL PAGE
 - Back link: **← MAP**
-- Header: `{address}` · `{neighborhood}` · `Zoning district {code}` · `{lotSf} sq ft · {frontage} × {depth} ft` · `mapped shape differs from assessed area` (mono, when the County ring bbox differs from width × depth by more than 25%) · `{Vacant | Improved}` · `{City-owned | Privately owned}` · `Transit {n} ft` · `{Taxes current | Tax-delinquent | In foreclosure}`
+- Header: `{address}` · `{neighborhood}` · `Zoning district {code}` · `{lotSf} sq ft · {frontage} × {depth} ft` · `mapped shape differs from assessed area` (mono, when the County ring bbox differs from width × depth by more than 25%) · `{Vacant | Improved}` · `{City-owned | Privately owned}` · `Transit {n} ft · {t} buses/hr` · `{Taxes current | Tax-delinquent | In foreclosure}`
 - Status line (right): **CONFORMING · FEASIBLE · AFFORDABLE** (or the subset that applies; **NON-CONFORMING** with the constraint) · mono: `at current parameters · {w} × {d} · {stories} stories · {units} units{ + ADU}`
 - Section label: **COMPLIANCE** — no intro line.
 
@@ -159,7 +159,7 @@ Last line: "These are the exact parameters that produced the results on this pag
 Result column: **PASS** / **FAIL**.
 
 - Aerial image of the parcel (County orthoimagery or Esri World Imagery tiles, parcel outline in centerline), 320 px square, right of the header; caption mono: `Aerial · {source} · {date}`.
-- Section label: **SITE CONDITIONS** — each: `{condition}: {value}` · `{dataset} · {date}`. Adds: `Condemned structure: {Yes | No}` · `Open violations: {n}` · `Property tax abatement: {Yes, through {year} | No}` · `ZIP home values, prior 12 months: {+x.x%}` (Zillow ZHVI, ZIP; "not available" if the ZIP is missing). `Nearest fire hydrant: {n} ft` · PWSA via WPRDC. Unavailable: "Not available in open data." Sewer always present: "Sewer: not available in open data — confirm with PWSA."
+- Section label: **SITE CONDITIONS** — each: `{condition}: {value}` · `{dataset} · {date}`. Adds: `Condemned structure: {Yes | No}` · `Open violations: {n}` · `Property tax abatement: {Yes, through {year} | No}` · `ZIP home values, prior 12 months: {+x.x%}` (Zillow ZHVI, ZIP; "not available" if the ZIP is missing). `Nearest fire hydrant: {n} ft` · PWSA via WPRDC. `Historic designation: {district name | Individual site | None}`. `Opportunity Zone: {Yes | No}`. `Nearest school: {name}, {n} ft`. `Nearest park: {name}, {n} ft`. `Street trees on frontage: {n}`. Unavailable: "Not available in open data." Sewer always present: "Sewer: not available in open data — confirm with PWSA."
 - Section label: **PRO FORMA** — no intro line.
   - **DEVELOPMENT** block, lines (label · amount; slider beneath where marked, with its own value at the track's end; source in mono beneath):
     - Construction cost · ${total} · slider `${cost} / sq ft` · `× {sf} sq ft · any method; default assumed between NAHB 2024 and an observed modular build`
@@ -193,7 +193,7 @@ Result column: **PASS** / **FAIL**.
   - Always for a new building: "Stormwater review — Pittsburgh Water; a planning module was required on a single infill lot." (link to PWSA development)
   - If Buildable area fails by 10 ft or less on any side, or Frontage fails: "Contextual setback — City Planning, Zoning Division; may be approved administratively." (link)
   - If any regulation check fails otherwise (lot area, height, units, ADU, parking, or buildable area by more than 10 ft): "Variance — Zoning Board of Adjustment; a hearing is required." (link to pittsburghpa.gov/dcp/zba)
-  - If Flood zone: "Floodplain permit — City Planning." · If Landslide-prone or Undermined: "Geotechnical report — required before foundation design." · If Steep slope: "Grading permit — PLI." · If Condemned structure: "Demolition permit — PLI." · If City-owned: "Acquisition — Urban Redevelopment Authority or City property disposition." · If Tax-delinquent or In foreclosure: "Acquisition — treasurer's sale or foreclosure process."
+  - If Flood zone: "Floodplain permit — City Planning." · If Landslide-prone or Undermined: "Geotechnical report — required before foundation design." · If Steep slope: "Grading permit — PLI." · If Condemned structure: "Demolition permit — PLI." · If City-owned: "Acquisition — Urban Redevelopment Authority or City property disposition." · If Tax-delinquent or In foreclosure: "Acquisition — treasurer's sale or foreclosure process." · If Historic designation (district or individual site): "Historic Review Commission approval — City Planning." (link)
 - Section label: **CONFIRM BEFORE YOU ACT** — always shown, exactly these lines:
   - When geometryMismatch: "The County's mapped parcel shape does not match its assessed lot area; verify the boundary before relying on frontage or buildable area." (first)
   - "Frontage and depth are measured from the County parcel polygon; the deed may differ by inches to a foot."
