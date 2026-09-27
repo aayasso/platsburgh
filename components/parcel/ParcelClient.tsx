@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import { ParcelAerial } from "@/components/parcel/ParcelAerial";
+import { ParcelNextSteps } from "@/components/parcel/ParcelNextSteps";
 import { ProForma } from "@/components/parcel/ProForma";
 import { buildableEnvelope, fit } from "@/lib/fit";
 import { fmtInt, metersToFt } from "@/lib/format";
@@ -299,6 +300,13 @@ export function ParcelClient(props: {
             setSitecost(n);
             persist(state, land, n);
           }}
+        />
+
+        <ParcelNextSteps
+          lot={lot}
+          fit={result}
+          construction={state.construction}
+          regulations={state.regulations}
         />
 
         <p className="mt-12 font-sans text-[13px] text-moss">
