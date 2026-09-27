@@ -1,13 +1,13 @@
 "use client";
 
-import Papa from "papaparse";
 import { useMemo, useState } from "react";
+import { buildParcelsCsv } from "@/lib/csvExport";
 import type { Evaluation } from "@/lib/evaluate";
 import { fmtInt, fmtMoney } from "@/lib/format";
 import { formatLeverValue, LEVER_LABEL, METRIC_WORD, PANEL_WORD } from "@/lib/leverCopy";
 import type { LeverRow } from "@/lib/levers";
 import { SOURCES } from "@/lib/sources";
-import type { BarTab } from "@/lib/urlState";
+import type { BarTab, WorkspaceState } from "@/lib/urlState";
 
 const PAGE = 40;
 
@@ -16,6 +16,7 @@ export function BottomBar(props: {
   evaluation: Evaluation;
   levers: LeverRow[];
   constraintFilter: string | null;
+  state: WorkspaceState;
   onBar: (bar: BarTab) => void;
   onConstraint: (c: string | null) => void;
 }) {
@@ -37,24 +38,7 @@ export function BottomBar(props: {
   }
 
   function downloadCsv() {
-    const rows = parcels.map((p) => ({
-      Address: p.lot.address,
-      Neighborhood: p.lot.neighborhood,
-      "Lot area (sq ft)": p.lot.lotSf,
-      "Frontage (ft)": p.lot.widthFt,
-      Status:
-        p.status === "cfa"
-          ? "Conforming · feasible · affordable"
-          : p.status === "cf"
-            ? "Conforming · feasible"
-            : p.status === "c"
-              ? "Conforming"
-              : p.status === "unknown"
-                ? "Site data unavailable"
-                : (p.constraint ?? "Non-conforming"),
-      "Subsidy required": p.subsidyRequired > 0 ? p.subsidyRequired : "",
-    }));
-    const csv = Papa.unparse(rows);
+    const csv = buildParcelsCsv(parcels, props.state, props.evaluation.inView);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");

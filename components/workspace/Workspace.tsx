@@ -194,6 +194,7 @@ export function Workspace() {
         evaluation={evaluation}
         levers={leverRows}
         constraintFilter={constraintFilter}
+        state={state}
         onBar={(bar) => persist({ ...state, bar })}
         onConstraint={setConstraintFilter}
       />
