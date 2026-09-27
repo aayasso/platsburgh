@@ -313,6 +313,10 @@ export function ParcelMap(props: {
           <span className="mr-1 inline-block h-2 w-2 rounded-full bg-brick/55" />
           Non-conforming
         </span>
+        <span>
+          <span className="mr-1 inline-block h-2 w-2 rounded-full border border-limestone-dark/40" />
+          Site data unavailable
+        </span>
       </div>
     </div>
   );

@@ -286,12 +286,27 @@ Citywide sale median $/sf: 161.14285714285714 from 7463 sales.
 - URL state keys per BUILD_SPEC §5f. `vacantOnly` defaults **on** in the workspace (engine default remains off for tests). Economics defaults: sale **160**, pace **275**.
 - `fitAll` / ladder / LEVERS / CONSTRAINTS / PARCELS / CSV all use the map's current bounds plus Site filters. Recalc debounce 60 ms on sliders; levers 300 ms; map `moveend` updates `lat,lng,z` and bounds.
 - Parcel page `/parcel/[id]` is the full COMPLIANCE + SITE CONDITIONS + PRO FORMA view per BUILD_SPEC §7 and COPY.md. Shared economics (cost, price, income, subsidy) and the five TERMS (`rate, down, ratio, tax, ins`) live in the URL with the workspace. `land` and `sitecost` are parcel-only overrides. SUMMARY is omitted unless `ANTHROPIC_API_KEY` is set; the route validates that Claude introduces no numbers absent from the COMPLIANCE lines.
-- METHODOLOGY lists regulation sliders, economics sliders, and the five household terms from `lib/rules.ts`. Buttons are **DOWNLOAD PARAMETERS** / **LOAD PARAMETERS** (BUILD_SPEC §6; COPY.md says DOWNLOAD / LOAD). Pace and public-return sentences from §5d/§5e are in the drawer.
+- METHODOLOGY lists regulation sliders, economics sliders, and the five household terms from `lib/rules.ts`. Buttons are **DOWNLOAD** / **LOAD** (COPY.md). Pace and public-return sentences from §5d/§5e are in the drawer; those two sentences were added to COPY.md because they appear on screen.
 - DOWNLOAD CSV writes the current PARCELS list (in-view, Site-filtered). SOURCES uses retrieved 2026-09-26 and the fallbacks actually used: County `OPENDATA/Parcels` (not PASDA), Pittsburgh Street Centerline, City of Pittsburgh property tax delinquency, FEMA `/arcgis/rest/services/public/NFHL/MapServer/28`.
 - `data/sales_medians.json` is keyed by County `NEIGHCODE` (`byNeighcode`). `lots.neighborhood` is the City neighborhood name from the Neighborhoods GeoJSON. Those keys do not join without guessing a code, so the parcel-page reference line uses the citywide median **$161/sf** from **7,463** sales (COPY still reads “Sales in this neighborhood”).
 - **Live 0050M00032000000 (237 N Aiken):** assessment `USEDESC` is SINGLE FAMILY, `YEARBLT` 2024, `empty` is false — it only appears on the map with **Vacant parcels only** unchecked. Width is **21.54 ft** (not the calibration 22 ft), so even at min lot 1,200 · front 15 · rear 15 · side 3 · units 2 the buildable width is 15.54 ft vs a 16 ft building and COMPLIANCE still fails setbacks. Test 5 still passes against `data/fixtures/lots.json` (22 × 96.79, vacant, land 13,000). Height limit must be 3 (`stories=3`) with the 3-story building or Height FAILs at the default limit of 2.
 
-- `npm run build` passes. 19 vitest tests still pass.
+## Performance (2026-09-26, Node, 39,207 parcels)
+
+- `fitAll` citywide: **17.7 ms** (budget 200 ms).
+- `evaluateWorkspace` (slider-drag path, citywide bounds): **18 ms** vacant-only, **23 ms** all parcels (budget 100 ms for recolor compute; MapLibre `setData` is the remaining paint).
+- `levers` citywide bounds: **161 ms** (budget 3 s).
+
+`scripts/audit-strings.ts` walks `app/` and `components/` except `app/api` (not on-screen) and `components/ui` (Tailwind/shadcn). Template placeholders in COPY.md are stripped before the diff.
+
+## Not built
+
+- `/api/health` (BUILD_SPEC §11).
+- Hosted/Vercel URL; run `npm run dev` locally.
+- Parcel-page neighborhood sale median by City name (sales file is County NEIGHCODE only).
+- Footer line on the map workspace (it would sit under the bottom bar); parcel page and `/docs` show it.
+- `docs/brand/lasalle-brand-specimen.html` is the upstream brand file and still contains LaSalle product names with “Score”; it is not UI copy.
+
 - Basemap is OpenFreeMap dark (no token). MapLibre's worker is served from `/maplibre-gl-worker.mjs` (copied into `public/` with `maplibre-gl-shared.mjs`) because Next/Turbopack does not load the default worker URL. If the style fails, a plain `map-bg` canvas still shows dots and neighborhood outlines.
 
 

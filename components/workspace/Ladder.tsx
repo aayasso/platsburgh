@@ -2,8 +2,15 @@ import { dashIfEmpty, fmtInt, fmtMoney } from "@/lib/format";
 import type { LadderModel } from "@/lib/evaluate";
 
 export function Ladder({ ladder }: { ladder: LadderModel }) {
-  const yearsBuild = dashIfEmpty(ladder.yearsToBuild, (v) => String(Math.round(v)));
-  const yearsPay = dashIfEmpty(ladder.paybackYears, (v) => String(Math.round(v)));
+  const empty = ladder.empty;
+  const yearsBuild = empty
+    ? "—"
+    : dashIfEmpty(ladder.yearsToBuild, (v) => String(Math.round(v)));
+  const yearsPay = empty
+    ? "—"
+    : dashIfEmpty(ladder.paybackYears, (v) => String(Math.round(v)));
+  const showBuildTag = !empty && ladder.yearsToBuild != null;
+  const showPayTag = !empty && ladder.paybackYears != null;
   return (
     <table className="shrink-0 border-separate border-spacing-x-5 border-spacing-y-0">
       <thead>
@@ -25,7 +32,9 @@ export function Ladder({ ladder }: { ladder: LadderModel }) {
           <td className="min-w-[5.5rem] whitespace-nowrap text-right text-[24px] font-bold text-centerline">
             {dashIfEmpty(ladder.conformingParcels, fmtInt)}
           </td>
-          <td className="min-w-[7rem] whitespace-nowrap text-right text-[24px] font-bold text-centerline" />
+          <td className="min-w-[7rem] whitespace-nowrap text-right text-[24px] font-bold text-centerline">
+            —
+          </td>
         </tr>
         <tr>
           <td className="whitespace-nowrap pr-4 text-left text-[22px] font-bold tracking-ladder text-limestone">
@@ -38,14 +47,16 @@ export function Ladder({ ladder }: { ladder: LadderModel }) {
             {dashIfEmpty(ladder.feasibleParcels, fmtInt)}
           </td>
           <td className="whitespace-nowrap text-right text-[24px] font-bold text-centerline">
-            {ladder.yearsToBuild != null ? (
+            {showBuildTag ? (
               <span className="inline-flex items-baseline gap-2">
                 {yearsBuild}
                 <span className="font-display text-[11px] font-semibold tracking-section text-limestone/70">
                   TO BUILD
                 </span>
               </span>
-            ) : null}
+            ) : (
+              yearsBuild
+            )}
           </td>
         </tr>
         <tr>
@@ -58,7 +69,9 @@ export function Ladder({ ladder }: { ladder: LadderModel }) {
           <td className="whitespace-nowrap text-right text-[24px] font-bold text-centerline">
             {dashIfEmpty(ladder.affordableParcels, fmtInt)}
           </td>
-          <td className="whitespace-nowrap text-right text-[24px] font-bold text-centerline" />
+          <td className="whitespace-nowrap text-right text-[24px] font-bold text-centerline">
+            —
+          </td>
         </tr>
         <tr>
           <td className="whitespace-nowrap pr-4 text-left text-[22px] font-bold tracking-ladder text-limestone">
@@ -67,16 +80,20 @@ export function Ladder({ ladder }: { ladder: LadderModel }) {
           <td className="whitespace-nowrap text-right text-[24px] font-bold text-centerline">
             {dashIfEmpty(ladder.subsidyPerUnit, fmtMoney)}
           </td>
-          <td className="whitespace-nowrap text-right text-[24px] font-bold text-centerline" />
           <td className="whitespace-nowrap text-right text-[24px] font-bold text-centerline">
-            {ladder.paybackYears != null ? (
+            —
+          </td>
+          <td className="whitespace-nowrap text-right text-[24px] font-bold text-centerline">
+            {showPayTag ? (
               <span className="inline-flex items-baseline gap-2">
                 {yearsPay}
                 <span className="font-display text-[11px] font-semibold tracking-section text-limestone/70">
                   PAYBACK
                 </span>
               </span>
-            ) : null}
+            ) : (
+              yearsPay
+            )}
           </td>
         </tr>
       </tbody>

@@ -138,14 +138,14 @@ export function MethodologyDrawer(props: {
           onClick={download}
           className="border border-brick px-3 py-1 font-display text-[12px] font-semibold tracking-section text-limestone"
         >
-          DOWNLOAD PARAMETERS
+          DOWNLOAD
         </button>
         <button
           type="button"
           onClick={() => fileRef.current?.click()}
           className="border border-brick px-3 py-1 font-display text-[12px] font-semibold tracking-section text-limestone"
         >
-          LOAD PARAMETERS
+          LOAD
         </button>
         <input
           ref={fileRef}

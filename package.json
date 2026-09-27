@@ -10,7 +10,8 @@
     "test": "vitest run",
     "gen-rules": "tsx scripts/gen-rules-doc.ts",
     "build-lots": "tsx scripts/build-lots.ts",
-    "bench-fitall": "tsx scripts/bench-fitall.ts"
+    "bench-fitall": "tsx scripts/bench-fitall.ts",
+    "audit-strings": "tsx scripts/audit-strings.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

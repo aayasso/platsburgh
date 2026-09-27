@@ -129,7 +129,7 @@ export function ParcelClient(props: {
       label: "Slope",
       value:
         typeof lot.slopeShare === "number"
-          ? `${Math.round(lot.slopeShare * 100)}% of lot on 25%+ slope`
+          ? `${Math.round(lot.slopeShare * 100)}% of parcel on 25%+ slope`
           : "Not available in open data.",
       source: "City of Pittsburgh · 2026-09-26",
     },

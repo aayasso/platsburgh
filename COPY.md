@@ -49,6 +49,8 @@ On the panel when open: role word, label, value only. Explanation and source app
 | PUBLIC | subsidyPerUnit | Subsidy per unit | Public capital contributed per unit. | user-defined |
 | MARKET | buildingPace | Building pace | New residential units the city builds per year. | City of Pittsburgh PLI permits, last three full years (or Census Building Permits Survey) |
 
+Building pace value: `{n} / yr`. ADUs permitted values: Yes · No. Insurance: `{n} / mo`.
+
 Drawer only: "A parcel is feasible when sale value plus subsidy covers construction cost, assessed land value, and site-condition costs. It is affordable when the unit price is within the household's borrowing capacity at the stated mortgage assumptions."
 
 ## SITE (section label; collapsed by default, chevron at right)
@@ -94,15 +96,15 @@ SOURCES tab: one row per dataset — `{name}` · `{publisher}` · `retrieved {da
 
 ## METHODOLOGY drawer (right-edge tab)
 Title: **METHODOLOGY**. First line: "Starting positions match the current code for a low-density residential district (§903.03)."
-Table: every regulation and economics slider — parameter, current value, explanation, code reference or source. Also: the household's maximum price at the current income, and the median subsidy required across conforming parcels.
-Definitions block: the feasible / affordable sentence above; the household assumptions with their current values.
+Table: every regulation and economics slider — parameter, current value, explanation, code reference or source. Also: the household's maximum price at the current income, and the median subsidy required across conforming parcels. Labels: **Maximum price** · **Median subsidy**.
+Definitions block: the feasible / affordable sentence above; the household assumptions with their current values. Pace: "Pace assumes the current parameters and the recent building rate hold." Public return: "Public return is property tax only; no sales tax, wage tax, or transfer tax. Not discounted; simple payback."
 Buttons: **DOWNLOAD** · **LOAD**
 Last line: "These are the exact parameters that produced the results on this page. The page address reproduces this view."
 
 ## PARCEL PAGE
 - Back link: **← MAP**
 - Header: `{address}` · `{neighborhood}` · `Zoning district {code}` · `{lotSf} sq ft · {frontage} × {depth} ft` · `{Vacant | Improved}` · `{City-owned | Privately owned}` · `Transit {n} ft` · `{Taxes current | Tax-delinquent | In foreclosure}`
-- Status line (right): **CONFORMING · FEASIBLE · AFFORDABLE** (or the subset that applies; **NON-CONFORMING** with the constraint) · mono: `at current parameters · {w} × {d} · {stories} stories · {units} units{ + ADU}`
+- Status line (right): **CONFORMING · FEASIBLE · AFFORDABLE** (or the subset that applies; **NON-CONFORMING ·** `{constraint}`) · mono: `at current parameters · {w} × {d} · {stories} stories · {units} units{ + ADU}`
 - Section label: **COMPLIANCE** — no intro line.
 
 | Check | Wording |
@@ -118,11 +120,14 @@ Last line: "These are the exact parameters that produced the results on this pag
 Result column: **PASS** / **FAIL**.
 
 - Section label: **SITE CONDITIONS** — each: `{condition}: {value}` · `{dataset} · {date}`. Unavailable: "Not available in open data." Sewer always present: "Sewer: not available in open data — confirm with PWSA."
+  Conditions: Slope · Landslide-prone · Undermined · Flood zone · Greenway · Water service · Sewer · Street access.
+  Values: `{n}% of parcel on 25%+ slope` · Yes · No · `No (Zone X)` · `Yes (PWSA)` · `street frontage` · `stairs-only`.
+  Dataset lines (retrieved 2026-09-26): `City of Pittsburgh · 2026-09-26` · `FEMA NFHL · 2026-09-26` · `PA DEP via WPRDC · 2026-09-26` · `Pittsburgh Street Centerline · 2026-09-26`. Sewer source column: `no source`.
 - Section label: **PRO FORMA** — no intro line.
   - **DEVELOPMENT** block, lines (label · amount; slider beneath where marked, with its own value at the track's end; source in mono beneath):
     - Construction cost · ${total} · slider `${cost} / sq ft` · `× {sf} sq ft · 237 N Aiken actual`
     - Land · ${land} · slider `${land}` · `County assessment ${assessed}`
-    - Site conditions · ${adders} · slider `${adders}` · `estimated: {named conditions} · 237 N Aiken actual`
+    - Site conditions · ${adders} · slider `${adders}` · `estimated: {named conditions} · 237 N Aiken actual` — named conditions: `none` · `narrow parcel (under 25 ft), staging + street` · slope · geotech · no water service
     - **Total cost** · ${cost}
     - Sale value · ${value} · slider `${price} / sq ft` · `× {sfPerUnit} sq ft × {units} units · WPRDC sales`
     - **Total value** · ${value} · `sale value + subsidy`
