@@ -386,7 +386,7 @@ function PublicBlock(props: {
             <Source>
               {fmtMoney(props.tax)} per year in property tax at {(props.rate * 100).toFixed(1)}%
               {typeof props.abatedThrough === "number"
-                ? `; abated through ${props.abatedThrough}; payback counted from then`
+                ? ` abated through ${props.abatedThrough}; payback counted from then`
                 : ""}
             </Source>
           ) : null}

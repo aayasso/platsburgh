@@ -90,6 +90,42 @@ export const SOURCES: SourceRow[] = [
     retrieved: "2026-09-26",
     url: "https://www.huduser.gov/portal/datasets/fmr/fmr2026/fy2026_safmrs.xlsx",
   },
+  {
+    name: "Condemned and Dead-End Properties",
+    publisher: "City of Pittsburgh / WPRDC",
+    retrieved: "2026-09-27",
+    url: "https://data.wprdc.org/dataset/condemned-properties",
+  },
+  {
+    name: "Pittsburgh PLI / DOMI / ES Violations Report",
+    publisher: "City of Pittsburgh / WPRDC",
+    retrieved: "2026-09-27",
+    url: "https://data.wprdc.org/dataset/pittsburgh-pli-violations-report",
+  },
+  {
+    name: "City of Pittsburgh Property Tax Abatements",
+    publisher: "City of Pittsburgh / WPRDC",
+    retrieved: "2026-09-27",
+    url: "https://data.wprdc.org/dataset/city-property-tax-abatements",
+  },
+  {
+    name: "Zillow Home Value Index, ZIP, all homes",
+    publisher: "Zillow",
+    retrieved: "2026-09-27",
+    url: "https://www.zillow.com/research/data/",
+  },
+  {
+    name: "Producer Price Index, inputs to residential construction (WPUIP231000)",
+    publisher: "BLS",
+    retrieved: "2026-09-27",
+    url: "https://data.bls.gov/timeseries/WPUIP231000",
+  },
+  {
+    name: "Allegheny County orthoimagery (PASDA Imagery 2021); Esri World Imagery fallback",
+    publisher: "Allegheny County / Esri",
+    retrieved: "2026-09-27",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
+  },
 ];
 
 export function sourceCite(needle: string): string {
@@ -103,4 +139,7 @@ export const SITE_CITES = {
   flood: sourceCite("Flood"),
   water: sourceCite("PWSA"),
   streets: sourceCite("Street"),
+  condemned: sourceCite("Condemned"),
+  violations: sourceCite("Violations"),
+  abatements: sourceCite("Abatements"),
 };

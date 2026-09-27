@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import { ParcelAerial } from "@/components/parcel/ParcelAerial";
+import { ProForma } from "@/components/parcel/ProForma";
 import { buildableEnvelope, fit } from "@/lib/fit";
 import { fmtInt, metersToFt } from "@/lib/format";
 import { zipHomeValuesFigure } from "@/lib/parcelRefs";
@@ -180,7 +181,7 @@ export function ParcelClient(props: {
         lot.condemned === "unknown" || lot.condemned == null
           ? "Not available in open data."
           : yn(lot.condemned),
-      source: SITE_CITES.city,
+      source: SITE_CITES.condemned,
     },
     {
       label: "Open violations",
@@ -188,7 +189,7 @@ export function ParcelClient(props: {
         lot.openViolations === "unknown" || lot.openViolations == null
           ? "Not available in open data."
           : String(lot.openViolations),
-      source: SITE_CITES.city,
+      source: SITE_CITES.violations,
     },
     {
       label: "Property tax abatement",
@@ -198,7 +199,7 @@ export function ParcelClient(props: {
           : typeof lot.abatedThrough === "number"
             ? `Yes, through ${lot.abatedThrough}`
             : "No",
-      source: SITE_CITES.city,
+      source: SITE_CITES.abatements,
     },
     {
       label: "ZIP home values, prior 12 months",

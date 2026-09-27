@@ -47,6 +47,7 @@ What building actually costs and takes in Pittsburgh, from public records and on
 | Construction interest | $33,269 on $537,600 over nine months at prime | 237 N Aiken loan statements | 2024 |
 | Design, survey, appraisal, title, insurance | ≈ $23,400 combined | 237 N Aiken invoices | 2023–24 |
 | Site-built construction cost, US average | $162 per finished sq ft | NAHB Cost of Constructing a Home | 2024 |
+| Construction input prices since the observed build | +11.2% (Nov 2023–May 2024 avg to latest month) | BLS Producer Price Index, inputs to residential construction | retrieved 2026-09-27 |
 | Citywide sale price, arm's-length, prior 24 months | $161 per finished sq ft median, 7,463 sales | WPRDC sales | retrieved 2026-09-26 |
 | Appraised value, new two-unit, 2,667 sq ft | $865,000 (≈ $324 per sq ft) | FNB appraisal | Jan 2025 |
 | New residential units permitted per year | 380 · 256 · 183 (avg 273) | City PLI permits | 2023–2025 |

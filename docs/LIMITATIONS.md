@@ -25,4 +25,16 @@ This is a decision-support prototype built in 39 hours. It is not legal, financi
 
 **Data currency** — every parcel page shows each dataset's retrieved date. Assessment records lag the real world.
 
+### Sources considered and not used
+
+- Zoning Board of Adjustment decisions — PDF parsing; deliberate
+- USGS 3DEP — marginal over City slope polygons
+- HMDA — complex, low marginal value
+- PA DEP eMapPA — manual access
+- OneStopPGH — portal, not data
+- Redfin / Realtor.com — parcel-level comps used instead
+- PennDOT
+- ResStock
+- Historical PLI
+
 **Who could be harmed, and what we did about it** — a map full of gray dots in a disinvested neighborhood could read as "don't build here." The constraints list exists so the constraint is always visible, and site constraints are shown separately from regulatory ones. No personal data: private owner names are never displayed.

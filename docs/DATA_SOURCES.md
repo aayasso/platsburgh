@@ -24,3 +24,9 @@ Retrieved 2026-09-26 unless noted. Fallbacks that were actually used (not the sp
 | Primary Mortgage Market Survey, 30-year fixed, week of Sept 24, 2026 | Freddie Mac | freddiemac.com/pmms | mortgage rate in the affordability calculation |
 | Cost of Constructing a Home 2024 | NAHB | nahb.org | observed mark on the construction-cost slider (site-built US average $162 / finished sf) |
 | Cost basis | 237 North Aiken LLC — completed modular two-unit, Pittsburgh (invoice-level cost build, 2023–2024) | private project records, summarized as unit costs in RULES.md | observed modular mark ($260 / sf); site and regulatory adders (slope, access/staging/street logistics on a lot under 25 ft). The construction-cost slider is user-set and method-neutral. |
+| Condemned and Dead-End Properties | City of Pittsburgh via WPRDC | data.wprdc.org/dataset/condemned-properties | condemned flag; Site exclusion |
+| Pittsburgh PLI / DOMI / Environmental Services Violations Report | City of Pittsburgh via WPRDC | data.wprdc.org/dataset/pittsburgh-pli-violations-report | openViolations on the parcel page |
+| City of Pittsburgh Property Tax Abatements | City of Pittsburgh via WPRDC | data.wprdc.org/dataset/city-property-tax-abatements | abatedThrough; Public return payback counted from the last abated year |
+| Zillow Home Value Index, ZIP, all homes | Zillow | zillow.com/research/data | zhviChange12m (12-month change for the parcel's ZIP) |
+| Producer Price Index, inputs to residential construction (WPUIP231000) | BLS | data.bls.gov | Ground Truth row; note under the modular cost mark. Not applied to any slider default. |
+| Orthoimagery | Allegheny County PASDA Imagery 2021; Esri World Imagery fallback | imagery.pasda.psu.edu; server.arcgisonline.com | parcel-page aerial (320 px) with parcel outline |

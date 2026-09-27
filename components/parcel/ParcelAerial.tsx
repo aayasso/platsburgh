@@ -32,14 +32,13 @@ export function ParcelAerial(props: { lot: Lot }) {
         />
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full"
-          viewBox="0 0 320 320"
           aria-hidden
         >
           <rect
-            x="96"
-            y="64"
-            width="128"
-            height="192"
+            x="30%"
+            y="20%"
+            width="40%"
+            height="60%"
             className="fill-none stroke-centerline stroke-2"
           />
         </svg>

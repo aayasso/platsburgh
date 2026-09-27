@@ -15,7 +15,7 @@ There are no fixed rule sets and no hidden financial assumptions. The sliders on
 - **Regulations** — eight sliders: minimum lot area, front, rear, and side setbacks, height limit, units per parcel, parking per unit, ADUs permitted. Each has an explanation and a code reference in the METHODOLOGY drawer.
 - **Construction** — four sliders (width, depth, stories, units) and two checkboxes (Attached, ADU).
 - **Economics** — five sliders: construction cost per square foot (method-neutral; starts at **$200**, an assumed midpoint, with observed marks for the NAHB 2024 site-built US average **$162** and one Pittsburgh modular build **$260**), sale price per square foot (starts at **$160**, the citywide median of recent sales rounded to the slider step), household income (starts at 80% of area median for a three-person household), subsidy per unit, and building pace (**275**, from City of Pittsburgh PLI new residential construction permits, 2023–2025). A parcel is feasible when value covers cost plus assessed land and site conditions; affordable when the unit price is within that household's borrowing capacity.
-- **Site** — the map is the scope. Filters: vacant parcels only or all, any owner or city-owned, optional zoning district, near transit only (a quarter mile of a PRT stop), tax-delinquent or foreclosed only. Site conditions: exclude steep slope, flood zone, landslide-prone, undermined, no water service, or stairs-only access; minimum frontage.
+- **Site** — the map is the scope. Filters: vacant parcels only or all, any owner or city-owned, optional zoning district, near transit only (a quarter mile of a PRT stop), tax-delinquent or foreclosed only. Site conditions: exclude steep slope, flood zone, landslide-prone, undermined, no water service, stairs-only access, or condemned structures (off by default); minimum frontage.
 - **Results** — the four-row table (units, parcels, years), with years-to-build at the recent pace and subsidy payback in property tax; a map of every parcel in view; **Levers**; a CONSTRAINTS list; a PARCELS list with CSV download; a METHODOLOGY drawer; the page address reproduces any view.
 
 ### Guiding principles
@@ -46,3 +46,15 @@ Open `http://localhost:3000`. There is no hosted deployment. SUMMARY on the parc
 ### Built with
 
 Next.js, TypeScript, Tailwind, shadcn/ui, MapLibre GL, Turf.js. Design: LaSalle Technologies brand system. Data in [DATA_SOURCES.md](DATA_SOURCES.md).
+
+### Sources considered and not used
+
+- Zoning Board of Adjustment decisions — PDF parsing; deliberate
+- USGS 3DEP — marginal over City slope polygons
+- HMDA — complex, low marginal value
+- PA DEP eMapPA — manual access
+- OneStopPGH — portal, not data
+- Redfin / Realtor.com — parcel-level comps used instead
+- PennDOT
+- ResStock
+- Historical PLI
