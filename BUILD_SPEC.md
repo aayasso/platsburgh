@@ -78,7 +78,8 @@ Parcel ID: 16 characters, e.g. `0050M00032000000`; accept dashes/spaces and norm
 { id, address, neighborhood, district, lotSf, widthFt, depthFt, hasStreetFrontage, stepsOnly,
   slopeShare (0–1), landslide, undermined, flood (true/false/unknown), greenway, water (true/false/unknown),
   empty, owner ('city'|'other'), assessedLand, lon, lat,
-  transitDistM (meters to nearest PRT stop), taxDelinquent (true/false), foreclosure (true/false) }
+  transitDistM (meters to nearest PRT stop), taxDelinquent (true/false), foreclosure (true/false),
+  compsPpsf (median $/finished sq ft of arm's-length sales within 800 m, prior 24 months), compsN (count), zip, fmr2br (HUD FY2026 Small Area FMR, 2-bedroom, for the ZIP; null if unavailable) }
 ```
 Geometry: width = longest parcel edge within 10 m of a street centerline (if none, `hasStreetFrontage=false` and width = short side of the minimum bounding rectangle); depth = area ÷ width. Prefilter every overlay by bounding box before intersecting; simplify polygons on load. Record source, count, runtime in `docs/DEV_NOTES.md`. Ship the file in the repo if under 50 MB (it will be far smaller — attributes and one lon/lat per lot).
 
@@ -256,6 +257,12 @@ Every control is a query parameter; the address reproduces the view. Keys, in th
 
 Empty view: if the map view contains no parcels after filters, every ladder cell shows "—" and the bottom bar reads "0 parcels in view"; nothing errors.
 
+## 5g. Ground truth layer
+Three things that tell a newcomer what is normal here, all facts with sources, never advice:
+1. **Observed marks on sliders** — a tick on the track at a measured value with a mono label (wording in COPY.md): construction cost at the 237 N Aiken actual; sale price at the citywide median and, when parcels are in view, the median of their compsPpsf; household income at 80% AMI; building pace at the 2023–25 average; mortgage rate at PMMS; regulation sliders at the current code value. Ticks are 1px limestone at 60%, 8px tall, centered on the value; clicking does nothing.
+2. **GROUND TRUTH table in METHODOLOGY** — content verbatim from COPY.md; rendered from `lib/groundTruth.ts` so docs can be generated from it.
+3. **Comps by distance and rent reference on the parcel page** — `compsPpsf`/`compsN` from the parcel file (computed once in build-lots with a spatial grid; fall back to citywide when compsN < 5) and `fmr2br` from HUD FY2026 Small Area FMRs by ZIP (fetch the FY2026 SAFMR file from huduser.gov; if unreachable, use the metro FMR for the Pittsburgh HUD Metro FMR Area and label it "metro"). Reference only; the rental path is not modeled.
+
 ## 6. The page (`/`)
 Layout and styling per DESIGN_SYSTEM.md (top pine bar with the ladder, left pine panel with the four sections, right-edge METHODOLOGY tab, bottom pine bar with CONSTRAINTS / LEVERS / PARCELS / SOURCES and DOWNLOAD CSV, full-bleed dark map that pans and zooms freely). The content below is what goes where; the design file says how it looks.
 
@@ -287,7 +294,7 @@ The **bottom bar** is collapsed by default to its tab row (CONSTRAINTS · LEVERS
 4. **LEVERS** tab (the only place Levers appears): all eighteen levers per §5c, one line each, ranked, with a small panel word (REGULATIONS · CONSTRUCTION · ECONOMICS) at left; "at limit" and "no change" rows at the bottom, muted.
 5. **PARCELS** tab (collapsed): address, neighborhood, lot area, frontage, status, subsidy required; paginated. **DOWNLOAD CSV** on the bar's right downloads the current list.
 6. **SOURCES** tab: each dataset, publisher, retrieved date, link.
-- **METHODOLOGY** drawer (right-edge tab only): every regulation and economics value with its explanation and code reference or source (§903.03 lot area and setbacks, §911.02 units per parcel, Ch. 914 parking, Ch. 912 ADUs); the feasible/affordable definitions; the household assumptions (mortgage rate, down payment, income to housing, property tax rate, insurance) with their current values; DOWNLOAD PARAMETERS and LOAD PARAMETERS (JSON); last line per COPY.md.
+- **METHODOLOGY** drawer (right-edge tab only): every regulation and economics value with its explanation and code reference or source (§903.03 lot area and setbacks, §911.02 units per parcel, Ch. 914 parking, Ch. 912 ADUs); the feasible/affordable definitions; the household assumptions (mortgage rate, down payment, income to housing, property tax rate, insurance) with their current values; the GROUND TRUTH table (§5g, content per COPY.md); DOWNLOAD PARAMETERS and LOAD PARAMETERS (JSON); last line per COPY.md.
 
 Footer on every page: "Decision-support prototype built at the AI Horizons AI for Housing Hackathon, Sept 26–27, 2026. Not legal, financial, or zoning advice. Sources and limitations: /docs."
 
@@ -298,7 +305,7 @@ Opens with the same regulations/construction/economics/site settings the person 
 - **SITE CONDITIONS**: slope share, landslide, undermined, flood, greenway, water, steps — each with its source and date; unavailable ones say "Not available in open data"; sewer always: "not available in open data — confirm with PWSA".
 - **PRO FORMA** for this building on this parcel (§5b), three blocks side by side. **The line is the slider:** a figure that can be moved has its track directly beneath it, with the computed amount at right and the slider's own value (e.g. "$260 / sq ft") small at the track's end. No separate slider lists; no figure appears twice. No intro sentence under the PRO FORMA label.
   - **DEVELOPMENT** — lines: Construction cost [slider $/sq ft, shared with the workspace] · Land [slider, per-parcel override, default assessed] · Site conditions [slider, per-parcel override, default = the estimated adders from the parcel's mapped conditions; sub-line names them] · **Total cost** · Sale value [slider $/sq ft, shared] · **Total value** (sale value + subsidy). Result: FEASIBLE / NOT FEASIBLE with the difference. "Feasible at ${breakEvenSalePricePerSf} per square foot, or ${breakEvenSubsidyPerUnit} per unit in subsidy."
-  - **HOUSEHOLD** — lines: Household income [slider, shared] · **Maximum price** (derived) · Unit price · Monthly payment. Then a compact two-column TERMS group of five small sliders (shared state): Mortgage rate, Down payment, Income to housing, Property tax rate, Insurance. Result: AFFORDABLE / NOT AFFORDABLE with the difference. Reference: the neighborhood's own sale median ({n} sales, {date}).
+  - **HOUSEHOLD** — lines: Household income [slider, shared] · **Maximum price** (derived) · Unit price · Monthly payment. Then a compact two-column TERMS group of five small sliders (shared state): Mortgage rate, Down payment, Income to housing, Property tax rate, Insurance. Result: AFFORDABLE / NOT AFFORDABLE with the difference. Reference lines per COPY.md: sales within ½ mile (median $/sq ft, count; citywide fallback) and the ZIP's HUD Small Area FMR for a 2-bedroom, labeled reference only.
   - **PUBLIC SUPPORT** — three lines: Subsidy provided [slider $/unit, shared] with the total (× units) · **Subsidy required** (derived: subsidyForAffordable) · **Public return** (derived: subsidy required ÷ annual property tax per unit, annual tax in the sub-line; "no subsidy required" when zero). Result: "MEETS REQUIREMENT." when provided ≥ required, else "SHORT BY ${gap} PER UNIT." ASSUMPTIONS and SUMMARY buttons at the bottom of this block.
   ASSUMPTIONS drawer with every input, its current value, and its source (contents per COPY.md). Every result on the page recalculates as any slider moves.
 - Optional **SUMMARY** button: Claude writes ≤120 words from the check lines only; validated to contain no numbers not present in the checks.
@@ -326,6 +333,7 @@ Acceptance: the anchor building (16 × 64 × 3, 2 units, finishedSf 3,072) on th
 15. Levers never mutates the current parameters (the URL and all sliders are unchanged after it runs).
 17. Pace: feasibleUnits 3,100 and buildingPace 500 → 6.2 years, displayed "6 YEARS"; buildingPace 0 is not allowed (slider min 50).
 18. Public return: unitPrice 219,100, propertyTaxRate 0.015 → annual tax 3,287; subsidyRequired 31,400 → payback 9.6 years, displayed "10 YEARS"; subsidyRequired 0 → "no subsidy required."
+20. Ground truth: every slider listed in COPY.md "Observed marks" renders a tick at the stated value; the GROUND TRUTH table renders all rows from lib/groundTruth.ts; a parcel with compsN < 5 shows the citywide median labeled citywide; a parcel with fmr2br null shows the metro figure labeled metro.
 19. Filters: nearTransitOnly keeps only parcels with transitDistM ≤ 400; delinquentOrForeclosedOnly keeps only taxDelinquent or foreclosure parcels; both compose with the other Site filters and the map bounds.
 16. Scope: with viewBounds covering the whole city, counts equal the citywide counts; with viewBounds covering half the fixture parcels, counts equal that half; the "in view" line reads `{n} of {total}`. The map view (center, zoom) is part of the URL state.
 
