@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import type { Evaluation } from "@/lib/evaluate";
 import { fmtInt, fmtMoney } from "@/lib/format";
+import { GROUND_TRUTH, GROUND_TRUTH_FOOTER, GROUND_TRUTH_INTRO } from "@/lib/groundTruth";
 import { dumpParameters, loadParameters } from "@/lib/params";
 import { affordablePrice } from "@/lib/proforma";
 import { economicsSliders, householdSliders, regulationSliders } from "@/lib/rules";
@@ -120,6 +121,31 @@ export function MethodologyDrawer(props: {
       <p className="mb-4 font-mono text-[13px] text-limestone">
         Median subsidy {evaluation.ladder.subsidyPerUnit == null ? "—" : fmtMoney(evaluation.ladder.subsidyPerUnit)}
       </p>
+      <h3 className="mb-2 font-display text-[13px] font-semibold tracking-section text-limestone">
+        GROUND TRUTH
+      </h3>
+      <p className="mb-3 font-sans text-[14px] text-limestone/70">{GROUND_TRUTH_INTRO}</p>
+      <table className="mb-2 w-full text-left text-[13px] text-limestone">
+        <thead>
+          <tr className="border-t border-limestone/10">
+            <th className="py-2 font-display tracking-heading">Item</th>
+            <th className="py-2 font-display tracking-heading">Figure</th>
+            <th className="py-2 font-display tracking-heading">Source</th>
+            <th className="py-2 font-display tracking-heading">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {GROUND_TRUTH.map((row) => (
+            <tr key={row.item} className="border-t border-limestone/10 align-top">
+              <td className="py-2 font-sans text-[14px] text-limestone/70">{row.item}</td>
+              <td className="py-2 font-mono">{row.figure}</td>
+              <td className="py-2 font-sans text-[14px] text-limestone/70">{row.source}</td>
+              <td className="py-2 font-mono text-[12px]">{row.date}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="mb-4 font-sans text-[14px] text-limestone/70">{GROUND_TRUTH_FOOTER}</p>
       <p className="mb-4 font-sans text-[14px] text-limestone/70">
         A parcel is feasible when sale value plus subsidy covers construction cost, assessed land
         value, and site-condition costs. It is affordable when the unit price is within the
@@ -138,14 +164,14 @@ export function MethodologyDrawer(props: {
           onClick={download}
           className="border border-brick px-3 py-1 font-display text-[12px] font-semibold tracking-section text-limestone"
         >
-          DOWNLOAD
+          DOWNLOAD PARAMETERS
         </button>
         <button
           type="button"
           onClick={() => fileRef.current?.click()}
           className="border border-brick px-3 py-1 font-display text-[12px] font-semibold tracking-section text-limestone"
         >
-          LOAD
+          LOAD PARAMETERS
         </button>
         <input
           ref={fileRef}

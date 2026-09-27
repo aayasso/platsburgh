@@ -1,6 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { GROUND_TRUTH, GROUND_TRUTH_FOOTER, GROUND_TRUTH_INTRO } from "../lib/groundTruth";
 import { economicsSliders, householdSliders, regulationSliders } from "../lib/rules";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -14,15 +15,29 @@ const rows = sliders
   )
   .join("\n");
 
+const gt = GROUND_TRUTH.map(
+  (r) => `| ${r.item} | ${r.figure} | ${r.source} | ${r.date} |`,
+).join("\n");
+
 const md = `# Rules
 
-Generated from \`lib/rules.ts\`. Do not edit by hand.
+Generated from \`lib/rules.ts\` and \`lib/groundTruth.ts\`. Do not edit by hand.
 
 Eight checks per parcel, in order: site conditions, parcel area, frontage, buildable area after setbacks, units per parcel, ADU, height, parking. The first failure is the parcel's constraint; all eight appear on the parcel page with the numbers. Unavailable site data is listed, never counted as a failure.
 
 | Key | Label | Explanation | Min | Max | Step | Default | Code or source |
 |---|---|---|---|---|---|---|---|
 ${rows}
+
+## GROUND TRUTH
+
+${GROUND_TRUTH_INTRO}
+
+| Item | Figure | Source | Date |
+|---|---|---|---|
+${gt}
+
+${GROUND_TRUTH_FOOTER}
 `;
 
 mkdirSync(dirname(out), { recursive: true });
