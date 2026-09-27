@@ -16,6 +16,8 @@ import {
   nearestPointMeters,
 } from "../lib/frontage";
 import Papa from "papaparse";
+import { geometryMismatch } from "../lib/aerial";
+import { geometryToRing } from "../lib/parcelBoundary";
 import {
   isVacantUse,
   loadCityAssessments,
@@ -1204,6 +1206,7 @@ async function main() {
       ? frontage({ geometry: g, streetIndex, lotSf: row.LOTAREA || 1 })
       : { widthFt: 0, depthFt: 0, hasStreetFrontage: false };
     const stepsHit = steps.length ? hitsOverlay(g, steps as Feature<Polygon | LineString>[], { lon, lat }) : false;
+    const ring = geometryToRing(g);
     const lot: Lot = {
       id: row.PARID,
       address: addressOf(row),
@@ -1232,6 +1235,9 @@ async function main() {
       taxDelinquent: delinquent ? delinquent.has(row.PARID) : "unknown",
       foreclosure: foreclosed ? foreclosed.has(row.PARID) : "unknown",
       zip: zip5(row.PROPERTYZIP),
+      geometryMismatch: ring
+        ? geometryMismatch(ring, dim.widthFt, dim.depthFt)
+        : false,
     };
     lots.push(lot);
     if (lots.length % 2000 === 0) {
@@ -1241,6 +1247,8 @@ async function main() {
   log(`assemble done in ${Date.now() - tAssemble} ms`);
 
   log(`Assembled ${lots.length} lots (${withGeom} with geometry of ${assessments.length} vacant-or-residential).`);
+  const mismatchN = lots.filter((l) => l.geometryMismatch).length;
+  log(`geometryMismatch: ${mismatchN} of ${lots.length} parcels (County ring bbox differs from widthFt × depthFt by more than 25% in either dimension).`);
 
   const unknownCounts: Record<string, number> = {};
   const keys = [

@@ -324,3 +324,7 @@ Retrieved 2026-09-27.
 - **City of Pittsburgh Property Tax Abatements** (`city-property-tax-abatements`): 1,975 rows, **1,382** PINs; `abatedThrough` = `start_year + num_years − 1`; **145** lots with an unexpired year (≥ 2026).
 - **Zillow ZHVI** ZIP all-homes CSV (`Zip_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month.csv`): 12-month change 2025-08-31 → 2026-08-31; **39,207** lots received a ZIP value (first fetch failed on a parse bug; rerun succeeded).
 - **BLS PPI** series `WPUIP231000` (inputs to residential construction): latest 2026-08 = 168.052; Nov 2023–May 2024 average 151.105; ratio **1.112** (**+11.2%**). Written to `data/ppi.json`. Not applied to any slider default.
+
+## Geometry mismatch (County ring vs width × depth)
+
+Counted 2026-09-27 from `data/cache/geometry.json` (County `OPENDATA/Parcels`) against `data/lots.json` widthFt × depthFt. A parcel is flagged `geometryMismatch` when the ring's north-aligned bounding box differs from those two dimensions by more than 25% in either side (sides sorted so orientation can swap). **35,328** of **39,207** parcels flag (the aerial always draws the County ring; the parcel page shows the COPY.md note when the live fetch disagrees). Width and depth are street-frontage and lotSf/width, not the geographic AABB, so rotated lots flag even when the polygon is the right shape. `build-lots` writes the flag and this count on assemble.

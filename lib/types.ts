@@ -35,6 +35,7 @@ export type Lot = {
   zhviChange12m?: number | null;
   /** Outer ring [lon, lat][], closed or open. */
   ring?: [number, number][];
+  geometryMismatch?: boolean;
 };
 
 export type Regulations = {

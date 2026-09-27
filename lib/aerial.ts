@@ -47,7 +47,7 @@ function closedRing(r: LonLat[]): LonLat[] {
   return [...r, first];
 }
 
-function ringBboxFt(ring: LonLat[]): { ewFt: number; nsFt: number } {
+export function ringBboxFt(ring: LonLat[]): { ewFt: number; nsFt: number } {
   const lons = ring.map(([lon]) => lon);
   const lats = ring.map(([, lat]) => lat);
   const lat = (Math.min(...lats) + Math.max(...lats)) / 2;
@@ -59,21 +59,21 @@ function ringBboxFt(ring: LonLat[]): { ewFt: number; nsFt: number } {
   };
 }
 
-function ringMatchesLot(ring: LonLat[], lot: Lot): boolean {
+export function geometryMismatch(
+  ring: LonLat[],
+  widthFt: number,
+  depthFt: number,
+): boolean {
   const { ewFt, nsFt } = ringBboxFt(ring);
   const a = [ewFt, nsFt].sort((x, y) => x - y);
-  const b = [lot.widthFt, lot.depthFt].sort((x, y) => x - y);
-  const close = (x: number, y: number) =>
-    Math.abs(x - y) <= 0.3 * Math.max(y, 1);
-  return close(a[0], b[0]) && close(a[1], b[1]);
+  const b = [widthFt, depthFt].sort((x, y) => x - y);
+  const off = (x: number, y: number) => Math.abs(x - y) > 0.25 * Math.max(y, 1);
+  return off(a[0], b[0]) || off(a[1], b[1]);
 }
 
 export function ringOf(lot: Lot): LonLat[] {
   const r = lot.ring;
-  if (r && r.length >= 4) {
-    const closed = closedRing(r);
-    if (ringMatchesLot(closed, lot)) return closed;
-  }
+  if (r && r.length >= 4) return closedRing(r);
   return fallbackRing(lot);
 }
 

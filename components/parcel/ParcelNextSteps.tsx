@@ -1,5 +1,5 @@
 import {
-  CONFIRM_BEFORE_YOU_ACT,
+  confirmBeforeYouAct,
   nextSteps,
 } from "@/lib/nextSteps";
 import type { Construction, FitResult, Lot, Regulations } from "@/lib/types";
@@ -30,7 +30,7 @@ export function ParcelNextSteps(props: {
         CONFIRM BEFORE YOU ACT
       </h2>
       <div className="mt-2">
-        {CONFIRM_BEFORE_YOU_ACT.map((line) => (
+        {confirmBeforeYouAct(props.lot).map((line) => (
           <div key={line} className="border-b border-limestone-dark py-2 font-sans text-[14px]">
             {line}
           </div>

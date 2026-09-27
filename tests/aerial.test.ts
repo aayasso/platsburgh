@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { AERIAL_SIZE_PX, aerialTilePlan, outlinePixelAspect } from "../lib/aerial";
+import {
+  AERIAL_SIZE_PX,
+  aerialTilePlan,
+  fallbackRing,
+  geometryMismatch,
+  outlinePixelAspect,
+} from "../lib/aerial";
 import { geometryToRing } from "../lib/parcelBoundary";
+import { confirmBeforeYouAct } from "../lib/nextSteps";
 import type { Lot } from "../lib/types";
 
 const base = {
@@ -54,17 +61,36 @@ describe("aerial outline", () => {
   });
 
   it("a 269 × 108 ft bbox ring fills at least 60% of the 320 px box width", () => {
-    const lot = {
-      ...base,
-      id: "fixture-269x108",
-      lotSf: 29210,
-      widthFt: 269,
-      depthFt: 108,
-    } as Lot;
+    const sized = { ...base, id: "fixture-269x108", lotSf: 29210, widthFt: 269, depthFt: 108 } as Lot;
+    const ring = fallbackRing(sized);
+    const lot = { ...sized, widthFt: 43, depthFt: 267, ring } as Lot;
     const plan = aerialTilePlan(lot);
     const xs = plan.outline.map((p) => p[0]);
     const widthPx = Math.max(...xs) - Math.min(...xs);
     expect(widthPx / AERIAL_SIZE_PX).toBeGreaterThanOrEqual(0.6);
+    expect(geometryMismatch(ring, lot.widthFt, lot.depthFt)).toBe(true);
+  });
+
+  it("draws the County ring even when it disagrees with the lot record", () => {
+    const sliverLot = { ...base, widthFt: 43, depthFt: 267 } as Lot;
+    const ring = fallbackRing(sliverLot);
+    const lot = { ...base, widthFt: 269, depthFt: 108, lotSf: 29210, ring } as Lot;
+    const plan = aerialTilePlan(lot);
+    expect(outlinePixelAspect(plan)).toBeGreaterThan(5);
+  });
+
+  it("geometryMismatch is true when either bbox side differs by more than 25%", () => {
+    const ring = fallbackRing({ ...base, widthFt: 24, depthFt: 100 } as Lot);
+    expect(geometryMismatch(ring, 24, 100)).toBe(false);
+    expect(geometryMismatch(ring, 269, 108)).toBe(true);
+  });
+
+  it("CONFIRM BEFORE YOU ACT prepends the mapped-shape line when the flag is set", () => {
+    const lines = confirmBeforeYouAct({ ...base, geometryMismatch: true } as Lot);
+    expect(lines[0]).toBe(
+      "The County's mapped parcel shape does not match its assessed lot area; verify the boundary before relying on frontage or buildable area.",
+    );
+    expect(confirmBeforeYouAct({ ...base } as Lot)[0]).toMatch(/^Frontage and depth/);
   });
 
   it("MultiPolygon outline uses the first polygon's outer ring", () => {

@@ -1,4 +1,5 @@
 import { ParcelClient } from "@/components/parcel/ParcelClient";
+import { geometryMismatch } from "@/lib/aerial";
 import { getLot } from "@/lib/lots-data";
 import { fetchParcelRing } from "@/lib/parcelBoundary";
 import Link from "next/link";
@@ -37,9 +38,16 @@ export default async function ParcelPage({
   }
 
   const ring = await fetchParcelRing(lot.id);
+  const withRing = ring
+    ? {
+        ...lot,
+        ring,
+        geometryMismatch: geometryMismatch(ring, lot.widthFt, lot.depthFt),
+      }
+    : lot;
   return (
     <ParcelClient
-      lot={ring ? { ...lot, ring } : lot}
+      lot={withRing}
       query={query}
       hasSummary={Boolean(process.env.ANTHROPIC_API_KEY)}
     />

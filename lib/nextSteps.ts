@@ -44,6 +44,16 @@ export const CONFIRM_BEFORE_YOU_ACT = [
   "Construction cost is your setting; comparable sales and rents are references, not appraisals.",
 ] as const;
 
+export const GEOMETRY_MISMATCH_CONFIRM =
+  "The County's mapped parcel shape does not match its assessed lot area; verify the boundary before relying on frontage or buildable area.";
+
+export const GEOMETRY_MISMATCH_NOTE = "mapped shape differs from assessed area";
+
+export function confirmBeforeYouAct(lot: Lot): string[] {
+  if (lot.geometryMismatch) return [GEOMETRY_MISMATCH_CONFIRM, ...CONFIRM_BEFORE_YOU_ACT];
+  return [...CONFIRM_BEFORE_YOU_ACT];
+}
+
 function failed(fit: FitResult, id: FitResult["checks"][number]["id"]): boolean {
   return fit.checks.find((c) => c.id === id)?.pass === false;
 }

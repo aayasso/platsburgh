@@ -141,7 +141,7 @@ Last line: "These are the exact parameters that produced the results on this pag
 
 ## PARCEL PAGE
 - Back link: **← MAP**
-- Header: `{address}` · `{neighborhood}` · `Zoning district {code}` · `{lotSf} sq ft · {frontage} × {depth} ft` · `{Vacant | Improved}` · `{City-owned | Privately owned}` · `Transit {n} ft` · `{Taxes current | Tax-delinquent | In foreclosure}`
+- Header: `{address}` · `{neighborhood}` · `Zoning district {code}` · `{lotSf} sq ft · {frontage} × {depth} ft` · `mapped shape differs from assessed area` (mono, when the County ring bbox differs from width × depth by more than 25%) · `{Vacant | Improved}` · `{City-owned | Privately owned}` · `Transit {n} ft` · `{Taxes current | Tax-delinquent | In foreclosure}`
 - Status line (right): **CONFORMING · FEASIBLE · AFFORDABLE** (or the subset that applies; **NON-CONFORMING** with the constraint) · mono: `at current parameters · {w} × {d} · {stories} stories · {units} units{ + ADU}`
 - Section label: **COMPLIANCE** — no intro line.
 
@@ -194,6 +194,7 @@ Result column: **PASS** / **FAIL**.
   - If any regulation check fails otherwise (lot area, height, units, ADU, parking, or buildable area by more than 10 ft): "Variance — Zoning Board of Adjustment; a hearing is required." (link to pittsburghpa.gov/dcp/zba)
   - If Flood zone: "Floodplain permit — City Planning." · If Landslide-prone or Undermined: "Geotechnical report — required before foundation design." · If Steep slope: "Grading permit — PLI." · If Condemned structure: "Demolition permit — PLI." · If City-owned: "Acquisition — Urban Redevelopment Authority or City property disposition." · If Tax-delinquent or In foreclosure: "Acquisition — treasurer's sale or foreclosure process."
 - Section label: **CONFIRM BEFORE YOU ACT** — always shown, exactly these lines:
+  - When geometryMismatch: "The County's mapped parcel shape does not match its assessed lot area; verify the boundary before relying on frontage or buildable area." (first)
   - "Frontage and depth are measured from the County parcel polygon; the deed may differ by inches to a foot."
   - "Sewer availability is not in any open dataset — confirm with Pittsburgh Water."
   - "Contextual setbacks, variances, and overlays are decided case by case; the tool does not model approvals."

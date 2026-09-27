@@ -8,6 +8,7 @@ import { ProForma } from "@/components/parcel/ProForma";
 import { buildableEnvelope, fit } from "@/lib/fit";
 import { fmtInt, metersToFt } from "@/lib/format";
 import { zipHomeValuesFigure } from "@/lib/parcelRefs";
+import { GEOMETRY_MISMATCH_NOTE } from "@/lib/nextSteps";
 import { estimatedSiteAdders, proforma } from "@/lib/proforma";
 import { dwellingUnits } from "@/lib/rules";
 import { SITE_CITES } from "@/lib/sources";
@@ -230,8 +231,11 @@ export function ParcelClient(props: {
             </h1>
             <p className="mt-2 font-sans text-[15px] text-moss">
               {lot.neighborhood} · Zoning district {lot.district} · {fmtInt(lot.lotSf)} sq ft ·{" "}
-              {Math.round(lot.widthFt)} × {Math.round(lot.depthFt * 100) / 100} ft ·{" "}
-              {lot.empty ? "Vacant" : "Improved"} ·{" "}
+              {Math.round(lot.widthFt)} × {Math.round(lot.depthFt * 100) / 100} ft
+              {lot.geometryMismatch ? (
+                <span className="font-mono"> · {GEOMETRY_MISMATCH_NOTE}</span>
+              ) : null}{" "}
+              · {lot.empty ? "Vacant" : "Improved"} ·{" "}
               {lot.owner === "city" ? "City-owned" : "Privately owned"} · Transit {transitFt} ft · {tax}
             </p>
             <div className="mt-3 text-right">

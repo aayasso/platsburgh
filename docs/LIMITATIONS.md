@@ -19,6 +19,7 @@ This is a decision-support prototype built in 39 hours. It is not legal, financi
 **Approximations**
 
 - Frontage and depth are estimated from parcel geometry and street centerlines; irregular parcels may be off. On 237 N Aiken (PIN `0050M00032000000`) the County polygon's street edge is **21.54 ft**; the deed/calibration figure is **22 ft**. Live assessment now records the parcel as improved (SINGLE FAMILY, YEARBLT 2024), so it only appears on the map with **Vacant parcels only** unchecked.
+- **35,328** of **39,207** parcels have a County-mapped ring whose north-aligned bounding box differs from recorded width × depth by more than 25% in either dimension (`geometryMismatch`). The aerial outline is always that ring. The parcel page notes the disagreement; verify the boundary before relying on frontage or buildable area.
 - Slope share comes from the City's 25%-or-greater slope polygons, not a survey.
 - The parking check is a simplification (a driveway needs roughly 10 ft of frontage beside the building).
 - Years at recent pace is a division, not a forecast: feasible units over the building-pace setting, assuming current sliders hold. Payback counts property tax only, undiscounted.
