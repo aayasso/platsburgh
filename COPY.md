@@ -11,7 +11,7 @@ Use these strings exactly. Planning and development vocabulary; no slang ("penci
   - **SUBSIDY / UNIT** · `${max}` · — · `{years}` PAYBACK (median across parcels requiring subsidy)
 
 ## Observed marks on sliders
-A small tick on the track at a measured value, with a mono label under the tick (limestone at 60%): Construction cost: two marks, `site-built US avg $162` (NAHB 2024) and `modular PGH $260` (237 N Aiken 2024); Sale price `citywide $160` and, when in view, `local ${n}`; Household income `80% AMI $79,500`; Building pace `2023–25 avg 273`; Mortgage rate `PMMS 7.03%`; Minimum lot area `code 3,000`; setbacks and height `code {value}`. Marks are facts with sources (in the drawer), never presets: clicking a mark does nothing.
+A small tick on the track at a measured value, with a mono label under the tick (limestone at 60%): Construction cost: two marks, `site-built US avg $162` (NAHB 2024) and `modular PGH $260` (237 N Aiken 2024; inputs +{x.x}% since, BLS PPI); Sale price `citywide $160` and, when in view, `local ${n}`; Household income `80% AMI $79,500`; Building pace `2023–25 avg 273`; Mortgage rate `PMMS 7.03%`; Minimum lot area `code 3,000`; setbacks and height `code {value}`. Marks are facts with sources (in the drawer), never presets: clicking a mark does nothing.
 
 ## REGULATIONS (section label; collapsed by default, chevron at right)
 On the panel when open: label and value only, plus observed marks where listed above. Explanation and code reference appear only in the METHODOLOGY drawer.
@@ -61,6 +61,7 @@ The map is the scope: every number on the page counts the parcels in the current
 - Zoning district (optional): placeholder "Any district"
 - Checkbox: **Near transit only** (within ¼ mile of a PRT stop)
 - Checkbox: **Tax-delinquent or foreclosed only**
+- Under SITE CONDITIONS: checkbox **Exclude condemned structures**
 - **SITE CONDITIONS** (collapsed): checkboxes, label only — Exclude steep slope · Exclude flood zone · Exclude landslide-prone · Exclude undermined · Exclude no water service · Exclude stairs-only access · Minimum frontage (slider). Definitions in the drawer.
 
 ## RESULTS
@@ -117,6 +118,7 @@ Definitions block: the feasible / affordable sentence above; the household assum
 | Construction interest | $33,269 on $537,600 over nine months at prime | 237 N Aiken loan statements | 2024 |
 | Design, survey, appraisal, title, insurance | ≈ $23,400 combined | 237 N Aiken invoices | 2023–24 |
 | Site-built construction cost, US average | $162 per finished sq ft | NAHB Cost of Constructing a Home | 2024 |
+| Construction input prices since the observed build | +{x.x}% (Nov 2023–May 2024 avg to latest month) | BLS Producer Price Index, inputs to residential construction | retrieved {date} |
 | Citywide sale price, arm's-length, prior 24 months | $161 per finished sq ft median, 7,463 sales | WPRDC sales | retrieved 2026-09-26 |
 | Appraised value, new two-unit, 2,667 sq ft | $865,000 (≈ $324 per sq ft) | FNB appraisal | Jan 2025 |
 | New residential units permitted per year | 380 · 256 · 183 (avg 273) | City PLI permits | 2023–2025 |
@@ -153,7 +155,8 @@ Last line: "These are the exact parameters that produced the results on this pag
 | Parking | "No parking required." / "{n} spaces required — {frontage} ft of frontage accommodates a driveway." / "{n} spaces required — {frontage} ft of frontage does not accommodate a driveway." |
 Result column: **PASS** / **FAIL**.
 
-- Section label: **SITE CONDITIONS** — each: `{condition}: {value}` · `{dataset} · {date}`. Unavailable: "Not available in open data." Sewer always present: "Sewer: not available in open data — confirm with PWSA."
+- Aerial image of the parcel (County orthoimagery or Esri World Imagery tiles, parcel outline in centerline), 320 px square, right of the header; caption mono: `Aerial · {source} · {date}`.
+- Section label: **SITE CONDITIONS** — each: `{condition}: {value}` · `{dataset} · {date}`. Adds: `Condemned structure: {Yes | No}` · `Open violations: {n}` · `Property tax abatement: {Yes, through {year} | No}` · `ZIP home values, prior 12 months: {+x.x%}` (Zillow ZHVI, ZIP; "not available" if the ZIP is missing). Unavailable: "Not available in open data." Sewer always present: "Sewer: not available in open data — confirm with PWSA."
 - Section label: **PRO FORMA** — no intro line.
   - **DEVELOPMENT** block, lines (label · amount; slider beneath where marked, with its own value at the track's end; source in mono beneath):
     - Construction cost · ${total} · slider `${cost} / sq ft` · `× {sf} sq ft · any method; default assumed between NAHB 2024 and an observed modular build`
@@ -173,7 +176,7 @@ Result column: **PASS** / **FAIL**.
   - **PUBLIC SUPPORT** block:
     - Subsidy provided · ${total} · slider `${subsidy} / unit` · `× {units} units`
     - **Subsidy required** · ${subsidyForAffordable} · `for this parcel to be feasible at a price this household can afford`
-    - **Public return** · {years}-year payback · `${annualTax} per year in property tax at {rate}%` (or `no subsidy required`)
+    - **Public return** · {years}-year payback · `${annualTax} per year in property tax at {rate}%` (or `no subsidy required`); when the parcel has an abatement: `abated through {year}; payback counted from then`
     - Result: "**MEETS REQUIREMENT.**" / "**SHORT BY ${gap} PER UNIT.**" 
     - Buttons: **ASSUMPTIONS** · **SUMMARY**
   - Source tags (mono): `237 N Aiken actual` · `assumed` · `WPRDC sales` · `County assessment` · `HUD FY2026` · `Freddie Mac PMMS 2026-09-24`

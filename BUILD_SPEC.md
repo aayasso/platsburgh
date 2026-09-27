@@ -64,6 +64,12 @@ Resolve WPRDC download URLs with `GET https://data.wprdc.org/api/3/action/packag
 | city_owned | City-owned property | slug `city-owned-properties` | owner filter |
 | delinquency | Tax delinquency | slug `allegheny-county-tax-delinquency` (or the Property API `pgh_tax_delinquency` block) | Tax-delinquent filter |
 | foreclosures | Mortgage foreclosure records | slug `allegheny-county-mortgage-foreclosure-records` | Foreclosed filter |
+| condemned | Condemned and Dead-End Properties | WPRDC (City of Pittsburgh) — match on parcel ID | condemned flag; Site exclusion |
+| violations | PLI / DOMI / Environmental Services Violations | WPRDC (City of Pittsburgh) — open violations per parcel ID | openViolations |
+| abatements | City of Pittsburgh Property Tax Abatements | WPRDC — parcel ID and expiration year | abatedThrough; Public return note |
+| zhvi | Zillow ZHVI, ZIP level, all homes | zillow.com/research/data (CSV) — 12-month change for the parcel's ZIP | zhviChange12m |
+| ppi | BLS Producer Price Index, inputs to residential construction | BLS API or CSV; ratio of latest month to the Nov 2023–May 2024 average | Ground Truth row; note under the modular cost mark |
+| aerial | Orthoimagery tiles | Allegheny County imagery service if reachable; else Esri World Imagery tiles `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}` with attribution | parcel-page aerial |
 | permits | PLI permits | slug `pli-permits` (City of Pittsburgh); fallback Census Building Permits Survey, City of Pittsburgh place | recent building pace (§5d) |
 
 Assessment fields (uppercase, confirmed): `PARID, PROPERTYOWNER, PROPERTYADDRESS, PROPERTYZIP, MUNICODE, NEIGHCODE, NEIGHDESC, USEDESC, LOTAREA (int sq ft), SALEDATE, SALEPRICE, SALEDESC, FAIRMARKETLAND, FAIRMARKETTOTAL, YEARBLT`.
@@ -79,7 +85,8 @@ Parcel ID: 16 characters, e.g. `0050M00032000000`; accept dashes/spaces and norm
   slopeShare (0–1), landslide, undermined, flood (true/false/unknown), greenway, water (true/false/unknown),
   empty, owner ('city'|'other'), assessedLand, lon, lat,
   transitDistM (meters to nearest PRT stop), taxDelinquent (true/false), foreclosure (true/false),
-  compsPpsf (median $/finished sq ft of arm's-length sales within 800 m, prior 24 months), compsN (count), zip, fmr2br (HUD FY2026 Small Area FMR, 2-bedroom, for the ZIP; null if unavailable) }
+  compsPpsf (median $/finished sq ft of arm's-length sales within 800 m, prior 24 months), compsN (count), zip, fmr2br (HUD FY2026 Small Area FMR, 2-bedroom, for the ZIP; null if unavailable),
+  condemned (true/false), openViolations (count), abatedThrough (year or null), zhviChange12m (fraction or null) }
 ```
 Geometry: width = longest parcel edge within 10 m of a street centerline (if none, `hasStreetFrontage=false` and width = short side of the minimum bounding rectangle); depth = area ÷ width. Prefilter every overlay by bounding box before intersecting; simplify polygons on load. Record source, count, runtime in `docs/DEV_NOTES.md`. Ship the file in the repo if under 50 MB (it will be far smaller — attributes and one lon/lat per lot).
 
@@ -123,6 +130,7 @@ Site conditions (checkboxes, all default on = exclude):
 Site filters (checkboxes, default off; narrow scope rather than exclude):
   nearTransitOnly       parcel within 400 m (¼ mile) of a PRT stop
   delinquentOrForeclosedOnly   taxDelinquent OR foreclosure — parcels with a public acquisition path
+  skipCondemned         (site-condition exclusion, default off) parcel carries a condemned structure
 ```
 Checks, in order; the first failing check is the parcel's **constraint** (later checks still run so the parcel page can show all of them). UI wording for each is in COPY.md.
 ```
@@ -246,6 +254,7 @@ Source, in order: (a) WPRDC "PLI Permits" (City of Pittsburgh): count permits wh
 ```
 annualTaxPerUnit  = unitPrice × propertyTaxRate           # same slider the household payment uses
 paybackYears      = subsidyRequiredPerUnit / annualTaxPerUnit     # undefined when subsidy required is 0 → "no subsidy required"
+                    + (abatedThrough ? abatedThrough − currentYear : 0)   # an abated parcel pays no incremental tax until the abatement ends
 citywide:  totalSubsidy = Σ subsidyForAffordable × units over conforming parcels in view
            annualTax    = Σ annualTaxPerUnit × units over those parcels
            medianPayback = median of paybackYears over parcels with subsidyRequired > 0
@@ -262,6 +271,12 @@ Three things that tell a newcomer what is normal here, all facts with sources, n
 1. **Observed marks on sliders** — a tick on the track at a measured value with a mono label (wording in COPY.md): construction cost at two marks, the NAHB 2024 site-built US average ($162) and the observed Pittsburgh modular build ($260); sale price at the citywide median and, when parcels are in view, the median of their compsPpsf; household income at 80% AMI; building pace at the 2023–25 average; mortgage rate at PMMS; regulation sliders at the current code value. Ticks are 1px limestone at 60%, 8px tall, centered on the value; clicking does nothing.
 2. **GROUND TRUTH table in METHODOLOGY** — content verbatim from COPY.md; rendered from `lib/groundTruth.ts` so docs can be generated from it.
 3. **Comps by distance and rent reference on the parcel page** — `compsPpsf`/`compsN` from the parcel file (computed once in build-lots with a spatial grid; fall back to citywide when compsN < 5) and `fmr2br` from HUD FY2026 Small Area FMRs by ZIP (fetch the FY2026 SAFMR file from huduser.gov; if unreachable, use the metro FMR for the Pittsburgh HUD Metro FMR Area and label it "metro"). Reference only; the rental path is not modeled.
+
+## 5h. Additional sources (Sunday additions)
+- **Aerial** on the parcel page: a 320 px static map of the parcel from the County imagery service or Esri World Imagery tiles (attribution required), parcel outline drawn in centerline; caption per COPY.md.
+- **PPI**: compute `ppiRatio` once in build-lots (latest month ÷ average of Nov 2023–May 2024) into data/ppi.json with series id and months; show as a Ground Truth row and as a note under the modular cost mark. Do not auto-escalate any default; it is information.
+- **Condemned, violations, abatements, ZHVI**: parcel facts on the parcel page per COPY.md; `skipCondemned` exclusion in Site conditions; abatement shifts the payback per §5e.
+- README and LIMITATIONS: a "Sources considered and not used" list — ZBA decisions (PDF parsing; deliberate), USGS 3DEP (marginal over City slope polygons), HMDA (complex, low marginal value), PA DEP eMapPA (manual access), OneStopPGH (portal, not data), Redfin/Realtor.com (parcel-level comps used instead), PennDOT, ResStock, Historical PLI.
 
 ## 6. The page (`/`)
 Layout and styling per DESIGN_SYSTEM.md (top pine bar with the ladder, left pine panel with the four sections, right-edge METHODOLOGY tab, bottom pine bar with CONSTRAINTS / LEVERS / PARCELS / SOURCES and DOWNLOAD CSV, full-bleed dark map that pans and zooms freely). The content below is what goes where; the design file says how it looks.
@@ -333,6 +348,7 @@ Acceptance (test 9): the anchor building (16 × 64 × 3, 2 units, finishedSf 3,0
 15. Levers never mutates the current parameters (the URL and all sliders are unchanged after it runs).
 17. Pace: feasibleUnits 3,100 and buildingPace 500 → 6.2 years, displayed "6 YEARS"; buildingPace 0 is not allowed (slider min 50).
 18. Public return: unitPrice 219,100, propertyTaxRate 0.015 → annual tax 3,287; subsidyRequired 31,400 → payback 9.6 years, displayed "10 YEARS"; subsidyRequired 0 → "no subsidy required."
+21. Sunday sources: a parcel with condemned=true is excluded when skipCondemned is on; abatedThrough 2030 adds (2030 − current year) to payback; zhviChange12m null renders "not available"; the aerial renders with a fallback tile source.
 20. Ground truth: every slider listed in COPY.md "Observed marks" renders a tick at the stated value; the GROUND TRUTH table renders all rows from lib/groundTruth.ts; a parcel with compsN < 5 shows the citywide median labeled citywide; a parcel with fmr2br null shows the metro figure labeled metro.
 19. Filters: nearTransitOnly keeps only parcels with transitDistM ≤ 400; delinquentOrForeclosedOnly keeps only taxDelinquent or foreclosure parcels; both compose with the other Site filters and the map bounds.
 16. Scope: with viewBounds covering the whole city, counts equal the citywide counts; with viewBounds covering half the fixture parcels, counts equal that half; the "in view" line reads `{n} of {total}`. The map view (center, zoom) is part of the URL state.
