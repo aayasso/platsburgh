@@ -29,7 +29,7 @@ export function nearestNamed(
   const { index, cellSize } = packed;
   const cx = Math.floor(lon / cellSize);
   const cy = Math.floor(lat / cellSize);
-  let best: { distFt: number; name?: string } | null = null;
+  let best = null as { distFt: number; name?: string } | null;
   const ftPerDeg = 328083.99 * Math.cos((lat * Math.PI) / 180);
   for (let r = 0; r <= maxRings; r++) {
     for (let dx = -r; dx <= r; dx++) {
