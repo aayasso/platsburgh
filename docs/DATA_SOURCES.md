@@ -30,10 +30,10 @@ Retrieved 2026-09-26 unless noted. Fallbacks that were actually used (not the sp
 | Zillow Home Value Index, ZIP, all homes | Zillow | zillow.com/research/data | zhviChange12m (12-month change for the parcel's ZIP) |
 | Producer Price Index, inputs to residential construction (WPUIP231000) | BLS | data.bls.gov | Ground Truth row; note under the modular cost mark. Not applied to any slider default. |
 | Orthoimagery | Esri World Imagery tiles (`tile/{z}/{y}/{x}`) | server.arcgisonline.com | parcel-page aerial (320 px stacked tiles with parcel outline) |
-| City Designated Historic Districts | City of Pittsburgh via WPRDC | data.wprdc.org/dataset/city-designated-historic-districts | historicDistrict; Next Steps Historic Review Commission |
-| City Designated Historic Sites | City of Pittsburgh via WPRDC | data.wprdc.org/dataset/city-designated-individual-historic-sites | historicSite; Next Steps Historic Review Commission |
-| Opportunity Zones | HUD via ArcGIS FeatureServer | services.arcgis.com | opportunityZone |
+| City Designated Historic Districts | City of Pittsburgh via WPRDC | data.wprdc.org/dataset/city-designated-historic-districts | historicDistrict (prop `historic_name`); 21 features / 34 polygons, 462 lots; Next Steps HRC |
+| City Designated Historic Sites | City of Pittsburgh via WPRDC | data.wprdc.org/dataset/city-designated-individual-historic-sites | historicSite; 158 features, 14 lots; Next Steps HRC |
+| Opportunity Zones (WPRDC no package; HUD QOZ FeatureServer, GEOID10 LIKE '42003%') | HUD via ArcGIS FeatureServer | services.arcgis.com | opportunityZone; 68 tracts, 10,805 lots |
 | Schools (Allegheny County or City) | Allegheny County via WPRDC | data.wprdc.org | schoolName, schoolDistFt |
 | Parks | City of Pittsburgh via WPRDC | data.wprdc.org/dataset/parks | parkName, parkDistFt |
 | PRT GTFS (transit frequency) | Pittsburgh Regional Transit | rideprt.org | transitTripsPerHour (weekday 7–9 a.m. trips / 2) |
-| City Trees | City of Pittsburgh via WPRDC | data.wprdc.org/dataset/city-trees | frontageTrees (trees within 25 ft of street-facing edge) |
+| City Trees (datastore fallback if GeoJSON too large) | City of Pittsburgh via WPRDC | data.wprdc.org/dataset/city-trees | frontageTrees (trees within 25 ft of street-facing edge); 45,709 trees |

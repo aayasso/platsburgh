@@ -364,3 +364,35 @@ City Trees: "City of Pittsburgh Trees" https://data.wprdc.org/dataset/9ce31f01-1
 NOT FOUND: City Trees failed: terminated
 NOT FOUND: City Trees points. frontageTrees set null.
 Wrote data/lots.json: 39207 lots (facts all).
+
+## Parcel facts (historic)
+
+City Designated Historic Districts: "City Designated Historic Districts" https://data.wprdc.org/dataset/8f92ae09-4cfa-4e0d-9c46-779a66d93d1e/resource/c926cfe2-e085-4808-94bc-b33895089a74/download/historic_districts.geojson
+City Designated Historic Districts: 21 features.
+City Designated Historic Sites: "City Designated Individual Historic Sites" https://data.wprdc.org/dataset/2ee7c48c-6fcf-407a-a8ca-477bdcfffda7/resource/dbe47f38-033d-448b-bb3d-ff0e598d4c50/download/historic_sites.geojson
+City Designated Historic Sites: 158 features.
+Historic: 34 district polygons, 158 site features; 462 lots in a district; 14 lots on a site.
+Wrote data/lots.json: 39207 lots (facts historic).
+
+## Parcel facts (oz)
+
+WPRDC search for opportunity zones returned no package; trying HUD FeatureServer.
+HUD Opportunity Zones (Allegheny County GEOID10 LIKE '42003%'): 68 tracts.
+Opportunity Zone: 68 tracts; 0 lots inside a zone.
+Wrote data/lots.json: 39207 lots (facts oz).
+
+## Parcel facts (oz)
+
+WPRDC search for opportunity zones returned no package; trying HUD FeatureServer.
+HUD Opportunity Zones (Allegheny County GEOID10 LIKE '42003%'): 68 tracts.
+Opportunity Zone: 68 tracts; 10805 lots inside a zone.
+Wrote data/lots.json: 39207 lots (facts oz).
+
+## Parcel facts (trees)
+
+City Trees: "City of Pittsburgh Trees" https://data.wprdc.org/dataset/9ce31f01-1dfa-4a14-9969-a5c5507a4b40/resource/d876927a-d3da-44d1-82e1-24310cdb7baf/download/trees_img.geojson
+City Trees: 45709 features.
+Pittsburgh Street Centerline: "Pittsburgh Street Centerline" https://data.wprdc.org/dataset/9ebd073b-f637-4f33-a7c2-619d23dd085a/resource/8a38a51d-5000-4600-8114-3f9e92202a64/download/pgh_centerlines.geojson
+Pittsburgh Street Centerline: 19683 features.
+Street trees: 45709 trees; frontageTrees on 39207 lots (33507 with a street-facing edge).
+Wrote data/lots.json: 39207 lots (facts trees).

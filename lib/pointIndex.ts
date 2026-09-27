@@ -91,6 +91,32 @@ export function countTreesNearEdges(
   return seen.size;
 }
 
+export function containsPoint(
+  lon: number,
+  lat: number,
+  index: Map<string, Feature<Polygon>[]>,
+  cellSize = 0.004,
+): boolean {
+  const cx = Math.floor(lon / cellSize);
+  const cy = Math.floor(lat / cellSize);
+  const pt = turf.point([lon, lat]);
+  const seen = new Set<Feature<Polygon>>();
+  for (let dx = -1; dx <= 1; dx++) {
+    for (let dy = -1; dy <= 1; dy++) {
+      for (const poly of index.get(`${cx + dx}_${cy + dy}`) ?? []) {
+        if (seen.has(poly)) continue;
+        seen.add(poly);
+        try {
+          if (turf.booleanPointInPolygon(pt, poly)) return true;
+        } catch {
+          /* skip */
+        }
+      }
+    }
+  }
+  return false;
+}
+
 export function containingName(
   lon: number,
   lat: number,
@@ -136,6 +162,7 @@ export function featureName(props: Record<string, unknown> | null | undefined): 
     "ParkName",
     "HIST_NAME",
     "HISTNAME",
+    "historic_name",
     "SITE_NAME",
     "DISTRICT",
     "HistoricNa",

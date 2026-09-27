@@ -145,7 +145,7 @@ export const SOURCES: SourceRow[] = [
     url: "https://data.wprdc.org/dataset/city-designated-individual-historic-sites",
   },
   {
-    name: "Opportunity Zones (WPRDC no package; HUD FeatureServer returned 0 tracts for Allegheny County)",
+    name: "Opportunity Zones (WPRDC no package; HUD FeatureServer, GEOID10 LIKE '42003%')",
     publisher: "HUD / ArcGIS FeatureServer",
     retrieved: "2026-09-27",
     url: "https://services.arcgis.com/VTyQ9soqVukalItT/ArcGIS/rest/services/Opportunity_Zones/FeatureServer/13",
@@ -169,7 +169,7 @@ export const SOURCES: SourceRow[] = [
     url: "https://www.rideprt.org/developerresources/google_transit.zip",
   },
   {
-    name: "City Trees (GeoJSON download terminated; frontageTrees set null)",
+    name: "City Trees (datastore; GeoJSON too large)",
     publisher: "City of Pittsburgh / WPRDC",
     retrieved: "2026-09-27",
     url: "https://data.wprdc.org/dataset/city-trees",

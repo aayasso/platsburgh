@@ -13,6 +13,7 @@ import {
 import {
   buildPointIndex,
   containingName,
+  containsPoint,
   countTreesNearEdges,
   featureName,
   nearestNamed,
@@ -20,9 +21,11 @@ import {
 } from "../lib/pointIndex";
 import type { Lot } from "../lib/types";
 import {
+  datastoreSearch,
   fetchJson,
   packageSearch,
   packageShow,
+  pickDatastoreResource,
   pickGeojsonResource,
   type CkanPackage,
 } from "../lib/wprdc";
@@ -216,12 +219,12 @@ export async function applyOpportunityZone(lots: Lot[], log: Log): Promise<void>
         "https://services.arcgis.com/VTyQ9soqVukalItT/ArcGIS/rest/services/Opportunity_Zones/FeatureServer/13";
       const page = await pageArcGisGeoJSON({
         layerUrl: layer,
-        where: "STATE='42' AND COUNTY='003'",
-        outFields: "GEOID,TRACT,COUNTY,STATE",
+        where: "GEOID10 LIKE '42003%'",
+        outFields: "GEOID10,TRACT,COUNTY,STATE",
         pageSize: 2000,
       });
       feats = page as Feature[];
-      log(`HUD Opportunity Zones (Allegheny County STATE=42 COUNTY=003): ${feats.length} tracts.`);
+      log(`HUD Opportunity Zones (Allegheny County GEOID10 LIKE '42003%'): ${feats.length} tracts.`);
     } catch (e) {
       log(`NOT FOUND: HUD Opportunity Zones (${e instanceof Error ? e.message : e}). opportunityZone set null.`);
       for (const lot of lots) lot.opportunityZone = null;
@@ -237,8 +240,7 @@ export async function applyOpportunityZone(lots: Lot[], log: Log): Promise<void>
   const index = buildPolyIndex(polys);
   let n = 0;
   for (const lot of lots) {
-    const hit = containingName(lot.lon, lot.lat, polys, index);
-    lot.opportunityZone = hit != null;
+    lot.opportunityZone = containsPoint(lot.lon, lot.lat, index);
     if (lot.opportunityZone) n++;
   }
   log(`Opportunity Zone: ${polys.length} tracts; ${n} lots inside a zone.`);
@@ -418,13 +420,56 @@ export async function applyTransitFrequency(
   }
 }
 
+async function loadTreesViaDatastore(log: Log): Promise<NamedPt[]> {
+  const pkg = await packageShow("city-trees");
+  const res = pickDatastoreResource(pkg);
+  if (!res) {
+    log("NOT FOUND: City Trees datastore resource.");
+    return [];
+  }
+  log(`City Trees datastore: ${res.id}`);
+  const pts: NamedPt[] = [];
+  let offset = 0;
+  let total = Infinity;
+  while (offset < total) {
+    const page = await datastoreSearch({
+      resourceId: res.id,
+      limit: 10000,
+      offset,
+    });
+    total = page.total;
+    for (const rec of page.records) {
+      const lat = Number(rec.latitude);
+      const lon = Number(rec.longitude);
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+      pts.push({ lon, lat, name: String(rec.common_name ?? "") });
+    }
+    offset += page.records.length;
+    if (page.records.length === 0) break;
+  }
+  log(`City Trees datastore: ${pts.length} trees with coordinates (of ${total} rows).`);
+  return pts;
+}
+
 export async function applyStreetTrees(
   lots: Lot[],
   cacheDir: string,
   log: Log,
 ): Promise<void> {
-  const treeFeats = await loadWprdcGeojson("City Trees", "city-trees", log);
-  const pts = asPoints(treeFeats);
+  let pts: NamedPt[] = [];
+  try {
+    const treeFeats = await loadWprdcGeojson("City Trees", "city-trees", log);
+    pts = asPoints(treeFeats);
+  } catch {
+    log("City Trees GeoJSON download failed; falling back to datastore.");
+  }
+  if (!pts.length) {
+    try {
+      pts = await loadTreesViaDatastore(log);
+    } catch (e) {
+      log(`City Trees datastore fallback failed: ${e instanceof Error ? e.message : e}`);
+    }
+  }
   if (!pts.length) {
     for (const lot of lots) lot.frontageTrees = null;
     log("NOT FOUND: City Trees points. frontageTrees set null.");
