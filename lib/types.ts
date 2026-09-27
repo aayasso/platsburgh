@@ -33,6 +33,8 @@ export type Lot = {
   openViolations?: number | "unknown";
   abatedThrough?: number | null | "unknown";
   zhviChange12m?: number | null;
+  /** Outer ring [lon, lat][], closed or open. */
+  ring?: [number, number][];
 };
 
 export type Regulations = {

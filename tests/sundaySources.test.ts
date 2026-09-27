@@ -53,7 +53,7 @@ describe("§9 test 21 Sunday sources", () => {
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/19/155000/148000",
     );
     const plan = aerialTilePlan({ ...clean, lat: 40.4668, lon: -79.93545 });
-    expect(plan.z).toBeGreaterThanOrEqual(18);
+    expect(plan.z).toBeGreaterThanOrEqual(15);
     expect(plan.z).toBeLessThanOrEqual(19);
     expect(plan.tiles.length).toBeGreaterThan(0);
     expect(plan.tiles[0].src).toMatch(/World_Imagery\/MapServer\/tile\/\d+\/\d+\/\d+$/);

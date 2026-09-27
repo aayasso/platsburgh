@@ -18,39 +18,28 @@ export function ParcelAerial(props: { lot: Lot }) {
         className="relative overflow-hidden bg-limestone-dark"
         style={{ width: AERIAL_SIZE_PX, height: AERIAL_SIZE_PX }}
       >
-        <div
-          className="absolute left-0 top-0"
-          style={{
-            width: plan.mosaicW,
-            height: plan.mosaicH,
-            transform: `translate(${plan.translateX}px, ${plan.translateY}px) scale(${plan.scale})`,
-            transformOrigin: "0 0",
-          }}
-        >
-          {plan.tiles.map((tile) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={tile.src}
-              src={tile.src}
-              alt=""
-              width={256}
-              height={256}
-              className="absolute max-w-none"
-              style={{ left: tile.left, top: tile.top }}
-            />
-          ))}
-        </div>
+        {plan.tiles.map((tile) => (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            key={tile.src}
+            src={tile.src}
+            alt=""
+            width={256}
+            height={256}
+            className="absolute max-w-none"
+            style={{
+              left: tile.left,
+              top: tile.top,
+              width: tile.width,
+              height: tile.height,
+            }}
+          />
+        ))}
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full"
           aria-hidden
         >
-          <rect
-            x="14.3%"
-            y="14.3%"
-            width="71.4%"
-            height="71.4%"
-            className="fill-none stroke-centerline stroke-2"
-          />
+          <path d={plan.path} className="fill-none stroke-centerline stroke-2" />
         </svg>
       </div>
       <figcaption className="mt-1 font-mono text-[11px] text-moss">{caption}</figcaption>

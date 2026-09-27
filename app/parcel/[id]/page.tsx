@@ -1,5 +1,6 @@
 import { ParcelClient } from "@/components/parcel/ParcelClient";
 import { getLot } from "@/lib/lots-data";
+import { fetchParcelRing } from "@/lib/parcelBoundary";
 import Link from "next/link";
 
 function qs(sp: Record<string, string | string[] | undefined>): string {
@@ -35,9 +36,10 @@ export default async function ParcelPage({
     );
   }
 
+  const ring = await fetchParcelRing(lot.id);
   return (
     <ParcelClient
-      lot={lot}
+      lot={ring ? { ...lot, ring } : lot}
       query={query}
       hasSummary={Boolean(process.env.ANTHROPIC_API_KEY)}
     />
