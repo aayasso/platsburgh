@@ -70,6 +70,28 @@ describe("§9 tests 1–8", () => {
     expect(result.constraint).toBe("Setbacks exceed buildable area");
   });
 
+  it("P, GI, and UI districts are excluded as non-residential when the site condition is on", () => {
+    for (const district of ["P", "GI", "UI"] as const) {
+      const lot = { ...clean, district };
+      const excluded = fit(
+        lot,
+        DEFAULT_REGULATIONS,
+        DEFAULT_CONSTRUCTION,
+        DEFAULT_SITE_CONDITIONS,
+      );
+      expect(excluded.conforming).toBe(false);
+      expect(excluded.constraint).toBe("Non-residential district");
+      const included = fit(
+        lot,
+        DEFAULT_REGULATIONS,
+        DEFAULT_CONSTRUCTION,
+        { ...DEFAULT_SITE_CONDITIONS, skipNonResidential: false },
+      );
+      expect(included.constraint).not.toBe("Non-residential district");
+    }
+    expect(DEFAULT_SITE_CONDITIONS.skipNonResidential).toBe(true);
+  });
+
   it("4. flood=true is site constraint while skipFlood on; conforms when off", () => {
     const excluded = fit(
       flood,

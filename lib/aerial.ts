@@ -40,13 +40,39 @@ export function fallbackRing(lot: Lot): LonLat[] {
   ];
 }
 
+function closedRing(r: LonLat[]): LonLat[] {
+  const first = r[0];
+  const last = r[r.length - 1];
+  if (first[0] === last[0] && first[1] === last[1]) return r;
+  return [...r, first];
+}
+
+function ringBboxFt(ring: LonLat[]): { ewFt: number; nsFt: number } {
+  const lons = ring.map(([lon]) => lon);
+  const lats = ring.map(([, lat]) => lat);
+  const lat = (Math.min(...lats) + Math.max(...lats)) / 2;
+  const mLat = 111_320;
+  const mLon = 111_320 * Math.cos((lat * Math.PI) / 180);
+  return {
+    ewFt: ((Math.max(...lons) - Math.min(...lons)) * mLon) / 0.3048,
+    nsFt: ((Math.max(...lats) - Math.min(...lats)) * mLat) / 0.3048,
+  };
+}
+
+function ringMatchesLot(ring: LonLat[], lot: Lot): boolean {
+  const { ewFt, nsFt } = ringBboxFt(ring);
+  const a = [ewFt, nsFt].sort((x, y) => x - y);
+  const b = [lot.widthFt, lot.depthFt].sort((x, y) => x - y);
+  const close = (x: number, y: number) =>
+    Math.abs(x - y) <= 0.3 * Math.max(y, 1);
+  return close(a[0], b[0]) && close(a[1], b[1]);
+}
+
 export function ringOf(lot: Lot): LonLat[] {
   const r = lot.ring;
   if (r && r.length >= 4) {
-    const first = r[0];
-    const last = r[r.length - 1];
-    if (first[0] === last[0] && first[1] === last[1]) return r;
-    return [...r, first];
+    const closed = closedRing(r);
+    if (ringMatchesLot(closed, lot)) return closed;
   }
   return fallbackRing(lot);
 }
@@ -124,22 +150,29 @@ export function aerialTilePlan(lot: Lot, sizePx = AERIAL_SIZE_PX): AerialPlan {
   const scale = sizePx / Math.max(bboxW, bboxH);
   const offsetX = (sizePx - bboxW * scale) / 2;
   const offsetY = (sizePx - bboxH * scale) / 2;
-  const tx0 = Math.floor(x0);
-  const tx1 = Math.floor(x1 - 1e-12);
-  const ty0 = Math.floor(y0);
-  const ty1 = Math.floor(y1 - 1e-12);
+  const worldPerPx = 1 / (TILE_PX * scale);
+  const boxX0 = x0 + (0 - offsetX) * worldPerPx;
+  const boxX1 = x0 + (sizePx - offsetX) * worldPerPx;
+  const boxY0 = y0 + (0 - offsetY) * worldPerPx;
+  const boxY1 = y0 + (sizePx - offsetY) * worldPerPx;
+  const tx0 = Math.floor(Math.min(boxX0, boxX1));
+  const tx1 = Math.floor(Math.max(boxX0, boxX1) - 1e-12);
+  const ty0 = Math.floor(Math.min(boxY0, boxY1));
+  const ty1 = Math.floor(Math.max(boxY0, boxY1) - 1e-12);
   const tiles: AerialTile[] = [];
   const tileSize = TILE_PX * scale;
+  const nTiles = 2 ** z;
   for (let y = ty0; y <= ty1; y++) {
     for (let x = tx0; x <= tx1; x++) {
+      const wrappedX = ((x % nTiles) + nTiles) % nTiles;
       tiles.push({
-        x,
+        x: wrappedX,
         y,
         left: (x - x0) * TILE_PX * scale + offsetX,
         top: (y - y0) * TILE_PX * scale + offsetY,
         width: tileSize,
         height: tileSize,
-        src: esriTileUrl(z, y, x),
+        src: esriTileUrl(z, y, wrappedX),
       });
     }
   }

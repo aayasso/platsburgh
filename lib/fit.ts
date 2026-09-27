@@ -1,4 +1,4 @@
-import { CONSTRAINT, dwellingUnits } from "./rules";
+import { CONSTRAINT, dwellingUnits, NON_RESIDENTIAL_DISTRICTS } from "./rules";
 import type {
   Construction,
   FitCheck,
@@ -27,6 +27,9 @@ function firstSiteConstraint(
   lot: Lot,
   site: SiteConditions,
 ): string | null {
+  if (site.skipNonResidential && NON_RESIDENTIAL_DISTRICTS.has(lot.district)) {
+    return CONSTRAINT.nonResidential;
+  }
   if (site.skipSteep && typeof lot.slopeShare === "number" && lot.slopeShare > 0.3) {
     return CONSTRAINT.steep;
   }

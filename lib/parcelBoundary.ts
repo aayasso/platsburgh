@@ -10,14 +10,6 @@ type GeoJsonGeom = {
   coordinates: unknown;
 };
 
-function ringArea(ring: LonLat[]): number {
-  let a = 0;
-  for (let i = 0; i < ring.length - 1; i++) {
-    a += ring[i][0] * ring[i + 1][1] - ring[i + 1][0] * ring[i][1];
-  }
-  return Math.abs(a / 2);
-}
-
 export function geometryToRing(geom: GeoJsonGeom | null | undefined): LonLat[] | null {
   if (!geom) return null;
   if (geom.type === "Polygon") {
@@ -27,18 +19,8 @@ export function geometryToRing(geom: GeoJsonGeom | null | undefined): LonLat[] |
   }
   if (geom.type === "MultiPolygon") {
     const polys = geom.coordinates as number[][][][];
-    let best: LonLat[] | null = null;
-    let bestA = 0;
-    for (const poly of polys) {
-      const ring = (poly[0] ?? []).map((c) => [c[0], c[1]] as LonLat);
-      if (ring.length < 4) continue;
-      const a = ringArea(ring);
-      if (a >= bestA) {
-        bestA = a;
-        best = ring;
-      }
-    }
-    return best;
+    const ring = (polys[0]?.[0] ?? []).map((c) => [c[0], c[1]] as LonLat);
+    return ring.length >= 4 ? ring : null;
   }
   return null;
 }

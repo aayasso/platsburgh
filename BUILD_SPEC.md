@@ -126,11 +126,12 @@ Site conditions (checkboxes, all default on = exclude):
   skipNoWater      (water === false)
   skipStepsOnly
   minFrontageFt    0–40 (default 20)
+  skipCondemned         (site-condition exclusion, default off) parcel carries a condemned structure
+  skipNonResidential    (site-condition exclusion, default on) district is P, GI, or UI — constraint "Non-residential district"
 
 Site filters (checkboxes, default off; narrow scope rather than exclude):
   nearTransitOnly       parcel within 400 m (¼ mile) of a PRT stop
   delinquentOrForeclosedOnly   taxDelinquent OR foreclosure — parcels with a public acquisition path
-  skipCondemned         (site-condition exclusion, default off) parcel carries a condemned structure
 ```
 Checks, in order; the first failing check is the parcel's **constraint** (later checks still run so the parcel page can show all of them). UI wording for each is in COPY.md.
 ```
@@ -262,7 +263,7 @@ citywide:  totalSubsidy = Σ subsidyForAffordable × units over conforming parce
 Property tax only; no sales tax, wage tax, or transfer tax — say so in METHODOLOGY. Not discounted; simple payback.
 
 ## 5f. URL state (so nothing is invented)
-Every control is a query parameter; the address reproduces the view. Keys, in this order: regulations `lot, front, rear, side, stories, upl, park, adu`; construction `w, d, st, u, att, cadu`; economics `cost, price, inc, sub, pace`; terms `rate, down, ratio, tax, ins`; site `vac, own, dist, transit, delinq, steep, flood, slide, mine, water, steps, frontage`; map `lat, lng, z`; panels open `open=reg,con,eco,site` and bottom bar `bar=constraints|levers|parcels|sources|closed`. Omit a key when it equals the default so links stay short. Per-parcel overrides (`land`, `sitecost`) appear only on `/parcel/[id]` links.
+Every control is a query parameter; the address reproduces the view. Keys, in this order: regulations `lot, front, rear, side, stories, upl, park, adu`; construction `w, d, st, u, att, cadu`; economics `cost, price, inc, sub, pace`; terms `rate, down, ratio, tax, ins`; site `vac, own, dist, transit, delinq, steep, flood, slide, mine, water, steps, cond, nres, frontage`; map `lat, lng, z`; panels open `open=reg,con,eco,site` and bottom bar `bar=constraints|levers|parcels|sources|closed`. Omit a key when it equals the default so links stay short. Per-parcel overrides (`land`, `sitecost`) appear only on `/parcel/[id]` links. `nres=0` turns off the parks and industrial exclusion (default on).
 
 Empty view: if the map view contains no parcels after filters, every ladder cell shows "—" and the bottom bar reads "0 parcels in view"; nothing errors.
 
@@ -297,7 +298,7 @@ Layout and styling per DESIGN_SYSTEM.md (top pine bar with the ladder, left pine
 
 *Economics* — five sliders from §5b in this order, each with a small role word above it (DEVELOPER · MARKET · HOUSEHOLD · PUBLIC · MARKET), label and value only: construction cost, sale price, household income, subsidy, building pace. No explanations or sources on the panel; they live in the METHODOLOGY drawer. The household's maximum price and the median subsidy appear in the METHODOLOGY drawer, not in the ladder or under the slider.
 
-*Site* — Vacant parcels only (on) / all; owner: Any owner / City-owned; zoning district (optional multi-select of codes present in the data); **Near transit only** (checkbox, off) — within a quarter mile of a PRT stop; **Tax-delinquent or foreclosed only** (checkbox, off) — parcels with a public acquisition path. *Site conditions* at the bottom of this panel, collapsed: the exclude checkboxes and the minimum frontage slider from §5, labels only. No neighborhood picker: the map is the scope. The ladder, LEVERS, CONSTRAINTS, PARCELS, and DOWNLOAD CSV all count the parcels inside the current map view that pass these filters.
+*Site* — Vacant parcels only (on) / all; owner: Any owner / City-owned; zoning district (optional multi-select of codes present in the data); **Near transit only** (checkbox, off) — within a quarter mile of a PRT stop; **Tax-delinquent or foreclosed only** (checkbox, off) — parcels with a public acquisition path. *Site conditions* at the bottom of this panel, collapsed: the exclude checkboxes (including **Exclude parks and industrial districts (P, GI, UI)**, default on) and the minimum frontage slider from §5, labels only. No neighborhood picker: the map is the scope. The ladder, LEVERS, CONSTRAINTS, PARCELS, and DOWNLOAD CSV all count the parcels inside the current map view that pass these filters. The parcel page header shows the district as in COPY.md.
 
 **Right column, top to bottom:**
 1. The headline ladder as a uniform table: one header row in small muted caps (UNITS · PARCELS · YEARS), then four rows with the same shape — outcome word as the row label (limestone 22px Barlow caps, left) · units · parcels · years (all centerline 24px Barlow, tabular numerals, right-aligned; the years cell carries a small caps tag: TO BUILD or PAYBACK). No role words in the ladder (they stay on the Economics sliders). Empty cells stay empty.

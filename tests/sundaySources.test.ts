@@ -66,4 +66,14 @@ describe("§9 test 21 Sunday sources", () => {
     expect(q).toContain("cond=1");
     expect(decodeView(q).siteConditions.skipCondemned).toBe(true);
   });
+
+  it("skipNonResidential is in the URL as nres and defaults on", () => {
+    expect(DEFAULT_SITE_CONDITIONS.skipNonResidential).toBe(true);
+    const off = encodeView({
+      siteConditions: { ...DEFAULT_SITE_CONDITIONS, skipNonResidential: false },
+    });
+    expect(off).toContain("nres=0");
+    expect(decodeView(off).siteConditions.skipNonResidential).toBe(false);
+    expect(decodeView("").siteConditions.skipNonResidential).toBe(true);
+  });
 });

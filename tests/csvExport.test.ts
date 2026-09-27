@@ -23,6 +23,7 @@ describe("§9 test 23 CSV provenance", () => {
     expect(comments[3]).toContain("16 × 64 ft");
     expect(comments[3]).toContain("3 stories");
     expect(comments[3]).toContain("2 units");
+    expect(comments[6]).toContain("parks and industrial districts");
     expect(comments[8]).toBe("# Decision support, not legal, financial, or zoning advice.");
     expect(comments.every((line) => line.startsWith("#"))).toBe(true);
 

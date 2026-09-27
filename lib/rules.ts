@@ -24,11 +24,14 @@ export const CONSTRAINT = {
   stepsOnly: "Stairs-only access",
   greenway: "Greenway",
   condemned: "Condemned structure",
+  nonResidential: "Non-residential district",
   notFeasibleLand: "Not feasible — land cost",
   notFeasibleSite: "Not feasible — site conditions",
   notFeasiblePrice: "Not feasible — sale prices",
   notAffordable: "Not affordable at household income",
 } as const;
+
+export const NON_RESIDENTIAL_DISTRICTS = new Set(["P", "GI", "UI"]);
 
 export const regulationSliders: SliderDef[] = [
   {
@@ -150,6 +153,7 @@ export const DEFAULT_SITE_CONDITIONS: SiteConditions = {
   skipNoWater: true,
   skipStepsOnly: true,
   skipCondemned: false,
+  skipNonResidential: true,
   minFrontageFt: 20,
 };
 

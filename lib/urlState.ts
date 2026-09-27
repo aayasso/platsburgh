@@ -106,6 +106,7 @@ export function encodeView(state: Partial<WorkspaceState> & { map?: MapView }): 
   setIfDiff(search, "water", sc.skipNoWater ? 1 : 0, 1);
   setIfDiff(search, "steps", sc.skipStepsOnly ? 1 : 0, 1);
   setIfDiff(search, "cond", sc.skipCondemned ? 1 : 0, 0);
+  setIfDiff(search, "nres", sc.skipNonResidential ? 1 : 0, 1);
   setIfDiff(search, "frontage", sc.minFrontageFt, d.siteConditions.minFrontageFt);
   const f = s.siteFilters;
   setIfDiff(search, "vac", f.vacantOnly ? 1 : 0, 1);
@@ -183,6 +184,7 @@ export function decodeView(query: string): WorkspaceState {
       skipNoWater: flag(search, "water", true),
       skipStepsOnly: flag(search, "steps", true),
       skipCondemned: flag(search, "cond", false),
+      skipNonResidential: flag(search, "nres", true),
       minFrontageFt: num(search, "frontage", d.siteConditions.minFrontageFt),
     },
     siteFilters: {

@@ -66,6 +66,7 @@ export type SiteConditions = {
   skipNoWater: boolean;
   skipStepsOnly: boolean;
   skipCondemned: boolean;
+  skipNonResidential: boolean;
   minFrontageFt: number;
 };
 

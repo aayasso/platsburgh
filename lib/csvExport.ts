@@ -36,6 +36,7 @@ function exclusionsList(sc: SiteConditions): string {
     sc.skipNoWater ? "no water service" : null,
     sc.skipStepsOnly ? "stairs-only access" : null,
     sc.skipCondemned ? "condemned structures" : null,
+    sc.skipNonResidential ? "parks and industrial districts" : null,
   ].filter((x): x is string => x !== null);
   return items.length ? items.join(", ") : "none";
 }

@@ -62,7 +62,8 @@ The map is the scope: every number on the page counts the parcels in the current
 - Checkbox: **Near transit only** (within ¼ mile of a PRT stop)
 - Checkbox: **Tax-delinquent or foreclosed only**
 - Under SITE CONDITIONS: checkbox **Exclude condemned structures**
-- **SITE CONDITIONS** (collapsed): checkboxes, label only — Exclude steep slope · Exclude flood zone · Exclude landslide-prone · Exclude undermined · Exclude no water service · Exclude stairs-only access · Minimum frontage (slider). Definitions in the drawer.
+- Under SITE CONDITIONS: checkbox **Exclude parks and industrial districts (P, GI, UI)** (default on)
+- **SITE CONDITIONS** (collapsed): checkboxes, label only — Exclude steep slope · Exclude flood zone · Exclude landslide-prone · Exclude undermined · Exclude no water service · Exclude stairs-only access · Exclude condemned structures · Exclude parks and industrial districts (P, GI, UI) · Minimum frontage (slider). Definitions in the drawer.
 
 ## RESULTS
 - Map legend: **Conforming · feasible · affordable** (solid centerline) · **Conforming · feasible** (hollow centerline) · **Conforming** (thin centerline ring) · **Non-conforming** (brick) · **Site data unavailable** (gray hollow)
@@ -83,6 +84,7 @@ Constraints (exact wording; count in mono beside each; largest first):
 - Undermined
 - No water service
 - Stairs-only access
+- Non-residential district
 - Not feasible — land cost
 - Not feasible — site conditions
 - Not feasible — sale prices

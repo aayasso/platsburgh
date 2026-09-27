@@ -319,6 +319,7 @@ export function LeftPanel(props: {
                 ["skipNoWater", "Exclude no water service"],
                 ["skipStepsOnly", "Exclude stairs-only access"],
                 ["skipCondemned", "Exclude condemned structures"],
+                ["skipNonResidential", "Exclude parks and industrial districts (P, GI, UI)"],
               ] as const
             ).map(([key, label]) => (
               <label
