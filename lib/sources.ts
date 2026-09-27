@@ -126,6 +126,12 @@ export const SOURCES: SourceRow[] = [
     retrieved: "2026-09-27",
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
   },
+  {
+    name: "PWSA fire hydrants (WPRDC search; no package found)",
+    publisher: "PWSA via WPRDC",
+    retrieved: "2026-09-27",
+    url: "https://data.wprdc.org/",
+  },
 ];
 
 export function sourceCite(needle: string): string {
@@ -142,4 +148,5 @@ export const SITE_CITES = {
   condemned: sourceCite("Condemned"),
   violations: sourceCite("Violations"),
   abatements: sourceCite("Abatements"),
+  hydrants: sourceCite("Hydrant"),
 };

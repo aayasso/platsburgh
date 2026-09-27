@@ -159,7 +159,7 @@ Last line: "These are the exact parameters that produced the results on this pag
 Result column: **PASS** / **FAIL**.
 
 - Aerial image of the parcel (County orthoimagery or Esri World Imagery tiles, parcel outline in centerline), 320 px square, right of the header; caption mono: `Aerial · {source} · {date}`.
-- Section label: **SITE CONDITIONS** — each: `{condition}: {value}` · `{dataset} · {date}`. Adds: `Condemned structure: {Yes | No}` · `Open violations: {n}` · `Property tax abatement: {Yes, through {year} | No}` · `ZIP home values, prior 12 months: {+x.x%}` (Zillow ZHVI, ZIP; "not available" if the ZIP is missing). Unavailable: "Not available in open data." Sewer always present: "Sewer: not available in open data — confirm with PWSA."
+- Section label: **SITE CONDITIONS** — each: `{condition}: {value}` · `{dataset} · {date}`. Adds: `Condemned structure: {Yes | No}` · `Open violations: {n}` · `Property tax abatement: {Yes, through {year} | No}` · `ZIP home values, prior 12 months: {+x.x%}` (Zillow ZHVI, ZIP; "not available" if the ZIP is missing). `Nearest fire hydrant: {n} ft` · PWSA via WPRDC. Unavailable: "Not available in open data." Sewer always present: "Sewer: not available in open data — confirm with PWSA."
 - Section label: **PRO FORMA** — no intro line.
   - **DEVELOPMENT** block, lines (label · amount; slider beneath where marked, with its own value at the track's end; source in mono beneath):
     - Construction cost · ${total} · slider `${cost} / sq ft` · `× {sf} sq ft · any method; default assumed between NAHB 2024 and an observed modular build`

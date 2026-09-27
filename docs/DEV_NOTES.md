@@ -335,3 +335,8 @@ Recomputed 2026-09-27 (`build-lots --sales-only`). Arm's-length sales in the pri
 
 - Citywide: **7,463** sales, median **$161.14 / sf** (slider mark `citywide $160`).
 - Homes built since 2015 (`YEARBLT ≥ 2015`): **226** sales, median **$336.28 / sf**. Count ≥ 50, so the sale-price slider default is that median rounded to $5: **$335**. Observed mark `new construction $335`. Ground Truth figure is **$336** per finished sq ft median, 226 sales (retrieved 2026-09-26).
+
+## Parcel facts (hydrants)
+
+NOT FOUND: WPRDC package_search for hydrants/hydrant returned no hydrant point dataset. hydrantDistFt set null on all lots. City GIS Fire_Hydrants_PGH exists (~9,771 PWSA points) but was not used; the spec required the WPRDC dataset.
+Wrote data/lots.json: 39207 lots (facts hydrants).

@@ -36,6 +36,16 @@ export type Lot = {
   /** Outer ring [lon, lat][], closed or open. */
   ring?: [number, number][];
   geometryMismatch?: boolean;
+  hydrantDistFt?: number | null;
+  historicDistrict?: string | null;
+  historicSite?: boolean | null;
+  opportunityZone?: boolean | null;
+  schoolName?: string | null;
+  schoolDistFt?: number | null;
+  parkName?: string | null;
+  parkDistFt?: number | null;
+  transitTripsPerHour?: number | null;
+  frontageTrees?: number | null;
 };
 
 export type Regulations = {

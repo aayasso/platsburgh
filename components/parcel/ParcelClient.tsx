@@ -8,6 +8,7 @@ import { ProForma } from "@/components/parcel/ProForma";
 import { buildableEnvelope, fit } from "@/lib/fit";
 import { fmtInt, metersToFt } from "@/lib/format";
 import { zipHomeValuesFigure } from "@/lib/parcelRefs";
+import { extraSiteRows } from "@/lib/parcelSiteFacts";
 import { GEOMETRY_MISMATCH_NOTE } from "@/lib/nextSteps";
 import { estimatedSiteAdders, proforma } from "@/lib/proforma";
 import { dwellingUnits } from "@/lib/rules";
@@ -208,6 +209,7 @@ export function ParcelClient(props: {
       value: zipHomeValuesFigure(lot.zhviChange12m),
       source: "Zillow ZHVI, ZIP",
     },
+    ...extraSiteRows(lot),
   ];
 
   return (

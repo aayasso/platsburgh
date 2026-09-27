@@ -111,6 +111,25 @@ function edgeNearStreet(
   return false;
 }
 
+export function streetFacingEdges(
+  geometry: Polygon | MultiPolygon,
+  streetIndex: StreetIndex,
+): [Position, Position][] {
+  const feature = turf.feature(geometry);
+  const bbox = turf.bbox(feature);
+  const streets = nearbyStreets(streetIndex, bbox);
+  const rings = ringsOf(geometry);
+  const edges: [Position, Position][] = [];
+  for (const ring of rings) {
+    for (let i = 0; i < ring.length - 1; i++) {
+      const a = ring[i];
+      const b = ring[i + 1];
+      if (edgeNearStreet(a, b, streets, 10)) edges.push([a, b]);
+    }
+  }
+  return edges;
+}
+
 export function frontage(opts: {
   geometry: Polygon | MultiPolygon;
   streetIndex: StreetIndex;

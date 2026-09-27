@@ -18,6 +18,8 @@ import {
 import Papa from "papaparse";
 import { geometryMismatch } from "../lib/aerial";
 import { geometryToRing } from "../lib/parcelBoundary";
+import type { Lot } from "../lib/types";
+import { applyFacts } from "./applyParcelFacts";
 import {
   isVacantUse,
   loadCityAssessments,
@@ -1391,16 +1393,36 @@ async function sundayExisting() {
   writeFileSync(notesPath, `${prev}\n\n## Sunday sources (§5h)\n\n${notes.join("\n")}\n`);
 }
 
+function factsWhich(): string | null {
+  const i = process.argv.indexOf("--facts");
+  if (i >= 0) return process.argv[i + 1] ?? "all";
+  const eq = process.argv.find((a) => a.startsWith("--facts="));
+  return eq ? eq.slice("--facts=".length) : null;
+}
+
+async function factsExisting(which: string) {
+  notes.length = 0;
+  const lots = JSON.parse(readFileSync(join(root, "data", "lots.json"), "utf8")) as Lot[];
+  await applyFacts(lots, which, cacheDir, log);
+  writeFileSync(join(root, "data", "lots.json"), JSON.stringify(lots));
+  log(`Wrote data/lots.json: ${lots.length} lots (facts ${which}).`);
+  const prev = existsSync(notesPath) ? readFileSync(notesPath, "utf8").trimEnd() : "";
+  writeFileSync(notesPath, `${prev}\n\n## Parcel facts (${which})\n\n${notes.join("\n")}\n`);
+}
+
 const enrichOnly = process.argv.includes("--enrich-only");
 const sundayOnly = process.argv.includes("--sunday");
 const salesOnlyFlag = process.argv.includes("--sales-only");
-const run = sundayOnly
-  ? sundayExisting
-  : salesOnlyFlag
-    ? salesOnly
-    : enrichOnly
-      ? enrichExisting
-      : main;
+const factsFlag = factsWhich();
+const run = factsFlag
+  ? () => factsExisting(factsFlag)
+  : sundayOnly
+    ? sundayExisting
+    : salesOnlyFlag
+      ? salesOnly
+      : enrichOnly
+        ? enrichExisting
+        : main;
 run().catch((err) => {
   console.error(err);
   if (!enrichOnly && !sundayOnly) {
