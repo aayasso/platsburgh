@@ -154,7 +154,7 @@ The same idea as the regulations: the economics are sliders, always visible, and
 ```
 Economics (sliders):
   buildCostPerSf     $80–$400      step 5      default 200    — DEVELOPER: method-neutral; default assumed between NAHB 2024 site-built average ($162) and the observed Pittsburgh modular build ($260); both are observed marks on the slider
-  salePricePerSf     $60–$500      step 5      default = citywide median of arm's-length sales, prior 24 months (from build-lots; date in drawer) — MARKET
+  salePricePerSf     $60–$500      step 5      default = median $/finished sq ft of arm's-length sales of homes YEARBLT ≥ 2015, prior 24 months, when n ≥ 50 (else citywide median); rounded to $5 (from build-lots; date in drawer) — MARKET
   buyerIncome        $30,000–$250,000 step 1,000  default 79,500 — HOUSEHOLD: HUD FY2026 Pittsburgh HUD Metro FMR Area, 80% AMI, 3-person household, effective May 1, 2026 (source in drawer)
   subsidyPerUnit     $0–$150,000   step 5,000  default 0      — PUBLIC
   buildingPace       50–3,000 units/yr  step 25  default = observed recent pace (§5d) — MARKET (label "Building pace"; source in drawer)

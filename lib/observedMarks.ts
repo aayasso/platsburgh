@@ -1,5 +1,6 @@
 import ppiJson from "../data/ppi.json";
 import { formatPpiDelta, type PpiFile } from "./ppi";
+import { DEFAULT_SALE_PRICE_PER_SF, NEW_CONSTRUCTION_SALE_COUNT } from "./salesMedians";
 import type { Lot } from "./types";
 
 export type ObservedMark = { value: number; label: string; note?: string };
@@ -16,6 +17,13 @@ export const OBSERVED_MARKS = {
     { value: 260, label: "modular PGH $260", note: modularPpiNote },
   ] as ObservedMark[],
   salePriceCitywide: { value: 160, label: "citywide $160" } as ObservedMark,
+  salePriceNewConstruction:
+    NEW_CONSTRUCTION_SALE_COUNT >= 50
+      ? ({
+          value: DEFAULT_SALE_PRICE_PER_SF,
+          label: `new construction $${DEFAULT_SALE_PRICE_PER_SF}`,
+        } as ObservedMark)
+      : null,
   buyerIncome: [{ value: 79_500, label: "80% AMI $79,500" }] as ObservedMark[],
   buildingPace: [{ value: 273, label: "2023–25 avg 273" }] as ObservedMark[],
   mortgageRatePct: [{ value: 7.03, label: "PMMS 7.03%" }] as ObservedMark[],
@@ -28,6 +36,9 @@ export const OBSERVED_MARKS = {
 
 export function salePriceMarks(localMedian: number | null): ObservedMark[] {
   const marks: ObservedMark[] = [OBSERVED_MARKS.salePriceCitywide];
+  if (OBSERVED_MARKS.salePriceNewConstruction) {
+    marks.push(OBSERVED_MARKS.salePriceNewConstruction);
+  }
   if (localMedian != null && Number.isFinite(localMedian)) {
     marks.push({ value: localMedian, label: `local ${Math.round(localMedian)}` });
   }

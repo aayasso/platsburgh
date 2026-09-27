@@ -854,6 +854,7 @@ function neighborhoodAt(polys: Feature<Polygon>[] | null, lon: number, lat: numb
 async function stepSales(
   livingArea: Map<string, number>,
   neighByPin: Map<string, string>,
+  yearBlt: Map<string, number>,
 ) {
   log("## Sales medians");
   const pkg = await packageShow("real-estate-sales");
@@ -882,12 +883,15 @@ async function stepSales(
     return {
       citywide: null as number | null,
       count: 0,
+      newConstructionMedian: null as number | null,
+      newConstructionCount: 0,
       byNeigh: {} as Record<string, number>,
       sales: [] as SalePsf[],
     };
   }
   const cutoff = new Date("2024-09-26T00:00:00Z");
   const prices: number[] = [];
+  const newConstructionPrices: number[] = [];
   const saleRows: SalePsf[] = [];
   const byNeigh: Record<string, number[]> = {};
   let priceField = "";
@@ -926,6 +930,7 @@ async function stepSales(
       if (psf < 20 || psf > 800) continue;
       prices.push(psf);
       saleRows.push({ pin, ppsf: psf });
+      if ((yearBlt.get(pin) ?? 0) >= 2015) newConstructionPrices.push(psf);
       const neigh = neighByPin.get(pin);
       if (neigh) {
         const list = byNeigh[neigh] ?? [];
@@ -937,18 +942,24 @@ async function stepSales(
     if (page.records.length === 0) break;
   }
   const citywide = median(prices);
+  const newConstructionMedian = median(newConstructionPrices);
   const byNeighMed: Record<string, { medianPerSf: number; n: number }> = {};
   for (const [k, vals] of Object.entries(byNeigh)) {
     const m = median(vals);
     if (m != null) byNeighMed[k] = { medianPerSf: m, n: vals.length };
   }
   log(`Arm's-length sales last 24 months with living area: ${prices.length}. Citywide median $/sf: ${citywide}`);
+  log(
+    `New construction (YEARBLT ≥ 2015): ${newConstructionPrices.length} sales, median $/sf: ${newConstructionMedian}`,
+  );
   writeFileSync(
     join(root, "data", "sales_medians.json"),
     JSON.stringify(
       {
         citywideMedianPerSf: citywide,
         saleCount: prices.length,
+        newConstructionMedianPerSf: newConstructionMedian,
+        newConstructionSaleCount: newConstructionPrices.length,
         priceField,
         keptCodes: [...keptCodes],
         asOf: "2026-09-26",
@@ -959,7 +970,14 @@ async function stepSales(
       2,
     ),
   );
-  return { citywide, count: prices.length, byNeigh: byNeighMed, sales: saleRows };
+  return {
+    citywide,
+    count: prices.length,
+    newConstructionMedian,
+    newConstructionCount: newConstructionPrices.length,
+    byNeigh: byNeighMed,
+    sales: saleRows,
+  };
 }
 
 async function stepPace() {
@@ -1056,11 +1074,13 @@ async function main() {
   const allAssess = readCache<{ rows: AssessmentRow[] }>("assessments.json");
   const livingAreaAll = new Map<string, number>();
   const neighByPin = new Map<string, string>();
+  const yearBlt = new Map<string, number>();
   for (const row of allAssess?.rows ?? assessments) {
     if (row.FINISHEDLIVINGAREA && row.FINISHEDLIVINGAREA > 0) {
       livingAreaAll.set(row.PARID, row.FINISHEDLIVINGAREA);
     }
     if (row.NEIGHCODE) neighByPin.set(row.PARID, row.NEIGHCODE);
+    if (row.YEARBLT != null && Number.isFinite(row.YEARBLT)) yearBlt.set(row.PARID, row.YEARBLT);
   }
   saveNotes();
 
@@ -1267,7 +1287,7 @@ async function main() {
   }
   log(`Unknown counts: ${JSON.stringify(unknownCounts)}`);
 
-  const sales = await stepSales(livingAreaAll, neighByPin);
+  const sales = await stepSales(livingAreaAll, neighByPin, yearBlt);
   assignCompsByDistance(lots, sales.sales, await coordsForSales(sales.sales, lots));
   const zipByPin = new Map<string, string>();
   for (const row of allAssess?.rows ?? assessments) {
@@ -1298,7 +1318,37 @@ async function main() {
   }
 
   log(`Citywide sale median $/sf: ${sales.citywide} from ${sales.count} sales.`);
+  log(
+    `New-construction sale median $/sf: ${sales.newConstructionMedian} from ${sales.newConstructionCount} sales (YEARBLT ≥ 2015).`,
+  );
   saveNotes();
+}
+
+async function salesOnly() {
+  notes.length = 0;
+  notes.push("# Development notes", "", "Sales medians refresh.", "");
+  const allAssess = readCache<{ rows: AssessmentRow[] }>("assessments.json");
+  if (!allAssess?.rows?.length) throw new Error("assessments.json cache required for --sales-only");
+  const livingAreaAll = new Map<string, number>();
+  const neighByPin = new Map<string, string>();
+  const yearBlt = new Map<string, number>();
+  for (const row of allAssess.rows) {
+    if (row.FINISHEDLIVINGAREA && row.FINISHEDLIVINGAREA > 0) {
+      livingAreaAll.set(row.PARID, row.FINISHEDLIVINGAREA);
+    }
+    if (row.NEIGHCODE) neighByPin.set(row.PARID, row.NEIGHCODE);
+    if (row.YEARBLT != null && Number.isFinite(row.YEARBLT)) yearBlt.set(row.PARID, row.YEARBLT);
+  }
+  const sales = await stepSales(livingAreaAll, neighByPin, yearBlt);
+  log(`Citywide sale median $/sf: ${sales.citywide} from ${sales.count} sales.`);
+  log(
+    `New-construction sale median $/sf: ${sales.newConstructionMedian} from ${sales.newConstructionCount} sales (YEARBLT ≥ 2015).`,
+  );
+  const prev = existsSync(notesPath) ? readFileSync(notesPath, "utf8").trimEnd() : "";
+  writeFileSync(
+    notesPath,
+    `${prev}\n\n## New-construction sale median\n\n${notes.filter((l) => !l.startsWith("#")).join("\n")}\n`,
+  );
 }
 
 async function enrichExisting() {
@@ -1308,16 +1358,18 @@ async function enrichExisting() {
   if (!allAssess?.rows?.length) throw new Error("assessments.json cache required for --enrich-only");
   const livingAreaAll = new Map<string, number>();
   const neighByPin = new Map<string, string>();
+  const yearBlt = new Map<string, number>();
   const zipByPin = new Map<string, string>();
   for (const row of allAssess.rows) {
     if (row.FINISHEDLIVINGAREA && row.FINISHEDLIVINGAREA > 0) {
       livingAreaAll.set(row.PARID, row.FINISHEDLIVINGAREA);
     }
     if (row.NEIGHCODE) neighByPin.set(row.PARID, row.NEIGHCODE);
+    if (row.YEARBLT != null && Number.isFinite(row.YEARBLT)) yearBlt.set(row.PARID, row.YEARBLT);
     const z = zip5(row.PROPERTYZIP);
     if (z) zipByPin.set(row.PARID, z);
   }
-  const sales = await stepSales(livingAreaAll, neighByPin);
+  const sales = await stepSales(livingAreaAll, neighByPin, yearBlt);
   assignCompsByDistance(lots, sales.sales, await coordsForSales(sales.sales, lots));
   const safmr = await stepSafmr();
   applyZipAndFmr(lots, zipByPin, safmr);
@@ -1341,7 +1393,14 @@ async function sundayExisting() {
 
 const enrichOnly = process.argv.includes("--enrich-only");
 const sundayOnly = process.argv.includes("--sunday");
-const run = sundayOnly ? sundayExisting : enrichOnly ? enrichExisting : main;
+const salesOnlyFlag = process.argv.includes("--sales-only");
+const run = sundayOnly
+  ? sundayExisting
+  : salesOnlyFlag
+    ? salesOnly
+    : enrichOnly
+      ? enrichExisting
+      : main;
 run().catch((err) => {
   console.error(err);
   if (!enrichOnly && !sundayOnly) {

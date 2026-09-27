@@ -161,11 +161,11 @@ export function Workspace() {
         }}
       />
       <FirstVisitNote />
-      <header ref={headerRef} className="fade-up pointer-events-auto absolute left-0 right-0 top-0 z-30 bg-pine px-6 py-[26px]">
-        <div className="flex items-start justify-between gap-8">
-          <h1 className="shrink-0 font-display text-[22px] font-bold tracking-mark text-limestone">
-            PLATSBURGH
-          </h1>
+      <header ref={headerRef} className="fade-up pointer-events-auto absolute left-0 right-0 top-0 z-30 bg-pine px-6 py-4">
+        <h1 className="font-display text-[22px] font-bold leading-none tracking-mark text-limestone">
+          PLATSBURGH
+        </h1>
+        <div className="mt-1">
           <Ladder ladder={evaluation.ladder} />
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-centerline" />
@@ -178,7 +178,7 @@ export function Workspace() {
           onChange={persist}
         />
       ) : (
-        <aside className="pointer-events-none absolute bottom-[52px] left-0 top-[var(--top-bar)] z-20 w-[380px] bg-pine p-4 font-sans text-[15px] text-limestone">
+        <aside className="pointer-events-none absolute left-4 z-20 w-[380px] bg-pine p-4 font-sans text-[15px] text-limestone" style={{ top: "calc(var(--top-bar) + 16px)" }}>
           Loading parcels…
         </aside>
       )}

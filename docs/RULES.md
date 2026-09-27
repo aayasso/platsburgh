@@ -15,7 +15,7 @@ Eight checks per parcel, in order: site conditions, parcel area, frontage, build
 | parkingPerUnit | Parking per unit | Off-street parking spaces required per dwelling unit. | 0 | 2 | 1 | 1 | Ch. 914 |
 | aduAllowed | ADUs permitted | Whether an accessory dwelling unit is permitted on the parcel. | 0 | 1 | 1 | false | Ch. 912 |
 | buildCostPerSf | Construction cost per sq ft | Hard cost per finished square foot for any construction method, excluding land. Land and site conditions are added from parcel records. | 80 | 400 | 5 | 200 | default $200 (assumed) between NAHB 2024 site-built average $162 and an observed Pittsburgh modular build $260 |
-| salePricePerSf | Sale price per sq ft | Market value per finished square foot. | 60 | 500 | 5 | 160 | WPRDC sales, prior 24 months, retrieved 2026-09-26 |
+| salePricePerSf | Sale price per sq ft | Market value per finished square foot. | 60 | 500 | 5 | 335 | WPRDC sales, homes built since 2015, prior 24 months, retrieved 2026-09-26 |
 | buyerIncome | Household income | The household the units should be affordable to. | 30000 | 250000 | 1000 | 79500 | HUD FY2026, 80% of area median, 3-person household |
 | subsidyPerUnit | Subsidy per unit | Public capital contributed per unit. | 0 | 150000 | 5000 | 0 | user-defined |
 | buildingPace | Building pace | New residential units the city builds per year. | 50 | 3000 | 25 | 275 | City of Pittsburgh PLI permits, last three full years (2023–2025) |
@@ -49,6 +49,7 @@ What building actually costs and takes in Pittsburgh, from public records and on
 | Site-built construction cost, US average | $162 per finished sq ft | NAHB Cost of Constructing a Home | 2024 |
 | Construction input prices since the observed build | +11.2% (Nov 2023–May 2024 avg to latest month) | BLS Producer Price Index, inputs to residential construction | retrieved 2026-09-27 |
 | Citywide sale price, arm's-length, prior 24 months | $161 per finished sq ft median, 7,463 sales | WPRDC sales | retrieved 2026-09-26 |
+| Sale price, homes built since 2015, prior 24 months | $336 per finished sq ft median, 226 sales | WPRDC sales | retrieved 2026-09-26 |
 | Appraised value, new two-unit, 2,667 sq ft | $865,000 (≈ $324 per sq ft) | FNB appraisal | Jan 2025 |
 | New residential units permitted per year | 380 · 256 · 183 (avg 273) | City PLI permits | 2023–2025 |
 | 30-year mortgage rate | 7.03% | Freddie Mac PMMS | Sept 24, 2026 |

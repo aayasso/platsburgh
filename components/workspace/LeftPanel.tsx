@@ -88,7 +88,7 @@ export function LeftPanel(props: {
   const scale = 2.2;
 
   return (
-    <aside className="pointer-events-auto absolute bottom-[52px] left-0 top-[var(--top-bar)] z-20 flex w-[380px] flex-col overflow-y-auto bg-pine">
+    <aside className="pointer-events-auto absolute left-4 z-20 flex w-[380px] max-h-[calc(100vh-var(--top-bar)-68px)] flex-col overflow-y-auto bg-pine" style={{ top: "calc(var(--top-bar) + 16px)" }}>
       <Section label="REGULATIONS" open={open.has("reg")} onToggle={() => toggle("reg")}>
         {regulationSliders.map((s) => {
           const key = s.key as keyof typeof r;

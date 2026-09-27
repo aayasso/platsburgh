@@ -328,3 +328,10 @@ Retrieved 2026-09-27.
 ## Geometry mismatch (County ring vs width × depth)
 
 Counted 2026-09-27 from `data/cache/geometry.json` (County `OPENDATA/Parcels`) against `data/lots.json` widthFt × depthFt. A parcel is flagged `geometryMismatch` when the ring's north-aligned bounding box differs from those two dimensions by more than 25% in either side (sides sorted so orientation can swap). **35,328** of **39,207** parcels flag (the aerial always draws the County ring; the parcel page shows the COPY.md note when the live fetch disagrees). Width and depth are street-frontage and lotSf/width, not the geographic AABB, so rotated lots flag even when the polygon is the right shape. `build-lots` writes the flag and this count on assemble.
+
+## New-construction sale median
+
+Recomputed 2026-09-27 (`build-lots --sales-only`). Arm's-length sales in the prior 24 months with finished living area, joined to assessment `YEARBLT`.
+
+- Citywide: **7,463** sales, median **$161.14 / sf** (slider mark `citywide $160`).
+- Homes built since 2015 (`YEARBLT ≥ 2015`): **226** sales, median **$336.28 / sf**. Count ≥ 50, so the sale-price slider default is that median rounded to $5: **$335**. Observed mark `new construction $335`. Ground Truth figure is **$336** per finished sq ft median, 226 sales (retrieved 2026-09-26).

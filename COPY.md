@@ -11,7 +11,7 @@ Use these strings exactly. Planning and development vocabulary; no slang ("penci
   - **SUBSIDY / UNIT** · `${max}` · — · `{years}` PAYBACK (median across parcels requiring subsidy)
 
 ## Observed marks on sliders
-A small tick on the track at a measured value, with a mono label under the tick (limestone at 60%): Construction cost: two marks, `site-built US avg $162` (NAHB 2024) and `modular PGH $260` (237 N Aiken 2024; inputs +{x.x}% since, BLS PPI); Sale price `citywide $160` and, when in view, `local ${n}`; Household income `80% AMI $79,500`; Building pace `2023–25 avg 273`; Mortgage rate `PMMS 7.03%`; Minimum lot area `code 3,000`; setbacks and height `code {value}`. Marks are facts with sources (in the drawer), never presets: clicking a mark does nothing.
+A small tick on the track at a measured value, with a mono label under the tick (limestone at 60%): Construction cost: two marks, `site-built US avg $162` (NAHB 2024) and `modular PGH $260` (237 N Aiken 2024; inputs +{x.x}% since, BLS PPI); Sale price `citywide $160` and `new construction $335` and, when in view, `local ${n}`; Household income `80% AMI $79,500`; Building pace `2023–25 avg 273`; Mortgage rate `PMMS 7.03%`; Minimum lot area `code 3,000`; setbacks and height `code {value}`. Marks are facts with sources (in the drawer), never presets: clicking a mark does nothing.
 
 ## REGULATIONS (section label; collapsed by default, chevron at right)
 On the panel when open: label and value only, plus observed marks where listed above. Explanation and code reference appear only in the METHODOLOGY drawer.
@@ -47,7 +47,7 @@ On the panel when open: role word, label, value only. Explanation and source app
 | Role word | Slider | Label | Explanation (drawer only) | Source (drawer only) |
 |---|---|---|---|---|
 | DEVELOPER | buildCostPerSf | Construction cost per sq ft | Hard cost per finished square foot for any construction method, excluding land. Land and site conditions are added from parcel records. | default $200 (assumed) between NAHB 2024 site-built average $162 and an observed Pittsburgh modular build $260 |
-| MARKET | salePricePerSf | Sale price per sq ft | Market value per finished square foot. | WPRDC sales, prior 24 months, retrieved {date} |
+| MARKET | salePricePerSf | Sale price per sq ft | Market value per finished square foot. | WPRDC sales, homes built since 2015, prior 24 months, retrieved 2026-09-26 |
 | HOUSEHOLD | buyerIncome | Household income | The household the units should be affordable to. | HUD FY2026, 80% of area median, 3-person household |
 | PUBLIC | subsidyPerUnit | Subsidy per unit | Public capital contributed per unit. | user-defined |
 | MARKET | buildingPace | Building pace | New residential units the city builds per year. | City of Pittsburgh PLI permits, last three full years (or Census Building Permits Survey) |
@@ -122,6 +122,7 @@ Definitions block: the feasible / affordable sentence above; the household assum
 | Site-built construction cost, US average | $162 per finished sq ft | NAHB Cost of Constructing a Home | 2024 |
 | Construction input prices since the observed build | +{x.x}% (Nov 2023–May 2024 avg to latest month) | BLS Producer Price Index, inputs to residential construction | retrieved {date} |
 | Citywide sale price, arm's-length, prior 24 months | $161 per finished sq ft median, 7,463 sales | WPRDC sales | retrieved 2026-09-26 |
+| Sale price, homes built since 2015, prior 24 months | $336 per finished sq ft median, 226 sales | WPRDC sales | retrieved 2026-09-26 |
 | Appraised value, new two-unit, 2,667 sq ft | $865,000 (≈ $324 per sq ft) | FNB appraisal | Jan 2025 |
 | New residential units permitted per year | 380 · 256 · 183 (avg 273) | City PLI permits | 2023–2025 |
 | 30-year mortgage rate | 7.03% | Freddie Mac PMMS | Sept 24, 2026 |

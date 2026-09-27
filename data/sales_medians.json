@@ -1,6 +1,8 @@
 {
   "citywideMedianPerSf": 161.14285714285714,
   "saleCount": 7463,
+  "newConstructionMedianPerSf": 336.2805642612209,
+  "newConstructionSaleCount": 226,
   "priceField": "PRICE",
   "keptCodes": [
     "0"

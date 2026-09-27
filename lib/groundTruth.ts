@@ -117,6 +117,12 @@ export const GROUND_TRUTH_ANY: GroundTruthRow[] = [
     date: "retrieved 2026-09-26",
   },
   {
+    item: "Sale price, homes built since 2015, prior 24 months",
+    figure: "$336 per finished sq ft median, 226 sales",
+    source: "WPRDC sales",
+    date: "retrieved 2026-09-26",
+  },
+  {
     item: "Appraised value, new two-unit, 2,667 sq ft",
     figure: "$865,000 (≈ $324 per sq ft)",
     source: "FNB appraisal",

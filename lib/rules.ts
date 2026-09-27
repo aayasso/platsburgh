@@ -1,3 +1,4 @@
+import { DEFAULT_SALE_PRICE_PER_SF } from "./salesMedians";
 import type {
   Construction,
   Economics,
@@ -187,8 +188,8 @@ export const economicsSliders: SliderDef[] = [
     min: 60,
     max: 500,
     step: 5,
-    default: 160,
-    source: "WPRDC sales, prior 24 months, retrieved 2026-09-26",
+    default: DEFAULT_SALE_PRICE_PER_SF,
+    source: "WPRDC sales, homes built since 2015, prior 24 months, retrieved 2026-09-26",
     panel: "economics",
     role: "MARKET",
   },
@@ -232,7 +233,7 @@ export const economicsSliders: SliderDef[] = [
 
 export const DEFAULT_ECONOMICS: Economics = {
   buildCostPerSf: 200,
-  salePricePerSf: 160,
+  salePricePerSf: DEFAULT_SALE_PRICE_PER_SF,
   buyerIncome: 79_500,
   subsidyPerUnit: 0,
   buildingPace: 275,

@@ -15,6 +15,10 @@ describe("§5g observed marks", () => {
     expect(OBSERVED_MARKS.buildCostPerSf[1].label).toBe("modular PGH $260");
     expect(OBSERVED_MARKS.buildCostPerSf[1].note).toMatch(/^inputs [+-]\d+\.\d+% since, BLS PPI$/);
     expect(OBSERVED_MARKS.salePriceCitywide).toEqual({ value: 160, label: "citywide $160" });
+    expect(OBSERVED_MARKS.salePriceNewConstruction).toEqual({
+      value: 335,
+      label: "new construction $335",
+    });
     expect(OBSERVED_MARKS.buyerIncome[0]).toEqual({ value: 79_500, label: "80% AMI $79,500" });
     expect(OBSERVED_MARKS.buildingPace[0]).toEqual({ value: 273, label: "2023–25 avg 273" });
     expect(OBSERVED_MARKS.mortgageRatePct[0]).toEqual({ value: 7.03, label: "PMMS 7.03%" });
@@ -34,8 +38,12 @@ describe("§5g observed marks", () => {
     expect(localCompsMedian(lots)).toBe(200);
     const marks = salePriceMarks(200);
     expect(marks[0].label).toBe("citywide $160");
-    expect(marks[1]).toEqual({ value: 200, label: "local 200" });
-    expect(economicsMarks("salePricePerSf", null)?.map((m) => m.label)).toEqual(["citywide $160"]);
+    expect(marks[1]).toEqual({ value: 335, label: "new construction $335" });
+    expect(marks[2]).toEqual({ value: 200, label: "local 200" });
+    expect(economicsMarks("salePricePerSf", null)?.map((m) => m.label)).toEqual([
+      "citywide $160",
+      "new construction $335",
+    ]);
     expect(regulationMarks("minLotSf")?.[0].value).toBe(3000);
     expect(regulationMarks("unitsPerLot")).toBeUndefined();
   });

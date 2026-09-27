@@ -17,7 +17,7 @@ describe("§5g GROUND TRUTH", () => {
       "Any construction method",
       "Observed on a modular build (method-specific)",
     ]);
-    expect(GROUND_TRUTH).toHaveLength(24);
+    expect(GROUND_TRUTH).toHaveLength(25);
     for (const row of GROUND_TRUTH) {
       if (row.item === "Construction input prices since the observed build") {
         expect(copy).toContain(row.item);

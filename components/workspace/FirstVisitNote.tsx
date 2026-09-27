@@ -39,7 +39,7 @@ export function FirstVisitNote() {
   if (!open) return null;
   return (
     <div
-      className="pointer-events-none absolute left-[400px] right-16 top-[calc(var(--top-bar)+16px)] z-[15] flex justify-center"
+      className="pointer-events-none absolute left-[412px] right-16 top-[calc(var(--top-bar)+16px)] z-[15] flex justify-center"
       aria-live="polite"
     >
       <div className="pointer-events-auto max-w-md bg-pine px-4 py-3 text-limestone shadow-sm">
