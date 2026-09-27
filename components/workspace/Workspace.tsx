@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BottomBar } from "@/components/workspace/BottomBar";
+import { FirstVisitNote } from "@/components/workspace/FirstVisitNote";
 import { Ladder } from "@/components/workspace/Ladder";
 import { LeftPanel } from "@/components/workspace/LeftPanel";
 import { MethodologyDrawer } from "@/components/workspace/MethodologyDrawer";
@@ -159,6 +160,7 @@ export function Workspace() {
           router.push(q ? `/parcel/${id}?${q}` : `/parcel/${id}`);
         }}
       />
+      <FirstVisitNote />
       <header ref={headerRef} className="fade-up pointer-events-auto absolute left-0 right-0 top-0 z-30 bg-pine px-6 py-[26px]">
         <div className="flex items-start justify-between gap-8">
           <h1 className="shrink-0 font-display text-[22px] font-bold tracking-mark text-limestone">
