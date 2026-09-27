@@ -92,7 +92,7 @@ Constraints (exact wording; count in mono beside each; largest first):
 
 LEVERS tab: eighteen lines — every slider and checkbox in Regulations, Construction, and Economics (building pace excluded) — each `{Lever} {from} → {to}` · `+{n} units {conform|feasible|affordable}` with a panel word at left (REGULATIONS · CONSTRUCTION · ECONOMICS), ranked; rows at the slider's limit read `at limit`; rows with no effect read `no change`. One line under the label: "Effect of loosening each parameter one step from the current settings. Nothing moves until you move it."
 
-Parcels tab columns: Address · Neighborhood · Lot area (sq ft) · Frontage (ft) · Status · Subsidy required ($, blank when none)
+Parcels tab columns: Address · Neighborhood · Lot area (sq ft) · Frontage (ft) · Status · Subsidy required ($, blank when none) · Historic designation · Opportunity Zone · Nearest school · Nearest park · Transit trips/hr · Nearest hydrant · Street trees
 Empty state: "No parcels match the current parameters."
 
 SOURCES tab: one row per dataset — `{name}` · `{publisher}` · `retrieved {date}` · link
@@ -174,7 +174,7 @@ Result column: **PASS** / **FAIL**.
     - **Maximum price** · ${buyerMax} · `{ratio}% of income to housing at the terms below`
     - Unit price · ${unitPrice} · `${price} / sq ft × {sfPerUnit} sq ft`
     - Monthly payment · ${monthly} · `principal, interest, taxes, insurance`
-    - **TERMS** (small label), five compact sliders in two columns: Mortgage rate · Down payment · Income to housing · Property tax rate · Insurance
+    - **TERMS** (small label), five compact sliders in two columns: Mortgage rate (`Freddie Mac PMMS, week of Sept 24, 2026.`) · Down payment (`Share of price paid in cash at purchase.`) · Income to housing (`Share of household income spent on housing.`) · Property tax rate (`Effective rate on unit price.`) · Insurance (`Monthly homeowners insurance.`)
     - Result: "**AFFORDABLE** — ${diff} below the household's maximum." / "**NOT AFFORDABLE** — ${diff} above." — Reference lines (mono): `Sales within ½ mile: median ${local}/sq ft ({n} sales, prior 24 months)` (falls back to `citywide` when n < 5) · `Typical rent, ZIP {zip}: ${fmr2br} for 2 bedrooms (HUD FY2026 Small Area FMR) — rental path not modeled`
   - **PUBLIC SUPPORT** block:
     - Subsidy provided · ${total} · slider `${subsidy} / unit` · `× {units} units`
