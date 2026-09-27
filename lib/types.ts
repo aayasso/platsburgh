@@ -29,6 +29,10 @@ export type Lot = {
   zip?: string;
   fmr2br?: number | null;
   fmrMetro?: boolean;
+  condemned?: boolean | "unknown";
+  openViolations?: number | "unknown";
+  abatedThrough?: number | null | "unknown";
+  zhviChange12m?: number | null;
 };
 
 export type Regulations = {

@@ -15,7 +15,7 @@ import {
   intersectionShare,
   nearestPointMeters,
 } from "../lib/frontage";
-import type { Lot } from "../lib/types";
+import Papa from "papaparse";
 import {
   isVacantUse,
   loadCityAssessments,
@@ -259,6 +259,225 @@ function applyZipAndFmr(
     }
   }
   log(`ZIP on ${withZip} parcels; SAFMR 2BR on ${withSafmr}; metro flag when missing.`);
+}
+
+async function pageDatastore(slug: string): Promise<{
+  title: string;
+  records: Record<string, unknown>[];
+} | null> {
+  try {
+    const pkg = await packageShow(slug);
+    const res = pickDatastoreResource(pkg);
+    if (!res) {
+      log(`NOT FOUND: datastore on ${slug}`);
+      return null;
+    }
+    log(`${slug}: ${pkg.title} resource ${res.name} ${res.id}`);
+    const records: Record<string, unknown>[] = [];
+    let offset = 0;
+    let total = Infinity;
+    while (offset < total) {
+      const page = await datastoreSearch({ resourceId: res.id, limit: 32000, offset });
+      total = page.total;
+      records.push(...page.records);
+      offset += page.records.length;
+      if (page.records.length === 0) break;
+      if (records.length % 64000 === 0) console.log(`${slug}: paged ${records.length} / ${total}`);
+    }
+    log(`${slug}: ${records.length} rows`);
+    return { title: pkg.title, records };
+  } catch (e) {
+    log(`NOT FOUND: ${slug}: ${e instanceof Error ? e.message : e}`);
+    return null;
+  }
+}
+
+async function loadZhviByZip(): Promise<Record<string, number> | null> {
+  const url =
+    "https://files.zillowstatic.com/research/public_csvs/zhvi/Zip_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month.csv";
+  const dest = cachePath("zhvi-zip.csv");
+  try {
+    if (!existsSync(dest)) {
+      const res = await fetch(url, {
+        headers: { "User-Agent": "Mozilla/5.0 (compatible; Platsburgh/1.0; research)" },
+      });
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      writeFileSync(dest, Buffer.from(await res.arrayBuffer()));
+    }
+    const text = readFileSync(dest, "utf8");
+    const parsed = Papa.parse<Record<string, string>>(text, { header: true, skipEmptyLines: true });
+    const rows = parsed.data;
+    const header = parsed.meta.fields ?? [];
+    const months = header.filter((h) => /^\d{4}-\d{2}-\d{2}$/.test(h)).sort();
+    if (months.length < 13) throw new Error("ZHVI CSV missing months");
+    const last = months[months.length - 1];
+    const prev = months[months.length - 13];
+    const out: Record<string, number> = {};
+    for (const row of rows) {
+      const zip = String(row.RegionName ?? row.regionname ?? "").replace(/\D/g, "").slice(0, 5);
+      const a = Number(row[prev]);
+      const b = Number(row[last]);
+      if (zip.length === 5 && a > 0 && Number.isFinite(b)) out[zip] = (b - a) / a;
+    }
+    log(`ZHVI ZIP CSV ${url}: ${Object.keys(out).length} ZIPs; using ${prev} → ${last}`);
+    return out;
+  } catch (e) {
+    log(`NOT FOUND: ZHVI (${e instanceof Error ? e.message : e}); zhviChange12m not available.`);
+    return null;
+  }
+}
+
+async function stepPpi() {
+  log("## BLS PPI inputs to residential construction");
+  const seriesId = "WPUIP231000";
+  const retrieved = new Date().toISOString().slice(0, 10);
+  const outPath = join(root, "data", "ppi.json");
+  try {
+    const res = await fetch("https://api.bls.gov/publicAPI/v2/timeseries/data/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        seriesid: [seriesId],
+        startyear: "2023",
+        endyear: "2026",
+      }),
+    });
+    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+    const body = (await res.json()) as {
+      status?: string;
+      Results?: { series?: { data?: { year: string; period: string; value: string }[] }[] };
+    };
+    const rows = body.Results?.series?.[0]?.data ?? [];
+    const byMonth = new Map<string, number>();
+    for (const r of rows) {
+      const m = r.period?.match(/^M(\d{2})$/);
+      if (!m) continue;
+      const key = `${r.year}-${m[1]}`;
+      const v = Number(r.value);
+      if (Number.isFinite(v)) byMonth.set(key, v);
+    }
+    const baseMonths = ["2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05"];
+    const baseVals = baseMonths.map((k) => byMonth.get(k)).filter((n): n is number => n != null);
+    const keys = [...byMonth.keys()].sort();
+    const latestMonth = keys[keys.length - 1];
+    const latest = latestMonth ? byMonth.get(latestMonth) : undefined;
+    if (!latestMonth || latest == null || baseVals.length < 4) {
+      throw new Error(`insufficient PPI months (got ${keys.join(",")})`);
+    }
+    const baseAverage = baseVals.reduce((s, n) => s + n, 0) / baseVals.length;
+    const ppiRatio = latest / baseAverage;
+    const file = {
+      seriesId,
+      latestMonth,
+      baseMonths,
+      latest,
+      baseAverage,
+      ppiRatio,
+      retrieved,
+    };
+    writeFileSync(outPath, JSON.stringify(file, null, 2));
+    log(
+      `PPI ${seriesId}: latest ${latestMonth}=${latest}; Nov 2023–May 2024 avg ${baseAverage.toFixed(3)}; ratio ${ppiRatio.toFixed(4)} (${((ppiRatio - 1) * 100).toFixed(1)}%).`,
+    );
+    return file;
+  } catch (e) {
+    log(`NOT FOUND: BLS PPI (${e instanceof Error ? e.message : e}); PPI row not available.`);
+    writeFileSync(
+      outPath,
+      JSON.stringify(
+        {
+          seriesId,
+          latestMonth: "",
+          baseMonths: ["2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05"],
+          latest: null,
+          baseAverage: null,
+          ppiRatio: null,
+          retrieved,
+          unavailable: true,
+        },
+        null,
+        2,
+      ),
+    );
+    return null;
+  }
+}
+
+async function applySundaySources(lots: Lot[]) {
+  log("## Sunday sources (condemned, violations, abatements, ZHVI, PPI)");
+  const condemnedPage = await pageDatastore("condemned-properties");
+  const condemned = new Set<string>();
+  if (condemnedPage) {
+    for (const rec of condemnedPage.records) {
+      const pin = normalizePin(String(rec.parcel_id ?? rec.PARID ?? rec.pin ?? ""));
+      if (pin.length >= 10) condemned.add(pin);
+    }
+    log(`Condemned PINs: ${condemned.size}`);
+  }
+  const violPage = await pageDatastore("pittsburgh-pli-violations-report");
+  const openViol = new Map<string, number>();
+  if (violPage) {
+    for (const rec of violPage.records) {
+      const status = String(rec.status ?? "");
+      if (/^closed$|^cancelled$/i.test(status.trim())) continue;
+      const pin = normalizePin(String(rec.parcel_id ?? rec.PARID ?? rec.pin ?? ""));
+      if (pin.length < 10) continue;
+      openViol.set(pin, (openViol.get(pin) ?? 0) + 1);
+    }
+    log(`Open-violation PINs: ${openViol.size}`);
+  }
+  const abatePage = await pageDatastore("city-property-tax-abatements");
+  const abated = new Map<string, number>();
+  const thisYear = new Date().getFullYear();
+  if (abatePage) {
+    for (const rec of abatePage.records) {
+      const pin = normalizePin(String(rec.pin ?? rec.parcel_id ?? rec.PARID ?? ""));
+      const start = Number(rec.start_year ?? rec.START_YEAR);
+      const years = Number(rec.num_years ?? rec.NUM_YEARS);
+      if (pin.length < 10 || !Number.isFinite(start) || !Number.isFinite(years)) continue;
+      const through = start + years - 1;
+      const prev = abated.get(pin);
+      if (prev == null || through > prev) abated.set(pin, through);
+    }
+    log(`Abatement PINs: ${abated.size} (through = start_year + num_years − 1; current year ${thisYear})`);
+  }
+  const zhvi = await loadZhviByZip();
+  let nCond = 0,
+    nViol = 0,
+    nAbate = 0,
+    nZhvi = 0;
+  for (const lot of lots) {
+    if (condemnedPage) {
+      lot.condemned = condemned.has(lot.id);
+      if (lot.condemned) nCond++;
+    } else {
+      lot.condemned = "unknown";
+    }
+    if (violPage) {
+      lot.openViolations = openViol.get(lot.id) ?? 0;
+      if (lot.openViolations) nViol++;
+    } else {
+      lot.openViolations = "unknown";
+    }
+    if (abatePage) {
+      const through = abated.get(lot.id);
+      lot.abatedThrough = through != null && through >= thisYear ? through : null;
+      if (lot.abatedThrough) nAbate++;
+    } else {
+      lot.abatedThrough = "unknown";
+    }
+    if (zhvi) {
+      const z = lot.zip ?? "";
+      lot.zhviChange12m = z && z in zhvi ? zhvi[z] : null;
+      if (lot.zhviChange12m != null) nZhvi++;
+    } else {
+      lot.zhviChange12m = null;
+    }
+  }
+  log(
+    `Applied to lots: condemned ${nCond}; open violations ${nViol}; active abatements ${nAbate}; ZHVI ${nZhvi}. Missing sources marked not available.`,
+  );
+  await stepPpi();
 }
 
 function addressOf(row: AssessmentRow): string {
@@ -1049,6 +1268,7 @@ async function main() {
   }
   const safmr = await stepSafmr();
   applyZipAndFmr(lots, zipByPin, safmr);
+  await applySundaySources(lots);
   writeFileSync(join(root, "data", "lots.json"), JSON.stringify(lots));
   log(`Wrote data/lots.json: ${lots.length} lots.`);
   await stepPace();
@@ -1093,6 +1313,7 @@ async function enrichExisting() {
   assignCompsByDistance(lots, sales.sales, await coordsForSales(sales.sales, lots));
   const safmr = await stepSafmr();
   applyZipAndFmr(lots, zipByPin, safmr);
+  await applySundaySources(lots);
   writeFileSync(join(root, "data", "lots.json"), JSON.stringify(lots));
   log(`Wrote data/lots.json: ${lots.length} lots (enrich-only).`);
   const prev = existsSync(notesPath) ? readFileSync(notesPath, "utf8").trimEnd() : "";
@@ -1100,11 +1321,22 @@ async function enrichExisting() {
   writeFileSync(notesPath, `${prev}\n\n## Ground truth data (comps, ZIP, SAFMR)\n\n${added.join("\n")}\n`);
 }
 
+async function sundayExisting() {
+  notes.length = 0;
+  const lots = JSON.parse(readFileSync(join(root, "data", "lots.json"), "utf8")) as Lot[];
+  await applySundaySources(lots);
+  writeFileSync(join(root, "data", "lots.json"), JSON.stringify(lots));
+  log(`Wrote data/lots.json: ${lots.length} lots (sunday sources).`);
+  const prev = existsSync(notesPath) ? readFileSync(notesPath, "utf8").trimEnd() : "";
+  writeFileSync(notesPath, `${prev}\n\n## Sunday sources (§5h)\n\n${notes.join("\n")}\n`);
+}
+
 const enrichOnly = process.argv.includes("--enrich-only");
-const run = enrichOnly ? enrichExisting : main;
+const sundayOnly = process.argv.includes("--sunday");
+const run = sundayOnly ? sundayExisting : enrichOnly ? enrichExisting : main;
 run().catch((err) => {
   console.error(err);
-  if (!enrichOnly) {
+  if (!enrichOnly && !sundayOnly) {
     notes.push(`FATAL: ${err instanceof Error ? err.stack ?? err.message : err}`);
     saveNotes();
   }

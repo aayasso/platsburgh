@@ -314,3 +314,13 @@ Citywide sale median $/sf: 161.14285714285714 from 7463 sales.
 - **Comps by distance:** median $/finished sq ft of arm's-length sales within 800 m over the prior 24 months. Spatial grid 400 m; **7286** of **7463** sales geocoded (County PIN fetch for sales not in the 40k lots file). Assigned on **39,207** parcels in **445 ms**.
 - **ZIP:** `PROPERTYZIP` from assessments, five digits, on every parcel in lots.json.
 - **HUD FY2026 Small Area FMRs:** `https://www.huduser.gov/portal/datasets/fmr/fmr2026/fy2026_safmrs.xlsx` (38,601 ZIP rows). 2-bedroom column `SAFMR 2BR`. Every parcel in this file matched a ZIP. If the file is unreachable, use Pittsburgh HUD Metro FMR Area 2-bedroom FMR **$1,299** and set `fmrMetro` so the parcel page reads "metro".
+
+## Sunday sources (§5h)
+
+Retrieved 2026-09-27.
+
+- **Condemned and Dead-End Properties** (`condemned-properties`): 3,569 rows, **2,895** distinct PINs; **817** of the 39,207 lots flagged `condemned`.
+- **Pittsburgh PLI/DOMI/ES Violations Report** (`pittsburgh-pli-violations-report`): 643,994 rows; open = status not Closed/Cancelled; **9,091** PINs citywide, **2,485** lots with `openViolations` > 0.
+- **City of Pittsburgh Property Tax Abatements** (`city-property-tax-abatements`): 1,975 rows, **1,382** PINs; `abatedThrough` = `start_year + num_years − 1`; **145** lots with an unexpired year (≥ 2026).
+- **Zillow ZHVI** ZIP all-homes CSV (`Zip_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month.csv`): 12-month change 2025-08-31 → 2026-08-31; **39,207** lots received a ZIP value (first fetch failed on a parse bug; rerun succeeded).
+- **BLS PPI** series `WPUIP231000` (inputs to residential construction): latest 2026-08 = 168.052; Nov 2023–May 2024 average 151.105; ratio **1.112** (**+11.2%**). Written to `data/ppi.json`. Not applied to any slider default.
