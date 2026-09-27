@@ -98,7 +98,36 @@ SOURCES tab: one row per dataset — `{name}` · `{publisher}` · `retrieved {da
 Title: **METHODOLOGY**. First line: "Starting positions match the current code for a low-density residential district (§903.03)."
 Table: every regulation and economics slider — parameter, current value, explanation, code reference or source. Also: the household's maximum price at the current income, and the median subsidy required across conforming parcels.
 Definitions block: the feasible / affordable sentence above; the household assumptions with their current values.
-Buttons: **DOWNLOAD** · **LOAD**
+**GROUND TRUTH** (section inside the drawer, after the parameter table): "What building actually costs and takes in Pittsburgh, from one completed project and public records. Reference only." Table columns: Item · Figure · Source · Date.
+| Item | Figure | Source | Date |
+|---|---|---|---|
+| Building permit fee (two-unit, ~2,700 sq ft) | $1,970 | 237 N Aiken invoices | 2023 |
+| Street staging permits (4) and street-opening permit | $1,072 + $543 | 237 N Aiken invoices | 2023–24 |
+| PWSA development permit and fees | $979 | 237 N Aiken invoices | 2023 |
+| PWSA stormwater review for a single infill lot | ~5 months; $11,737 engineering | 237 N Aiken invoices | Jun–Nov 2023 |
+| Utility connections (excavation, storm, sanitary, water lines) | $19,500 | 237 N Aiken invoices | 2024 |
+| Utility change orders (ACHD check valve, curb valve, storm core, road bond) | $4,670 | 237 N Aiken invoices | 2024 |
+| Street repair after utility cut | $5,015 | 237 N Aiken invoices | 2024 |
+| Electric service (two meters, two panels) | $5,350 | 237 N Aiken invoices | 2024 |
+| Site prep and precast foundation (184 linear ft) | $49,486 (≈ $50.70 per footprint sq ft; $139 per linear ft) | 237 N Aiken invoices | 2023–24 |
+| Crane, set crew, toter, cones (three modules, 1.5 days) | $29,632 | 237 N Aiken invoices | Dec 2023 |
+| Extra crane site prep and traffic control | $8,920 | 237 N Aiken invoices | 2024 |
+| Neighbor staging agreement (22-ft lot, no alley) | $14,000 | 237 N Aiken agreement | Nov 2023 |
+| Factory cost, volumetric modular, high-spec two-unit | $175 per finished sq ft; freight $10,668 for three modules from Strattanville, PA | 237 N Aiken final invoice | 2024 |
+| Factory start to set day | 164 days (modules ~80% built in 30 days) | 237 N Aiken records | 2023 |
+| Set day to certificate of occupancy | 229 days | 237 N Aiken records | 2023–24 |
+| Factory start to occupancy | 393 days | 237 N Aiken records | 2023–24 |
+| Construction interest | $33,269 on $537,600 over nine months at prime | 237 N Aiken loan statements | 2024 |
+| Design, survey, appraisal, title, insurance | ≈ $23,400 combined | 237 N Aiken invoices | 2023–24 |
+| Total documented cost, 2,667 finished sq ft | $853,890 (≈ $320 per sq ft) | 237 N Aiken cost basis | 2024 |
+| Appraised value, same building | $865,000 (≈ $324 per sq ft) | FNB appraisal | Jan 2025 |
+| Citywide sale price, arm's-length, prior 24 months | $161 per finished sq ft median, 7,463 sales | WPRDC sales | retrieved 2026-09-26 |
+| New residential units permitted per year | 380 · 256 · 183 (avg 273) | City PLI permits | 2023–2025 |
+| 30-year mortgage rate | 7.03% | Freddie Mac PMMS | Sept 24, 2026 |
+| Area median income, three-person household | $99,400 (80%: $79,500) | HUD FY2026 | May 2026 |
+Footer of the table: "A contextual setback was approved administratively on this project with no Zoning Board case; the tool does not model approvals. Figures are one project's invoices and are shown as reference, not estimates."
+
+Buttons: **DOWNLOAD PARAMETERS** · **LOAD PARAMETERS** (JSON)
 Last line: "These are the exact parameters that produced the results on this page. The page address reproduces this view."
 
 ## PARCEL PAGE
