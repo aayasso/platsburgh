@@ -8,10 +8,16 @@ export function annualTaxPerUnit(
 export function paybackYears(
   subsidyRequiredPerUnit: number,
   annualTax: number,
+  abatedThrough?: number | null | "unknown",
+  currentYear = new Date().getFullYear(),
 ): number | null {
   if (subsidyRequiredPerUnit === 0) return null;
   if (annualTax === 0) return Number.POSITIVE_INFINITY;
-  return subsidyRequiredPerUnit / annualTax;
+  const extra =
+    typeof abatedThrough === "number" && abatedThrough > currentYear
+      ? abatedThrough - currentYear
+      : 0;
+  return subsidyRequiredPerUnit / annualTax + extra;
 }
 
 export function formatPayback(years: number | null): string {

@@ -13,6 +13,12 @@ export function salesWithinHalfMileLine(lot: Lot): string {
   return `Sales within ½ mile: median ${fmtMoney(Math.round(sales.citywideMedianPerSf))}/sq ft (citywide, ${fmtInt(sales.saleCount)} sales, prior 24 months)`;
 }
 
+export function zipHomeValuesFigure(zhviChange12m: number | null | undefined): string {
+  if (zhviChange12m == null || !Number.isFinite(zhviChange12m)) return "not available";
+  const sign = zhviChange12m >= 0 ? "+" : "";
+  return `${sign}${(zhviChange12m * 100).toFixed(1)}%`;
+}
+
 export function typicalRentLine(lot: Lot): string {
   const metro = lot.fmr2br == null || lot.fmrMetro === true;
   const amount = metro ? PITTSBURGH_METRO_FMR_2BR : lot.fmr2br!;

@@ -64,7 +64,7 @@ export function ProForma(props: {
   const income = economicsSliders.find((s) => s.key === "buyerIncome")!;
   const subsidy = economicsSliders.find((s) => s.key === "subsidyPerUnit")!;
   const tax = annualTaxPerUnit(pf.unitPrice, state.household.propertyTaxRate);
-  const years = paybackYears(pf.subsidyForAffordable, tax);
+  const years = paybackYears(pf.subsidyForAffordable, tax, lot.abatedThrough);
   const provided = state.economics.subsidyPerUnit;
   const meets = provided >= pf.subsidyForAffordable;
   const gap = Math.max(0, pf.subsidyForAffordable - provided);
@@ -272,6 +272,7 @@ export function ProForma(props: {
           rate={h.propertyTaxRate}
           meets={meets}
           gap={gap}
+          abatedThrough={lot.abatedThrough}
           hasSummary={props.hasSummary}
           checkLines={props.checkLines}
           state={state}
@@ -348,6 +349,7 @@ function PublicBlock(props: {
   rate: number;
   meets: boolean;
   gap: number;
+  abatedThrough?: number | null | "unknown";
   hasSummary: boolean;
   checkLines: string[];
   state: WorkspaceState;
@@ -383,6 +385,9 @@ function PublicBlock(props: {
           {props.years != null ? (
             <Source>
               {fmtMoney(props.tax)} per year in property tax at {(props.rate * 100).toFixed(1)}%
+              {typeof props.abatedThrough === "number"
+                ? `; abated through ${props.abatedThrough}; payback counted from then`
+                : ""}
             </Source>
           ) : null}
         </Row>

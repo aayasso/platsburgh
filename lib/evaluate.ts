@@ -99,7 +99,7 @@ export function evaluateWorkspace(
       if (subsidyRequired > 0) {
         subsidies.push(subsidyRequired);
         const tax = pf.unitPrice * state.household.propertyTaxRate;
-        const years = paybackYears(subsidyRequired, tax);
+        const years = paybackYears(subsidyRequired, tax, row.lot.abatedThrough);
         if (years != null) paybacks.push(years);
       }
       if (affordable) status = "cfa";

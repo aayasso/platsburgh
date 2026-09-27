@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
-import { ProForma } from "@/components/parcel/ProForma";
+import { ParcelAerial } from "@/components/parcel/ParcelAerial";
 import { buildableEnvelope, fit } from "@/lib/fit";
 import { fmtInt, metersToFt } from "@/lib/format";
+import { zipHomeValuesFigure } from "@/lib/parcelRefs";
 import { estimatedSiteAdders, proforma } from "@/lib/proforma";
 import { dwellingUnits } from "@/lib/rules";
 import { SITE_CITES } from "@/lib/sources";
@@ -173,6 +174,37 @@ export function ParcelClient(props: {
       value: yn(lot.stepsOnly),
       source: streets,
     },
+    {
+      label: "Condemned structure",
+      value:
+        lot.condemned === "unknown" || lot.condemned == null
+          ? "Not available in open data."
+          : yn(lot.condemned),
+      source: SITE_CITES.city,
+    },
+    {
+      label: "Open violations",
+      value:
+        lot.openViolations === "unknown" || lot.openViolations == null
+          ? "Not available in open data."
+          : String(lot.openViolations),
+      source: SITE_CITES.city,
+    },
+    {
+      label: "Property tax abatement",
+      value:
+        lot.abatedThrough === "unknown"
+          ? "Not available in open data."
+          : typeof lot.abatedThrough === "number"
+            ? `Yes, through ${lot.abatedThrough}`
+            : "No",
+      source: SITE_CITES.city,
+    },
+    {
+      label: "ZIP home values, prior 12 months",
+      value: zipHomeValuesFigure(lot.zhviChange12m),
+      source: "Zillow ZHVI, ZIP",
+    },
   ];
 
   return (
@@ -200,15 +232,16 @@ export function ParcelClient(props: {
               {lot.empty ? "Vacant" : "Improved"} ·{" "}
               {lot.owner === "city" ? "City-owned" : "Privately owned"} · Transit {transitFt} ft · {tax}
             </p>
-          </div>
-          <div className="text-right">
-            <div className="font-display text-[14px] font-bold tracking-section">{status}</div>
-            <div className="mt-1 font-mono text-[12px] text-moss">
-              at current parameters · {state.construction.widthFt} × {state.construction.depthFt} ·{" "}
-              {state.construction.stories} stories · {units} units
-              {state.construction.adu ? " + ADU" : ""}
+            <div className="mt-3 text-right">
+              <div className="font-display text-[14px] font-bold tracking-section">{status}</div>
+              <div className="mt-1 font-mono text-[12px] text-moss">
+                at current parameters · {state.construction.widthFt} × {state.construction.depthFt} ·{" "}
+                {state.construction.stories} stories · {units} units
+                {state.construction.adu ? " + ADU" : ""}
+              </div>
             </div>
           </div>
+          <ParcelAerial lot={lot} />
         </div>
 
         <h2 className="mt-10 font-display text-[13px] font-semibold tracking-section">COMPLIANCE</h2>
